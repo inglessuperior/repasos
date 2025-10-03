@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 4 - Pasado Simple, Vocabulario y Conectores</title>
+
+    <!-- Importa la fuente Inter de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Importa el script de Tailwind CSS para el diseño -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Estilos base emulados para Inter y colores */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        /* Títulos y subtítulos emulados */
+        .titulo1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2563eb; /* text-blue-600 */
+            line-height: 1.25;
+        }
+        .titulo2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .subtitulo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #374151; /* gray-700 */
+        }
+        .formula {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        /* Clase para ejercicios */
+        .question-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e9ecef; 
+            border-radius: 6px;
+            background-color: #f8f8f8; 
+        }
+        
+        /* Estilos para campos de texto */
+        .text-input {
+            border: 1px solid #ccc;
+            padding: 8px 10px;
+            border-radius: 4px;
+            width: 95%;
+            max-width: 400px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Estilos de Feedback (Resultado) */
+        .result-container {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        /* CLASE NUEVA: OCULTA EL CONTENEDOR Y NO OCUPA ESPACIO */
+        .hidden-initial {
+            display: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .correct { 
+            background-color: #d1e7dd; /* Verde claro */
+            color: #0f5132; /* Verde oscuro */
+            border: 1px solid #badbcc;
+        }
+        .incorrect { 
+            background-color: #f8d7da; /* Rojo claro */
+            color: #842029; /* Rojo oscuro */
+            border: 1px solid #f5c2c7;
+        }
+        
+        /* Botones de revisión/PDF */
+        .check-button {
+            padding: 12px 25px;
+            background-color: #2563eb; /* Azul */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: 600;
+            display: block; 
+            transition: background-color 0.3s;
+        }
+        .check-button:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .pdf-button {
+            padding: 12px 25px;
+            background-color: #10b981; /* Verde esmeralda (otro color) */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px; /* Más cerca del resultado */
+            font-weight: 600;
+            display: none; /* Inicialmente oculto */
+            transition: background-color 0.3s;
+        }
+        .pdf-button:hover {
+            background-color: #059669;
+        }
+
+
+        /* Estilo para las opciones de radio */
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+        label {
+            display: block; 
+            padding: 4px 0;
+            cursor: pointer;
+        }
+        
+        /* Ocultamos el elemento antes de la acción JS, usando la clase 'hidden' en el HTML */
+        #finalScore {
+            min-height: 100px; /* Asegura un mínimo de altura para que el centrado vertical sea notable */
+        }
+        #finalScore p {
+            margin: 0; /* Remover margen por defecto de los párrafos */
+        }
+
+
+        @media (max-width: 768px) {
+            .titulo1 { font-size: 2.5rem; }
+            .titulo2 { font-size: 1.5rem; }
+            .subtitulo { font-size: 1.1rem; }
+        }
+
+        /* ESTILOS DE IMPRESIÓN (PDF) */
+        @media print {
+            /* Mantiene el body visible */
+            body {
+                padding: 0;
+                margin: 0;
+                /* Restablece el ancho máximo para mejor impresión */
+                max-width: 800px;
+                margin: 0 auto; 
+            }
+            
+            /* SOLO OCULTA LOS BOTONES, PERO MANTIENE VISIBLE EL CONTENEDOR FLEXIBLE Y LA PUNTUACIÓN */
+            .check-button, 
+            .pdf-button { 
+                display: none !important; 
+            }
+
+            /* Asegura que el formulario y sus contenidos sean visibles */
+            #quizForm, 
+            main,
+            .question-group,
+            .titulo2,
+            .subtitulo,
+            .flex.flex-col.items-center { /* Aseguramos que el contenedor de los botones (y sus espacios) no se oculte por completo */
+                display: block !important;
+            }
+
+            /* Remueve fondos y bordes para ahorrar tinta y mejorar la lectura en papel */
+            .question-group {
+                border: none !important;
+                background-color: white !important;
+                padding: 5px 0 !important;
+                margin-bottom: 10px !important;
+            }
+
+            /* Asegura que la puntuación final sea visible y sin fondo */
+            #finalScore {
+                /* Usamos flex para mantener el centrado vertical/horizontal de Tailwind */
+                display: flex !important; 
+                margin: 30px auto;
+                max-width: 600px;
+                border: 2px solid #000; /* Añade un borde negro para destacar en el reporte */
+                background-color: white !important; 
+            }
+            
+            /* Oculta los campos de entrada de texto */
+            .text-input {
+                border: none !important;
+                border-bottom: 1px solid #333 !important; /* Muestra solo una línea para la respuesta */
+            }
+
+            /* Asegura que las etiquetas de radio seleccionadas se vean bien (marcando el texto) */
+            input[type="radio"]:checked + label {
+                font-weight: 700;
+            }
+
+            /* Ajusta los contenedores de resultado (verde/rojo) para la impresión */
+            .result-container {
+                display: block !important; /* Asegura que el resultado sea visible para impresión */
+                border: 1px solid #ccc;
+                padding: 4px 8px;
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+            }
+
+            /* Asegura que los colores de feedback se vean bien en escala de grises */
+            .correct { 
+                background-color: #c8e6c9 !important; /* Verde claro visible */
+                color: #000 !important;
+                border: 1px solid #81c784 !important;
+            }
+            .incorrect { 
+                background-color: #ffcdd2 !important; /* Rojo claro visible */
+                color: #000 !important;
+                border: 1px solid #e57373 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center" id="header-print">
+        <!-- Logo con la URL correcta -->
+        <img src="https://i.imgur.com/7BHucwa.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <p class="formula mx-auto p-0 text-sm" style="width: fit-content; min-width: 150px; color: #1f2937; border-color: #d1d5db;">INDEX</p>
+
+</body>
+</html>
