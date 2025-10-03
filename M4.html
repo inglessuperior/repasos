@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 4 - Pasado Simple, Vocabulario y Conectores</title>
+
+    <!-- Importa la fuente Inter de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Importa el script de Tailwind CSS para el diseño -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Estilos base emulados para Inter y colores */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        /* Títulos y subtítulos emulados */
+        .titulo1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2563eb; /* text-blue-600 */
+            line-height: 1.25;
+        }
+        .titulo2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .subtitulo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #374151; /* gray-700 */
+        }
+        .formula {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        /* Clase para ejercicios */
+        .question-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e9ecef; 
+            border-radius: 6px;
+            background-color: #f8f8f8; 
+        }
+        
+        /* Estilos para campos de texto */
+        .text-input {
+            border: 1px solid #ccc;
+            padding: 8px 10px;
+            border-radius: 4px;
+            width: 95%;
+            max-width: 400px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Estilos de Feedback (Resultado) */
+        .result-container {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        /* CLASE NUEVA: OCULTA EL CONTENEDOR Y NO OCUPA ESPACIO */
+        .hidden-initial {
+            display: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .correct { 
+            background-color: #d1e7dd; /* Verde claro */
+            color: #0f5132; /* Verde oscuro */
+            border: 1px solid #badbcc;
+        }
+        .incorrect { 
+            background-color: #f8d7da; /* Rojo claro */
+            color: #842029; /* Rojo oscuro */
+            border: 1px solid #f5c2c7;
+        }
+        
+        /* Botones de revisión/PDF */
+        .check-button {
+            padding: 12px 25px;
+            background-color: #2563eb; /* Azul */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: 600;
+            display: block; 
+            transition: background-color 0.3s;
+        }
+        .check-button:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .pdf-button {
+            padding: 12px 25px;
+            background-color: #10b981; /* Verde esmeralda (otro color) */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px; /* Más cerca del resultado */
+            font-weight: 600;
+            display: none; /* Inicialmente oculto */
+            transition: background-color 0.3s;
+        }
+        .pdf-button:hover {
+            background-color: #059669;
+        }
+
+
+        /* Estilo para las opciones de radio */
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+        label {
+            display: block; 
+            padding: 4px 0;
+            cursor: pointer;
+        }
+        
+        /* Ocultamos el elemento antes de la acción JS, usando la clase 'hidden' en el HTML */
+        #finalScore {
+            min-height: 100px; /* Asegura un mínimo de altura para que el centrado vertical sea notable */
+        }
+        #finalScore p {
+            margin: 0; /* Remover margen por defecto de los párrafos */
+        }
+
+
+        @media (max-width: 768px) {
+            .titulo1 { font-size: 2.5rem; }
+            .titulo2 { font-size: 1.5rem; }
+            .subtitulo { font-size: 1.1rem; }
+        }
+
+        /* ESTILOS DE IMPRESIÓN (PDF) */
+        @media print {
+            /* Mantiene el body visible */
+            body {
+                padding: 0;
+                margin: 0;
+                /* Restablece el ancho máximo para mejor impresión */
+                max-width: 800px;
+                margin: 0 auto; 
+            }
+            
+            /* SOLO OCULTA LOS BOTONES, PERO MANTIENE VISIBLE EL CONTENEDOR FLEXIBLE Y LA PUNTUACIÓN */
+            .check-button, 
+            .pdf-button { 
+                display: none !important; 
+            }
+
+            /* Asegura que el formulario y sus contenidos sean visibles */
+            #quizForm, 
+            main,
+            .question-group,
+            .titulo2,
+            .subtitulo,
+            .flex.flex-col.items-center { /* Aseguramos que el contenedor de los botones (y sus espacios) no se oculte por completo */
+                display: block !important;
+            }
+
+            /* Remueve fondos y bordes para ahorrar tinta y mejorar la lectura en papel */
+            .question-group {
+                border: none !important;
+                background-color: white !important;
+                padding: 5px 0 !important;
+                margin-bottom: 10px !important;
+            }
+
+            /* Asegura que la puntuación final sea visible y sin fondo */
+            #finalScore {
+                /* Usamos flex para mantener el centrado vertical/horizontal de Tailwind */
+                display: flex !important; 
+                margin: 30px auto;
+                max-width: 600px;
+                border: 2px solid #000; /* Añade un borde negro para destacar en el reporte */
+                background-color: white !important; 
+            }
+            
+            /* Oculta los campos de entrada de texto */
+            .text-input {
+                border: none !important;
+                border-bottom: 1px solid #333 !important; /* Muestra solo una línea para la respuesta */
+            }
+
+            /* Asegura que las etiquetas de radio seleccionadas se vean bien (marcando el texto) */
+            input[type="radio"]:checked + label {
+                font-weight: 700;
+            }
+
+            /* Ajusta los contenedores de resultado (verde/rojo) para la impresión */
+            .result-container {
+                display: block !important; /* Asegura que el resultado sea visible para impresión */
+                border: 1px solid #ccc;
+                padding: 4px 8px;
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+            }
+
+            /* Asegura que los colores de feedback se vean bien en escala de grises */
+            .correct { 
+                background-color: #c8e6c9 !important; /* Verde claro visible */
+                color: #000 !important;
+                border: 1px solid #81c784 !important;
+            }
+            .incorrect { 
+                background-color: #ffcdd2 !important; /* Rojo claro visible */
+                color: #000 !important;
+                border: 1px solid #e57373 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center" id="header-print">
+        <!-- Logo con la URL correcta -->
+        <img src="https://i.imgur.com/7BHucwa.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <p class="formula mx-auto p-0 text-sm" style="width: fit-content; min-width: 150px; color: #1f2937; border-color: #d1d5db;">MÓDULO: 4</p>
+        <h1 class="titulo1 mt-2 mb-8">Repaso General</h1>
+        <p class="text-lg text-gray-600 mb-10">Instrucciones: Lee cada pregunta con atención y selecciona o escribe la respuesta correcta.</p>
+    </header>
+    
+    <main class="max-w-4xl mx-auto mt-10">
+
+        <form id="quizForm" onsubmit="return false;">
+
+            <!-- SECCIÓN I: PASADO SIMPLE (WAS/WERE y Forma Base) - 18 PREGUNTAS -->
+            <hr class="border-t border-gray-300 my-4">
+
+            <h2 class="titulo2 my-6">Sección I: Was/were y pasado simple afirmativo</h2>
+            
+            
+            <p class="subtitulo mb-6">A. Completa con was o were (afirmativo, negativo, o interrogativo).</p>
+            
+            <div class="question-group">
+                <p class="mb-4">1. My brother ______ very tired after the trip.</p>
+                <label><input type="radio" name="q1" value="was"> was</label>
+                <label><input type="radio" name="q1" value="were"> were</label>
+                <div id="result1" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">2. The children ______ playing in the park yesterday.</p>
+                <label><input type="radio" name="q2" value="was"> was</label>
+                <label><input type="radio" name="q2" value="were"> were</label>
+                <div id="result2" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">3. I ______ at home last Sunday morning.</p>
+                <label><input type="radio" name="q3" value="was"> was</label>
+                <label><input type="radio" name="q3" value="were"> were</label>
+                <div id="result3" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">4. They ______ very excited about the concert.</p>
+                <label><input type="radio" name="q4" value="was"> was</label>
+                <label><input type="radio" name="q4" value="were"> were</label>
+                <div id="result4" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">5. The weather last week ______ cold.</p>
+                <label><input type="radio" name="q5" value="was"> was</label>
+                <label><input type="radio" name="q5" value="were"> were</label>
+                <div id="result5" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q6 (Negativa) -->
+            <div class="question-group">
+                <p class="mb-4">6. Escribe la forma <b>negativa</b> de: "I was in the city last month."</p>
+                <input type="text" id="q6" name="q6_text" class="text-input">
+                <div id="result6" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q7 (Interrogativa) -->
+            <div class="question-group">
+                <p class="mb-4">7. Selecciona la forma <b>interrogativa</b> de: "She was angry."</p>
+                <label><input type="radio" name="q7" value="A"> Was she angry?</label>
+                <label><input type="radio" name="q7" value="B"> Were she angry?</label>
+                <label><input type="radio" name="q7" value="C"> Did she was angry?</label>
+                <div id="result7" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q8 (Negativa) -->
+            <div class="question-group">
+                <p class="mb-4">8. We ______ happy about the result.</p>
+                <label><input type="radio" name="q8" value="A"> wasn't</label>
+                <label><input type="radio" name="q8" value="B"> didn't</label>
+                <label><input type="radio" name="q8" value="C"> weren't</label>
+                <div id="result8" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q9 (Interrogativa) -->
+            <div class="question-group">
+                <p class="mb-4">9. ______ they at the party on Saturday?</p>
+                <label><input type="radio" name="q9" value="A"> Was</label>
+                <label><input type="radio" name="q9" value="B"> Were</label>
+                <label><input type="radio" name="q9" value="C"> Did</label>
+                <div id="result9" class="result-container hidden-initial"></div>
+            </div>
+            
+            <p class="subtitulo mb-6 mt-8">B. Escribe el pasado simple o elige el correcto.</p>
+
+            <div class="question-group">
+                <p class="mb-4">10. Escribe el pasado simple de <b>write</b></p>
+                <input type="text" id="q10" name="q10_text" class="text-input">
+                <div id="result10" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">11. El pasado simple de <b>stop</b> es:</p>
+                <label><input type="radio" name="q11" value="A"> stoped</label>
+                <label><input type="radio" name="q11" value="B"> stopped</label>
+                <label><input type="radio" name="q11" value="C"> stop</label>
+                <div id="result11" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">12. Selecciona el verbo correcto en pasado: I ____ my homework after class.</p>
+                <label><input type="radio" name="q12" value="A"> did</label>
+                <label><input type="radio" name="q12" value="B"> do</label>
+                <label><input type="radio" name="q12" value="C"> done</label>
+                <div id="result12" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">13. Selecciona los verbos correctos: They ____ a lot of things when they ____ to Italy.</p>
+                <label><input type="radio" name="q13" value="A"> buy / go</label>
+                <label><input type="radio" name="q13" value="B"> bought / go</label>
+                <label><input type="radio" name="q13" value="C"> bought / went</label>
+                <div id="result13" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">14. Escribe el pasado simple de <b>study</b></p>
+                <input type="text" id="q14" name="q14_text" class="text-input">
+                <div id="result14" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q15 -->
+            <div class="question-group">
+                <p class="mb-4">15. Escribe el pasado simple de <b>feel</b></p>
+                <input type="text" id="q15" name="q15_text" class="text-input">
+                <div id="result15" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q16 -->
+            <div class="question-group">
+                <p class="mb-4">16. El pasado simple de <b>become</b> es:</p>
+                <label><input type="radio" name="q16" value="A"> became</label>
+                <label><input type="radio" name="q16" value="B"> becomed</label>
+                <label><input type="radio" name="q16" value="C"> become</label>
+                <div id="result16" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- NUEVA Q17 (RADIO) -->
+            <div class="question-group">
+                <p class="mb-4">17. Selecciona el verbo correcto para completar la oración: Mary ____ lunch at home yesterday.</p>
+                <label><input type="radio" name="q17" value="A"> eat</label>
+                <label><input type="radio" name="q17" value="B"> ate</label>
+                <label><input type="radio" name="q17" value="C"> eating</label>
+                <div id="result17" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- NUEVA Q18 (TEXTO) -->
+            <div class="question-group">
+                <p class="mb-4">18. Escribe sólo el verbo de esta oración en pasado simple: We (see) a black cat last night.</p>
+                <input type="text" id="q18" name="q18_text" class="text-input">
+                <div id="result18" class="result-container hidden-initial"></div>
+            </div>
+
+
+            <!-- SECCIÓN II: PASADO SIMPLE (NEGACIÓN Y PREGUNTAS CON DID) - 8 PREGUNTAS -->
+            <hr class="border-t border-gray-300 my-10">
+            <h2 class="titulo2 my-6 mt-10">Sección II: Pasado simple negativo e interrogativo</h2>
+            
+
+            <p class="subtitulo mb-3">C. Transforma la oración.</p>
+
+            <!-- Q19 (Original Q17): Texto: Negativa de "Sarah and Ben saw a good movie." -->
+            <div class="question-group">
+                <p class="mb-4">19. Escribe la forma <b>negativa</b> de esta frase: "Sarah and Ben saw a good movie."</p>
+                <input type="text" id="q19" name="q19_text" class="text-input">
+                <div id="result19" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q20 (Original Q18) -->
+            <div class="question-group">
+                <p class="mb-4">20. ¿Cuál es la forma <strong>interrogativa</strong> de: "She bought a new phone"?</p>
+                <label><input type="radio" name="q20" value="A"> Did she bought a new phone?</label>
+                <label><input type="radio" name="q20" value="B"> Did she buy a new phone?</label>
+                <label><input type="radio" name="q20" value="C"> Was she buy a new phone?</label>
+                <div id="result20" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- NUEVA Q21 (RADIO) -->
+            <div class="question-group">
+                <p class="mb-4">21. Selecciona la forma <b>negativa</b> de: "He drank coffee this morning."</p>
+                <label><input type="radio" name="q21" value="A"> He didn't drank coffee this morning.</label>
+                <label><input type="radio" name="q21" value="B"> He wasn't drank coffee this morning.</label>
+                <label><input type="radio" name="q21" value="C"> He didn't drink coffee this morning.</label>
+                <div id="result21" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- NUEVA Q22 (TEXTO) -->
+            <div class="question-group">
+                <p class="mb-4">22. Escribe la forma <b>interrogativa</b> de: "The cat slept on the couch."</p>
+                <input type="text" id="q22" name="q22_text" class="text-input">
+                <div id="result22" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q23 (Original Q19) -->
+            <div class="question-group">
+                <p class="mb-4">23. Selecciona la forma <b>negativa</b> de: "They traveled to Paris last month."</p>
+                <label><input type="radio" name="q23" value="A"> They wasn't traveled to Paris last month.</label>
+                <label><input type="radio" name="q23" value="B"> They didn't travel to Paris last month.</label>
+                <label><input type="radio" name="q23" value="C"> They not traveled to Paris last month.</label>
+                <div id="result23" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q24 (Original Q20) -->
+            <div class="question-group">
+                <p class="mb-4">24. Escribe la forma <b>interrogativa</b> de: "They lived here last year."</p>
+                <input type="text" id="q24" name="q24_text" class="text-input">
+                <div id="result24" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- NUEVA Q25 (RADIO) -->
+            <div class="question-group">
+                <p class="mb-4">25. Selecciona la respuesta <b>negativa</b> para: "Did you finish the book?"</p>
+                <label><input type="radio" name="q25" value="A"> No, I didn't finished.</label>
+                <label><input type="radio" name="q25" value="B"> No, I didn't.</label>
+                <label><input type="radio" name="q25" value="C"> No, I wasn't.</label>
+                <div id="result25" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- NUEVA Q26 (TEXTO) -->
+            <div class="question-group">
+                <p class="mb-4">26. Escribe la forma <b>negativa</b> de: "They ran in the marathon."</p>
+                <input type="text" id="q26" name="q26_text" class="text-input">
+                <div id="result26" class="result-container hidden-initial"></div>
+            </div>
+
+
+            <p class="subtitulo mb-3 mt-8">D. Escribe la pregunta Wh- correcta para cada respuesta.</p>
+            
+            <!-- Q27 (Original Q21): Texto: Pregunta para "I went to the park yesterday." -->
+            <div class="question-group">
+                <p class="mb-4">27. Respuesta: I went to the <b>park</b> yesterday (la pregunta es sobre el <b>lugar</b>).</p>
+                <input type="text" id="q27" name="q27_text" class="text-input">
+                <div id="result27" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q28 (Original Q22) -->
+            <div class="question-group">
+                <p class="mb-4">28. Respuesta: I bought a new coat <b>because</b> mine was too old (la pregunta es sobre la <b>razón</b>).</p>
+                <label><input type="radio" name="q28" value="A"> What did you buy?</label>
+                <label><input type="radio" name="q28" value="B"> Why did you buy a new coat?</label>
+                <label><input type="radio" name="q28" value="C"> How much did the coat cost?</label>
+                <div id="result28" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q29 (Original Q23) -->
+            <div class="question-group">
+                <p class="mb-4">29. Respuesta: <b>We</b> watched TV all afternoon (la pregunta es sobre el <b>sujeto</b>).</p>
+                <label><input type="radio" name="q29" value="A"> Who watched TV all afternoon?</label>
+                <label><input type="radio" name="q29" value="B"> What did we do all afternoon?</label>
+                <label><input type="radio" name="q29" value="C"> What time did we watch TV?</label>
+                <div id="result29" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q30 (Original Q24) -->
+            <div class="question-group">
+                <p class="mb-4">30. Respuesta: She woke up at <b>seven</b> (la pregunta es sobre la <b>hora</b>).</p>
+                <input type="text" id="q30" name="q30_text" class="text-input">
+                <div id="result30" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q31 (Original Q25) -->
+            <div class="question-group">
+                <p class="mb-4">31. Respuesta: I met <b>my best friend</b> today (la pregunta es sobre la <b>persona</b>).</p>
+                <label><input type="radio" name="q31" value="A"> What did you meet?</label>
+                <label><input type="radio" name="q31" value="B"> Who did you meet?</label>
+                <label><input type="radio" name="q31" value="C"> When did you meet?</label>
+                <div id="result31" class="result-container hidden-initial"></div>
+            </div>
+
+
+            <!-- SECCIÓN III: VOCABULARIO (Lugares, Transporte, Expresiones) - 9 PREGUNTAS -->
+            <hr class="border-t border-gray-300 my-10">
+            <h2 class="titulo2 my-6 mt-10">Sección III: Vocabulario</h2>
+            
+
+            <p class="subtitulo mb-3">E. Lugares y Medios de Transporte.</p>
+
+            <!-- Q32 (Original Q26) -->
+            <div class="question-group">
+                <p class="mb-4">32. Puedes depositar o retirar dinero aquí.</p>
+                <label><input type="radio" name="q32" value="A"> Hospital</label>
+                <label><input type="radio" name="q32" value="B"> Bank</label>
+                <label><input type="radio" name="q32" value="C"> Restaurant</label>
+                <div id="result32" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q33 (Original Q27) -->
+            <div class="question-group">
+                <p class="mb-4">33. Vehículo grande que se utiliza para transportar personas o carga por agua:</p>
+                <label><input type="radio" name="q33" value="A"> Bus</label>
+                <label><input type="radio" name="q33" value="B"> Subway</label>
+                <label><input type="radio" name="q33" value="C"> Ship</label>
+                <div id="result33" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q34 (Original Q28) -->
+            <div class="question-group">
+                <p class="mb-4">34. Es el lugar donde abordas o aterrizas un avión:</p>
+                <label><input type="radio" name="q34" value="A"> Train station</label>
+                <label><input type="radio" name="q34" value="B"> Airport</label>
+                <label><input type="radio" name="q34" value="C"> Port</label>
+                <div id="result34" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q35 (Original Q29) -->
+            <div class="question-group">
+                <p class="mb-4">35. ¿Qué medio de transporte viaja bajo tierra?</p>
+                <label><input type="radio" name="q35" value="A"> Taxi</label>
+                <label><input type="radio" name="q35" value="B"> Subway</label>
+                <label><input type="radio" name="q35" value="C"> Train</label>
+                <div id="result35" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q36 (Original Q30) -->
+            <div class="question-group">
+                <p class="mb-4">36. El lugar donde puedes comprar medicinas es:</p>
+                <label><input type="radio" name="q36" value="A"> Bookshop</label>
+                <label><input type="radio" name="q36" value="B"> Market</label>
+                <label><input type="radio" name="q36" value="C"> Pharmacy</label>
+                <div id="result36" class="result-container hidden-initial"></div>
+            </div>
+
+            <p class="subtitulo mb-3 mt-8">F. Expresiones de Tiempo.</p>
+
+            <!-- Q37 (Original Q31) -->
+            <div class="question-group">
+                <p class="mb-4">37. I called my grandparents two weeks ____.</p>
+                <label><input type="radio" name="q37" value="last"> last</label>
+                <label><input type="radio" name="q37" value="ago"> ago</label>
+                <label><input type="radio" name="q37" value="yesterday"> yesterday</label>
+                <div id="result37" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q38 (Original Q32) -->
+            <div class="question-group">
+                <!-- Verbo cambiado de 'called' a 'cooked' -->
+                <p class="mb-4">38. He cooked dinner ____ night.</p>
+                <label><input type="radio" name="q38" value="ago"> ago</label>
+                <label><input type="radio" name="q38" value="yesterday"> yesterday</label>
+                <label><input type="radio" name="q38" value="last"> last</label>
+                <div id="result38" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q39 (Original Q33) -->
+            <div class="question-group">
+                <p class="mb-4">39. Usamos <b>yesterday</b> para referirnos a:</p>
+                <label><input type="radio" name="q39" value="A"> un momento en el pasado distante.</label>
+                <label><input type="radio" name="q39" value="B"> el día inmediatamente anterior al de hoy.</label>
+                <label><input type="radio" name="q39" value="C"> un día anterior de la semana.</label>
+                <div id="result39" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q40 (Original Q34) -->
+            <div class="question-group">
+                <p class="mb-4">40. I finished my trip ____ November.</p>
+                <label><input type="radio" name="q40" value="A"> ago</label>
+                <label><input type="radio" name="q40" value="B"> yesterday</label>
+                <label><input type="radio" name="q40" value="C"> last</label>
+                <div id="result40" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- SECCIÓN IV: NARRACIÓN Y PHRASAL VERBS - 10 PREGUNTAS -->
+            <hr class="border-t border-gray-300 my-10">
+            <h2 class="titulo2 my-6 mt-10">Sección IV: Narración y phrasal verbs</h2>
+            
+            
+            <p class="subtitulo mb-3">G. Conectores Narrativos.</p>
+
+            <!-- Q41 (Original Q35) -->
+            <div class="question-group">
+                <p class="mb-4">41. We left home late, ____ we took a taxi (indica <b>resultado/consecuencia</b>).</p>
+                <label><input type="radio" name="q41" value="A"> and</label>
+                <label><input type="radio" name="q41" value="B"> but</label>
+                <label><input type="radio" name="q41" value="C"> so</label>
+                <div id="result41" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q42 (Original Q36) -->
+            <div class="question-group">
+                <p class="mb-4">42. She loved the museum, ____ she thought it was too dirty (indica <b>contraste</b>).</p>
+                <label><input type="radio" name="q42" value="A"> but</label>
+                <label><input type="radio" name="q42" value="B"> because</label>
+                <label><input type="radio" name="q42" value="C"> so</label>
+                <div id="result42" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q43 (Original Q37) -->
+            <div class="question-group">
+                <p class="mb-4">43. I cleaned my desk, ____ I went to the kitchen for a snack (indica <b>secuencia</b>).</p>
+                <label><input type="radio" name="q43" value="A"> because</label>
+                <label><input type="radio" name="q43" value="B"> then</label>
+                <label><input type="radio" name="q43" value="C"> so</label>
+                <div id="result43" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q44 (Original Q38) -->
+            <div class="question-group">
+                <p class="mb-4">44. The store was closed ____ it was a national holiday (indica <b>razón</b>).</p>
+                <label><input type="radio" name="q44" value="A"> so</label>
+                <label><input type="radio" name="q44" value="B"> because</label>
+                <label><input type="radio" name="q44" value="C"> but</label>
+                <div id="result44" class="result-container hidden-initial"></div>
+            </div>
+
+            <p class="subtitulo mb-3 mt-8">H. Phrasal verbs.</p>
+
+            <!-- Q45 (Original Q39) -->
+            <div class="question-group">
+                <p class="mb-4">45. I need to <b>look up</b> this word. ¿Qué significa <b>look up</b>?</p>
+                <label><input type="radio" name="q45" value="A"> buscar (información)</label>
+                <label><input type="radio" name="q45" value="B"> mirar hacia arriba</label>
+                <label><input type="radio" name="q45" value="C"> buscar (un objeto perdido)</label>
+                <div id="result45" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q46 (Original Q40) -->
+            <div class="question-group">
+                <p class="mb-4">46. We <b>checked in</b> at the hotel. ¿Qué significa <b>check in</b>?</p>
+                <label><input type="radio" name="q46" value="A"> revisar / salir del hotel</label>
+                <label><input type="radio" name="q46" value="B"> registrarse / confirmar llegada</label>
+                <label><input type="radio" name="q46" value="C"> revisar (el contenido de algo)</label>
+                <div id="result46" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q47 (Original Q41) -->
+            <div class="question-group">
+                <p class="mb-4">47. El phrasal verb <b>turn off</b> significa:</p>
+                <label><input type="radio" name="q47" value="A"> encender</label>
+                <label><input type="radio" name="q47" value="B"> apagar</label>
+                <label><input type="radio" name="q47" value="C"> continuar</label>
+                <div id="result47" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q48 (Original Q42) -->
+            <div class="question-group">
+                <p class="mb-4">48. El phrasal verb <b>take off</b> (hablando de un avión o ropa) significa:</p>
+                <label><input type="radio" name="q48" value="A"> despegar / quitarse</label>
+                <label><input type="radio" name="q48" value="B"> despegar / ponerse</label>
+                <label><input type="radio" name="q48" value="C"> subirse / irse</label>
+                <div id="result48" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q49 (Original Q43) -->
+            <div class="question-group">
+                <p class="mb-4">49. El phrasal verb <b>put on</b> (hablando de ropa) significa:</p>
+                <label><input type="radio" name="q49" value="A"> quitarse</label>
+                <label><input type="radio" name="q49" value="B"> ponerse</label>
+                <label><input type="radio" name="q49" value="C"> guardar</label>
+                <div id="result49" class="result-container hidden-initial"></div>
+            </div>
+
+             <!-- Q50 (Original Q44) -->
+            <div class="question-group">
+                <p class="mb-4">50. El phrasal verb <b>get up</b> significa:</p>
+                <label><input type="radio" name="q50" value="A"> levantarse de la cama</label>
+                <label><input type="radio" name="q50" value="B"> darse por vencido</label>
+                <label><input type="radio" name="q50" value="C"> ir a la cama</label>
+                <div id="result50" class="result-container hidden-initial"></div>
+            </div>
+
+
+            <!-- Contenedor para botones y score -->
+             <div class="mb-20">
+
+
+
+            <div class="flex flex-col items-center">
+                <!-- Botón de verificación (siempre visible) -->
+                <button type="button" class="check-button" id="checkButton" onclick="checkQuiz()">Verificar respuestas</button>
+                
+                <!-- Botón de PDF (Inicialmente oculto) -->
+                <button type="button" class="pdf-button" id="pdfButton" onclick="generatePDF()">Generar PDF de resultados</button>
+            </div>
+            
+            <!-- Puntuación final (CLASES DE TAILWIND AÑADIDAS AQUÍ) -->
+            <h3 id="finalScore" 
+                class="hidden p-5 border-2 border-gray-800 bg-gray-100 rounded-lg text-2xl mt-10 font-bold flex flex-col justify-center items-center" 
+                style="margin-bottom: 50px; min-height: 100px;">
+            </h3>
+
+
+            </div>
+
+        </form>
+
+    </main>
+
+    <script>
+        // Función auxiliar para limpiar y normalizar la entrada de texto
+        function normalizeText(text) {
+            if (typeof text !== 'string') return '';
+            // 1. Convertir a minúsculas
+            // 2. Eliminar espacios innecesarios al inicio/final
+            // 3. Eliminar signos de puntuación comunes (., ?, !)
+            return text.toLowerCase().trim().replace(/[\.,?!]$/, '');
+        }
+
+        /**
+         * Maps the internal correct answer value (e.g., 'B', 'was') to the explicit 
+         * text label visible in the quiz (e.g., 'STUDIED', 'WAS').
+         * @param {string} qName - The name of the question ('q7').
+         * @param {string} correctValue - The internal correct value ('B', 'was').
+         * @returns {string} The explicit display text for the correct answer, in uppercase.
+         */
+        function getExplicitAnswerText(qName, correctValue) {
+            // If the value is the answer itself (was, were, ago, last), just return it capitalized.
+            if (!['A', 'B', 'C'].includes(correctValue)) {
+                return correctValue.toUpperCase();
+            }
+            
+            // Find the correct radio input element by name and value
+            const correctInput = document.querySelector(`input[name="${qName}"][value="${correctValue}"]`);
+            
+            if (correctInput && correctInput.parentNode) {
+                const label = correctInput.parentNode;
+                let answerText = '';
+                
+                // Iterate through child nodes to find the text after the input element
+                for (let node of label.childNodes) {
+                    // Check if the node is a text node (nodeType 3) and is not empty/whitespace
+                    if (node.nodeType === 3 && node.textContent.trim().length > 0) {
+                        answerText += node.textContent;
+                    }
+                }
+                // If a clean text answer is found, return it
+                const trimmedAnswer = answerText.trim();
+                if (trimmedAnswer) {
+                    return trimmedAnswer.toUpperCase();
+                }
+            }
+            
+            // Fallback: return the option code capitalized if we can't find the text
+            return correctValue.toUpperCase();
+        }
+
+        // Función para validar preguntas de texto
+        function checkTextQuestion(qId, correctAnswers, resultDiv) {
+            const inputElement = document.getElementById(qId);
+            const rawAnswer = inputElement ? inputElement.value : '';
+            const userAnswer = normalizeText(rawAnswer);
+
+            // La respuesta correcta puede ser un array de posibles respuestas normalizadas
+            const expectedAnswers = Array.isArray(correctAnswers) 
+                                    ? correctAnswers.map(normalizeText) 
+                                    : [normalizeText(correctAnswers)];
+            
+            // El texto explícito de la respuesta (usamos la primera opción si es array)
+            const correctAnswerDisplay = Array.isArray(correctAnswers) 
+                                        ? correctAnswers[0].toUpperCase()
+                                        : correctAnswers.toUpperCase();
+
+
+            // 1. Limpiar clases y contenido
+            resultDiv.classList.remove('correct', 'incorrect');
+            resultDiv.textContent = '';
+            
+            // 2. Mostrar el contenedor (remover la clase de ocultar)
+            resultDiv.classList.remove('hidden-initial');
+
+            if (rawAnswer === '') {
+                // Muestra la respuesta correcta incluso si está sin responder
+                resultDiv.textContent = `Sin responder. La respuesta correcta es: ${correctAnswerDisplay}`;
+                resultDiv.classList.add('incorrect');
+                return 0;
+            }
+
+            // Usamos .some(expected => userAnswer.includes(expected)) para dar flexibilidad.
+            const isCorrect = expectedAnswers.some(expected => userAnswer.includes(expected));
+
+            if (isCorrect) {
+                // Muestra "¡Correcto!"
+                resultDiv.textContent = '¡Correcto!';
+                resultDiv.classList.add('correct');
+                return 1;
+            } else {
+                // Muestra la respuesta correcta.
+                resultDiv.textContent = `Incorrecto. La respuesta correcta es: ${correctAnswerDisplay}`; 
+                resultDiv.classList.add('incorrect');
+                return 0;
+            }
+        }
+        
+        function checkQuiz() {
+            // Total de preguntas: 50
+            const totalQuestions = 50; 
+            
+            // Respuestas correctas para las 50 preguntas
+            const correctAnswers = {
+                // SECCIÓN A: WAS/WERE (9 PREGUNTAS)
+                'q1': 'was',    
+                'q2': 'were',   
+                'q3': 'was',    
+                'q4': 'were',   
+                'q5': 'was',
+                'q6': ['I wasn\'t in the city last month', 'I was not in the city last month'],  
+                'q7': 'A',      // Was she angry?
+                'q8': 'C',      // weren't
+                'q9': 'B',      // Were they at the party on Saturday?
+                
+                // SECCIÓN B: FORMA BASE (9 PREGUNTAS) - Q10-Q18
+                'q10': 'wrote',  
+                'q11': 'B',      // stopped
+                'q12': 'A',      // did
+                'q13': 'C',      // bought / went
+                'q14': 'studied', 
+                'q15': 'felt',  
+                'q16': 'A',     // became
+                'q17': 'B',     // NUEVA: ate
+                'q18': 'saw',   // NUEVA: saw
+                
+                // SECCIÓN C: NEGACIÓN Y PREGUNTAS con DID (8 PREGUNTAS) - Q19-Q26
+                // Negativa de saw: Sarah and Ben didn't see a good movie. (Permitimos contracción o forma larga)
+                'q19': ['Sarah and Ben didn\'t see a good movie', 'Sarah and Ben did not see a good movie'], 
+                'q20': 'B',     // Did she buy
+                'q21': 'C',     // NUEVA: He didn't drink coffee this morning.
+                // Interrogativa: Did the cat sleep on the couch? (Permitimos con o sin signo)
+                'q22': ['Did the cat sleep on the couch', 'Did the cat sleep on the couch?'],
+                'q23': 'B',     // They didn't travel to Paris last month.
+                // Interrogativa: Did they live here last year? (Permitimos con o sin signo)
+                'q24': ['Did they live here last year', 'Did they live here last year?'],
+                'q25': 'B',     // NUEVA: No, I didn't. (Respuesta corta)
+                // Negativa: They didn't run in the marathon. (Permitimos contracción o forma larga)
+                'q26': ['They didn\'t run in the marathon', 'They did not run in the marathon'],
+                
+                // SECCIÓN D: PREGUNTAS WH- (5 PREGUNTAS) - Q27-Q31
+                // Where did you go yesterday? (Permitimos con o sin signo, y forma larga)
+                'q27': ['Where did you go yesterday', 'Where did you go yesterday?'],
+                'q28': 'B',     // Why did you buy
+                'q29': 'A',     // Who watched (pregunta de sujeto)
+                // What time did she wake up? (Permitimos con o sin signo)
+                'q30': ['What time did she wake up', 'What time did she wake up?', 'At what time did she wake up?'], 
+                'q31': 'B',     // Who did you meet?
+                
+                // SECCIÓN E: LUGARES Y TRANSPORTE (5 PREGUNTAS) - Q32-Q36
+                'q32': 'B',     // Bank
+                'q33': 'C',     // Ship
+                'q34': 'B',     // Airport
+                'q35': 'B',     // Subway
+                'q36': 'C',     // Pharmacy
+                
+                // SECCIÓN F: EXPRESIONES DE TIEMPO (4 PREGUNTAS) - Q37-Q40
+                'q37': 'ago',   
+                'q38': 'last',  // last night
+                'q39': 'B',     // día inmediatamente anterior
+                'q40': 'C',     // last November
+                
+                // SECCIÓN G: CONECTORES NARRATIVOS (4 PREGUNTAS) - Q41-Q44
+                'q41': 'C',     // so (resultado)
+                'q42': 'A',     // but (contraste)
+                'q43': 'B',     // then (secuencia)
+                'q44': 'B',     // because (razón)
+                
+                // SECCIÓN H: PHRASAL VERBS (6 PREGUNTAS) - Q45-Q50
+                'q45': 'A',     // look up (buscar info)
+                'q46': 'B',     // check in (registrarse)
+                'q47': 'B',     // turn off (apagar)
+                'q48': 'A',     // take off (despegar / quitarse)
+                'q49': 'B',     // put on (ponerse ropa)
+                'q50': 'A',     // get up (levantarse de la cama)
+            };
+
+
+            let score = 0;
+
+            // Ids de preguntas que son de texto (para validar correctamente)
+            // Se han re-enumerado y añadido las nuevas: Q18, Q19, Q22, Q24, Q26, Q27, Q30
+            const textQuestions = ['q6', 'q10', 'q14', 'q15', 'q18', 'q19', 'q22', 'q24', 'q26', 'q27', 'q30'];
+
+            // 1. Validar preguntas de opción múltiple (Radio) y texto
+            for (let i = 1; i <= totalQuestions; i++) {
+                const qName = 'q' + i;
+                const resultDiv = document.getElementById('result' + i);
+                
+                // Si la pregunta es de texto, la manejamos con la función específica y luego continuamos
+                if (textQuestions.includes(qName)) {
+                    const correct = checkTextQuestion(qName, correctAnswers[qName], resultDiv);
+                    score += correct;
+                    continue; 
+                }
+
+                // Lógica para preguntas de opción múltiple (Radio)
+                const selected = document.querySelector(`input[name="${qName}"]:checked`);
+                
+                // Limpiar resultados anteriores y mostrar el contenedor
+                if (resultDiv) {
+                    resultDiv.classList.remove('correct', 'incorrect', 'hidden-initial'); // *CAMBIO: Remover la clase de ocultar*
+                    resultDiv.textContent = '';
+                }
+
+                // Obtener la respuesta correcta explícita
+                const correctAnswerValue = correctAnswers[qName];
+                const displayAnswerText = getExplicitAnswerText(qName, correctAnswerValue);
+
+                if (selected) {
+                    const answer = selected.value;
+                    const isCorrect = (answer === correctAnswerValue);
+                    
+                    if (isCorrect) {
+                        score++;
+                        if (resultDiv) {
+                            resultDiv.textContent = '¡Correcto!';
+                            resultDiv.classList.add('correct');
+                        }
+                    } else {
+                        if (resultDiv) {
+                            resultDiv.textContent = `Incorrecto. La respuesta correcta es: ${displayAnswerText}`;
+                            resultDiv.classList.add('incorrect');
+                        }
+                    }
+                } else {
+                    // Si no se responde, muestra la respuesta correcta explícita.
+                    if (resultDiv) {
+                        resultDiv.textContent = `Sin responder. La respuesta correcta es: ${displayAnswerText}`;
+                        resultDiv.classList.add('incorrect');
+                    }
+                }
+            }
+
+
+            // Calcular la calificación (sobre 10)
+            const grade = (score / totalQuestions) * 10;
+            
+            // Texto para los aciertos
+            const aciertosMessage = `Aciertos: ${score} de ${totalQuestions}`;
+            // Texto para la calificación (redondeado a un decimal)
+            const gradeMessage = `${grade.toFixed(1)}`; // Calificación sin texto
+            
+            // Mostrar el resultado final con el formato solicitado
+            const finalScoreElement = document.getElementById('finalScore');
+            
+            // Aquí es donde se construye el contenido con los aciertos y la calificación
+            finalScoreElement.innerHTML = `
+                <p class="text-xl font-semibold text-gray-800">${aciertosMessage}</p>
+                <p class="text-3xl mt-2 font-extrabold text-gray-900">Calificación: ${gradeMessage}</p>
+            `;
+            
+            // Hace visible el elemento al remover la clase hidden (no inyecta display: flex)
+            finalScoreElement.classList.remove('hidden');
+            
+            // Mostrar el botón de PDF
+            document.getElementById('pdfButton').style.display = 'block';
+            
+            // Llevar al usuario al resultado
+            finalScoreElement.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * Genera un PDF (usando la función de impresión del navegador) 
+         * mostrando solo la cabecera, el quiz con las respuestas y el resultado final.
+         */
+        function generatePDF() {
+            // 1. Aseguramos que la puntuación final esté visible
+            document.getElementById('finalScore').classList.remove('hidden');
+
+            // 2. Ocultamos los botones antes de llamar a la impresión
+            document.getElementById('checkButton').style.display = 'none';
+            document.getElementById('pdfButton').style.display = 'none';
+
+            // 3. Imprimir
+            window.print();
+
+            // 4. Restaurar la visibilidad de los botones después de imprimir
+            document.getElementById('checkButton').style.display = 'block';
+            document.getElementById('pdfButton').style.display = 'block'; 
+        }
+    </script>
+
+</body>
+</html>
