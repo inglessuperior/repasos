@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 5</title>
+
+    <!-- Importa la fuente Inter de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Importa el script de Tailwind CSS para el diseño -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+        <style>
+        /* Estilos base emulados para Inter y colores */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        /* Títulos y subtítulos emulados */
+        .titulo1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2563eb; /* text-blue-600 */
+            line-height: 1.25;
+        }
+        .titulo2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .subtitulo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #374151; /* gray-700 */
+        }
+        .formula {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        /* Clase para ejercicios */
+        .question-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e9ecef; 
+            border-radius: 6px;
+            background-color: #f8f8f8; 
+        }
+        
+        /* Estilos de Feedback (Resultado) */
+        .result-container {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            line-height: 1.4; /* Mejora la legibilidad de la justificación */
+            font-size: 0.95rem;
+        }
+        
+        /* CLASE NUEVA: OCULTA EL CONTENEDOR Y NO OCUPA ESPACIO */
+        .hidden-initial {
+            display: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .correct { 
+            background-color: #d1e7dd; /* Verde claro */
+            color: #0f5132; /* Verde oscuro */
+            border: 1px solid #badbcc;
+        }
+        .incorrect { 
+            background-color: #f8d7da; /* Rojo claro */
+            color: #842029; /* Rojo oscuro */
+            border: 1px solid #f5c2c7;
+        }
+        
+        /* Botones de revisión/PDF */
+        .check-button {
+            padding: 12px 25px;
+            background-color: #2563eb; /* Azul */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: 600;
+            display: block; 
+            transition: background-color 0.3s;
+        }
+        .check-button:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .pdf-button {
+            padding: 12px 25px;
+            background-color: #10b981; /* Verde esmeralda (otro color) */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px; /* Más cerca del resultado */
+            font-weight: 600;
+            display: none; /* Inicialmente oculto */
+            transition: background-color 0.3s;
+        }
+        .pdf-button:hover {
+            background-color: #059669;
+        }
+
+
+        /* Estilo para las opciones de radio */
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+        label {
+            display: block; 
+            padding: 4px 0;
+            cursor: pointer;
+        }
+        
+        /* Ocultamos el elemento antes de la acción JS, usando la clase 'hidden' en el HTML */
+        #finalScore {
+            min-height: 100px; 
+        }
+        #finalScore p {
+            margin: 0; 
+        }
+
+        /* Estilo de la clase que pediste */
+        .mb-4 {
+            margin-bottom: 1rem; /* 16px */
+        }
+        
+        /* Estilo para los Dropdown Menus */
+        .select-dropdown {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px; /* Ancho cómodo para la selección */
+            cursor: pointer;
+        }
+        
+        /* --- ESTILOS PARA ORDENAMIENTO (SENTENCIA COMPLETA) --- */
+        .order-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            background-color: #e5e7eb; /* gray-200 */
+            border-radius: 6px;
+            min-height: 50px;
+        }
+        /* --- ESTILOS PARA RELLENAR HUECOS (FiTB) --- */
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            background-color: #f1f5f9; /* blue-gray-100 */
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .drop-blank {
+            display: inline-block;
+            min-width: 60px;
+            min-height: 30px;
+            border-bottom: 2px solid #3b82f6; /* blue-500 */
+            padding: 2px 5px;
+            margin: 0 4px;
+            text-align: center;
+            color: #1f2937; /* gray-800 */
+            background-color: #ffffff;
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .drop-blank.drag-over {
+            background-color: #bfdbfe; /* blue-200 */
+            border-color: #1d4ed8; /* blue-700 */
+        }
+        .drop-blank-filled {
+            color: #1f2937;
+            font-weight: 700;
+        }
+        
+        /* Estilo para la palabra arrastrable (Usado en ambos tipos de ejercicios) */
+        .order-word {
+            padding: 6px 12px;
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            border-radius: 4px;
+            cursor: grab; /* Indica que es arrastrable */
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+            user-select: none; /* Evita que el texto sea seleccionado al hacer clic */
+        }
+        .order-word:hover {
+            background-color: #4338ca; /* indigo-700 */
+        }
+        /* Estilo para el elemento arrastrado */
+        .order-word.dragging {
+            opacity: 0.5;
+            border: 2px dashed #f59e0b; /* amber-500 */
+        }
+        /* Estilo para el área donde se puede soltar */
+        .order-container.drag-over {
+            border: 2px dashed #f59e0b; /* amber-500 */
+            background-color: #fee2e2; /* red-100 */
+        }
+        /* Fin de estilos de ordenamiento */
+
+
+        @media (max-width: 768px) {
+            .titulo1 { font-size: 2.5rem; }
+            .titulo2 { font-size: 1.5rem; }
+            .subtitulo { font-size: 1.1rem; }
+        }
+
+        /* ESTILOS DE IMPRESIÓN (PDF) */
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+                max-width: 800px;
+                margin: 0 auto; 
+            }
+            
+            .check-button, 
+            .pdf-button { 
+                display: none !important; 
+            }
+
+            #quizForm, 
+            main,
+            .question-group,
+            .titulo2,
+            .subtitulo,
+            .flex.flex-col.items-center { 
+                display: block !important;
+            }
+
+            .question-group {
+                border: none !important;
+                background-color: white !important;
+                padding: 5px 0 !important;
+                margin-bottom: 10px !important;
+            }
+
+            #finalScore {
+                display: flex !important; 
+                margin: 30px auto;
+                max-width: 600px;
+                border: 2px solid #000; 
+                background-color: white !important; 
+            }
+            
+            .select-dropdown {
+                border: 1px solid #000 !important;
+                background-color: #eee !important;
+                max-width: none !important;
+            }
+
+            input[type="radio"]:checked + label {
+                font-weight: 700;
+            }
+
+            .result-container {
+                display: block !important; 
+                border: 1px solid #ccc;
+                padding: 4px 8px;
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+            }
+
+            .correct { 
+                background-color: #c8e6c9 !important; 
+                color: #000 !important;
+                border: 1px solid #81c784 !important;
+            }
+            .incorrect { 
+                background-color: #ffcdd2 !important; 
+                color: #000 !important;
+                border: 1px solid #e57373 !important;
+            }
+            
+            /* Ocultar elementos interactivos de ordenamiento en impresión */
+            .order-container, .drag-pool {
+                display: block !important;
+                background-color: #f8f8f8 !important;
+            }
+            .order-word {
+                color: #333 !important;
+                background-color: #ccc !important;
+                margin-right: 5px;
+                display: inline-block;
+                border: 1px solid #aaa;
+                cursor: default !important;
+            }
+            .drop-blank {
+                border-color: #000 !important;
+                color: #333 !important;
+                background-color: #e0e0e0 !important;
+                font-weight: 700 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center" id="header-print">
+        <!-- Logo con la URL correcta -->
+        <img src="https://i.imgur.com/7BHucwa.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <p class="formula mx-auto p-0 text-sm" style="width: fit-content; min-width: 150px; color: #1f2937; border-color: #d1d5db;">MÓDULO: 5</p>
+        <h1 class="titulo1 mt-2 mb-8">Repaso General</h1>
+        <p class="text-lg text-gray-600 mb-10">Instrucciones: Lee cada pregunta con atención y responde correctamente.</p>
+    </header>
+    
+    <main class="max-w-4xl mx-auto mt-10">
+
+        <form id="quizForm" onsubmit="return false;">
+
+
+<hr class="border-t border-gray-300 my-4">
+
+            <!-- SECCIÓN I: TIEMPOS DE FUTURO (PC, GOING TO, WILL) - 15 PREGUNTAS -->
+             <h2 class="titulo2 my-6">Sección I: Futuro</h2>
+            
+            
+            <p class="subtitulo mb-6">A. Elige la mejor opción para expresar el futuro.</p>
+            
+            <div class="question-group">
+                <p class="mb-4">1. Look at those dark clouds! It ______ (rain) soon. (Evidencia visible)</p>
+                <label><input type="radio" name="q1" value="B"> is going to rain</label>
+                <label><input type="radio" name="q1" value="A"> will rain</label>
+                <label><input type="radio" name="q1" value="C"> is raining</label>
+                <div id="result1" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">2. "I'm cold." "Don't worry, I ______ (close) the window." (Decisión espontánea)</p>
+                <label><input type="radio" name="q2" value="A"> am going to close</label>
+                <label><input type="radio" name="q2" value="B"> will close</label>
+                <label><input type="radio" name="q2" value="C"> close</label>
+                <div id="result2" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">3. We ______ (have) a big team meeting at 10 AM tomorrow. (Plan/compromiso fijo con hora)</p>
+                <label><input type="radio" name="q3" value="A"> are having</label>
+                <label><input type="radio" name="q3" value="B"> will have</label>
+                <label><input type="radio" name="q3" value="C"> are going to have</label>
+                <div id="result3" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">4. I think she ______ (get) a promotion next year. (Predicción, creencia personal)</p>
+                <label><input type="radio" name="q4" value="A"> is going to get</label>
+                <label><input type="radio" name="q4" value="B"> is getting</label>
+                <label><input type="radio" name="q4" value="C"> will get</label>
+                <div id="result4" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">5. They already bought the tickets. They ______ (fly) to Paris next Sunday. (Plan fijo con fecha)</p>
+                <label><input type="radio" name="q5" value="A"> will fly</label>
+                <label><input type="radio" name="q5" value="B"> are going to fly</label>
+                <label><input type="radio" name="q5" value="C"> are flying</label>
+                <div id="result5" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q6: DROP-DOWN --><div class="question-group">
+                <p class="mb-4">6. Futuro usando presente continuo: I ______ (work) on the report later.</p>
+                <select name="q6" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar conjugación --</option>
+                    <option value="A">will work</option>
+                    <option value="B">am working</option>
+                    <option value="C">am going to work</option>
+                </select>
+                <div id="result6" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q7: FILL-IN-THE-BLANK DRAG-AND-DROP (GOING TO) (3 words) --><div class="question-group">
+                <p class="mb-4">7. Arrastra las palabras correctas para formar la oración:</p>
+                <p class="mb-4">She 
+                    <span id="q7-blank-1" class="drop-blank" data-blank-index="1" data-answer=""></span> 
+                    <span id="q7-blank-2" class="drop-blank" data-blank-index="2" data-answer=""></span> 
+                    <span id="q7-blank-3" class="drop-blank" data-blank-index="3" data-answer=""></span> 
+                    start her new job soon.
+                </p>
+                <div id="q7-pool" class="drag-pool">
+                    <span class="order-word" data-word="be" draggable="true">be</span>
+                    <span class="order-word" data-word="to" draggable="true">to</span>
+                    <span class="order-word" data-word="are" draggable="true">are</span>
+                    <span class="order-word" data-word="is" draggable="true">is</span>
+                    <span class="order-word" data-word="going" draggable="true">going</span>
+                    <span class="order-word" data-word="will" draggable="true">will</span>
+                    <span class="order-word" data-word="does" draggable="true">does</span>
+                </div>
+                <!-- Hidden input stores the sequence of the blanks: word1-word2-word3 -->
+                <input type="hidden" name="q7_order" id="q7_order" value="">
+                <div id="result7" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q8: DROP-DOWN --><div class="question-group">
+                <p class="mb-4">8. Futuro en negativo: We ______ (not / miss) the deadline.</p>
+                <select name="q8" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar conjugación --</option>
+                    <option value="A">don't miss</option>
+                    <option value="B">won't miss</option>
+                    <option value="C">aren't miss</option>
+                </select>
+                <div id="result8" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">9. ¿Cuál de estas frases es un plan fijo?</p>
+                <label><input type="radio" name="q9" value="A"> I'll probably call her</label>
+                <label><input type="radio" name="q9" value="B"> It's going to be cloudy</label>
+                <label><input type="radio" name="q9" value="C"> We are moving to the new office on Monday</label>
+                <div id="result9" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">10. ¿Cuál de estas frases expresa una promesa?</p>
+                <label><input type="radio" name="q10" value="A"> I'm going to the mall</label>
+                <label><input type="radio" name="q10" value="B"> I will help you with your presentation</label>
+                <label><input type="radio" name="q10" value="C"> I'm meeting the client later</label>
+                <div id="result10" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">11. They ______ (not / go) to the beach because the weather forecast is stormy. (Decisión planeada)</p>
+                <label><input type="radio" name="q11" value="A"> aren't going to go</label>
+                <label><input type="radio" name="q11" value="B"> won't go</label>
+                <label><input type="radio" name="q11" value="C"> aren't will go</label>
+                <div id="result11" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">12. Forma interrogativa de: You will pass the exam.</p>
+                <label><input type="radio" name="q12" value="A"> Will you passing</label>
+                <label><input type="radio" name="q12" value="B"> Will you pass</label>
+                <label><input type="radio" name="q12" value="C"> Do you pass</label>
+                <div id="result12" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">13. The company is ______ (hire) five new engineers soon. (Plan/intención)</p>
+                <label><input type="radio" name="q13" value="A"> will hire</label>
+                <label><input type="radio" name="q13" value="B"> going to hire</label>
+                <label><input type="radio" name="q13" value="C"> hiring</label>
+                <div id="result13" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q14: FILL-IN-THE-BLANK DRAG-AND-DROP (PRESENT CONTINUOUS QUESTION) (3 words) --><div class="question-group">
+                <p class="mb-4">14. Arrastra las palabras correctas para formar la oración (plan/compromiso fijo):</p>
+                <p class="mb-4">What time 
+                    <span id="q14-blank-1" class="drop-blank" data-blank-index="1" data-answer=""></span> 
+                    <span id="q14-blank-2" class="drop-blank" data-blank-index="2" data-answer=""></span> 
+                    <span id="q14-blank-3" class="drop-blank" data-blank-index="3" data-answer=""></span> 
+                    for the airport tomorrow?
+                </p>
+                <div id="q14-pool" class="drag-pool">
+                    <span class="order-word" data-word="you" draggable="true">you</span>
+                    <span class="order-word" data-word="will" draggable="true">will</span>
+                    <span class="order-word" data-word="leaving" draggable="true">leaving</span>
+                    <span class="order-word" data-word="do" draggable="true">do</span>
+                    <span class="order-word" data-word="be" draggable="true">be</span>
+                    <span class="order-word" data-word="are" draggable="true">are</span>
+                    <span class="order-word" data-word="leave" draggable="true">leave</span>
+
+                </div>
+                <input type="hidden" name="q14_order" id="q14_order" value="">
+                <div id="result14" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">15. Tomorrow, the sky ______ (be) cloudy all day. (Predicción del clima sin evidencia visual inmediata)</p>
+                <label><input type="radio" name="q15" value="A"> is going to be</label>
+                <label><input type="radio" name="q15" value="B"> will be</label>
+                <label><input type="radio" name="q15" value="C"> is being</label>
+                <div id="result15" class="result-container hidden-initial"></div>
+            </div>
+
+
+        <hr class="border-t border-gray-300 my-10">
+
+            
+            <!-- SECCIÓN II: VERBOS MODALES (SHOULD, MUST, HAVE TO) - 10 PREGUNTAS -->
+             <h2 class="titulo2 my-6 mt-10">Sección II: Verbos modales: should, must, have to</h2>
+            
+
+            <p class="subtitulo mb-6">B. Elige el verbo modal correcto o su conjugación.</p>
+            
+            <!-- Q16: ORDENAMIENTO --><div class="question-group">
+                <p class="mb-4">16. Ordena las palabras para formar la oración de consejo:</p>
+                <div id="q16-words" class="order-container">
+                    <!-- Palabras iniciales (la clave es el orden en la respuesta) --><span class="order-word" data-word="a" draggable="true">a</span>
+                    <span class="order-word" data-word="You" draggable="true">You</span>
+                    <span class="order-word" data-word="see" draggable="true">see</span>
+                    <span class="order-word" data-word="doctor" draggable="true">doctor</span>
+                    <span class="order-word" data-word="should" draggable="true">should</span>
+                </div>
+                <!-- Input oculto para guardar la respuesta ordenada --><input type="hidden" name="q16_order" id="q16_order" value="">
+                <div id="result16" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q17: ORDENAMIENTO --><div class="question-group">
+                <p class="mb-4">17. Ordena las palabras para formar la oración de prohibición:</p>
+                <div id="q17-words" class="order-container">
+                    <!-- Palabras iniciales --><span class="order-word" data-word="mustn't" draggable="true">mustn't</span>
+                    <span class="order-word" data-word="talk" draggable="true">talk</span>
+                    <span class="order-word" data-word="You" draggable="true">You</span>
+                    <span class="order-word" data-word="exam" draggable="true">exam</span>
+                    <span class="order-word" data-word="during" draggable="true">during</span>
+                    <span class="order-word" data-word="the" draggable="true">the</span>
+                </div>
+                <input type="hidden" name="q17_order" id="q17_order" value="">
+                <div id="result17" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q18: ORDENAMIENTO --><div class="question-group">
+                <p class="mb-4">18. Ordena las palabras para formar la oración de obligación:</p>
+                <div id="q18-words" class="order-container">
+                    <!-- Palabras iniciales --><span class="order-word" data-word="to" draggable="true">to</span>
+                    <span class="order-word" data-word="have" draggable="true">have</span>
+                    <span class="order-word" data-word="We" draggable="true">We</span>
+                    <span class="order-word" data-word="report" draggable="true">report</span>
+                    <span class="order-word" data-word="the" draggable="true">the</span>
+                    <span class="order-word" data-word="finish" draggable="true">finish</span>
+                    <span class="order-word" data-word="today" draggable="true">today</span>
+                </div>
+                <input type="hidden" name="q18_order" id="q18_order" value="">
+                <div id="result18" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q19: DROP-DOWN --><div class="question-group">
+                <p class="mb-4">19. ¿Cuál es el significado de "mustn't"?</p>
+                <select name="q19" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar significado --</option>
+                    <option value="A">No es necesario / No tienes la obligación</option>
+                    <option value="B">Prohibición estricta / No debes</option>
+                    <option value="C">Un consejo / Sería una buena idea</option>
+                </select>
+                <div id="result19" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">20. She has a deadline, so she ______ (finish) the report by noon. (Obligación)</p>
+                <label><input type="radio" name="q20" value="A"> needs to finish</label>
+                <label><input type="radio" name="q20" value="B"> should finish</label>
+                <label><input type="radio" name="q20" value="C"> has to finish</label>
+                <div id="result20" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">21. You ______ (not / worry) about the payment; I paid it yesterday. (Falta de necesidad)</p>
+                <label><input type="radio" name="q21" value="A"> shouldn't worry</label>
+                <label><input type="radio" name="q21" value="B"> mustn't worry</label>
+                <label><input type="radio" name="q21" value="C"> don't have to worry</label>
+                <div id="result21" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">22. Completa la pregunta: ______ (I / work) on Sunday?</p>
+                <label><input type="radio" name="q22" value="A"> Have I work</label>
+                <label><input type="radio" name="q22" value="B"> Do I have to work</label>
+                <label><input type="radio" name="q22" value="C"> Am I having to work</label>
+                <div id="result22" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">23. It's a great idea, you ______ (invest) in that company. (Consejo)</p>
+                <label><input type="radio" name="q23" value="A"> should invest</label>
+                <label><input type="radio" name="q23" value="B"> must invest</label>
+                <label><input type="radio" name="q23" value="C"> have to invest</label>
+                <div id="result23" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">24. She ______ (not / tell) anyone our secret. (Prohibición estricta)</p>
+                <label><input type="radio" name="q24" value="A"> doesn't have to tell</label>
+                <label><input type="radio" name="q24" value="B"> mustn't tell</label>
+                <label><input type="radio" name="q24" value="C"> shouldn't tell</label>
+                <div id="result24" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">25. You ______ (pay) taxes. (Obligación)</p>
+                <label><input type="radio" name="q25" value="A"> need to pay</label>
+                <label><input type="radio" name="q25" value="B"> should pay</label>
+                <label><input type="radio" name="q25" value="C"> have to pay</label>
+                <div id="result25" class="result-container hidden-initial"></div>
+            </div>
+
+
+            <hr class="border-t border-gray-300 my-10">
+            
+            <!-- SECCIÓN III: COMPARATIVOS Y SUPERLATIVOS - 10 PREGUNTAS -->
+             <h2 class="titulo2 my-6 mt-10">Sección III: Comparativos y superlativos</h2>
+            
+
+            <p class="subtitulo mb-6">C. Elige la forma comparativa/superlativa correcta.</p>
+
+            <!-- Q26: DROP-DOWN --><div class="question-group">
+                <p class="mb-4">26. This job is ______ (good) than my last one.</p>
+                <select name="q26" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar comparativo --</option>
+                    <option value="A">gooder</option>
+                    <option value="B">better</option>
+                    <option value="C">more good</option>
+                </select>
+                <div id="result26" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q27: DROP-DOWN --><div class="question-group">
+                <p class="mb-4">27. This is ______ (big) office in the building.</p>
+                <select name="q27" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar superlativo --</option>
+                    <option value="A">the bigest</option>
+                    <option value="B">the biggest</option>
+                    <option value="C">the most big</option>
+                </select>
+                <div id="result27" class="result-container hidden-initial"></div>
+            </div>
+            
+            <!-- Q28: DROP-DOWN --><div class="question-group">
+                <p class="mb-4">28. The new car is ______ (expensive) than the old one.</p>
+                <select name="q28" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar comparativo --</option>
+                    <option value="A">expensiver</option>
+                    <option value="B">more expensive</option>
+                    <option value="C">most expensive</option>
+                </select>
+                <div id="result28" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q29: FILL-IN-THE-BLANK DRAG-AND-DROP (AS...AS) -->
+             <div class="question-group">
+                <p class="mb-4">29. Arrastra las palabras correctas para formar la oración:</p>
+                <p class="mb-4">The salary is 
+                    <span id="q29-blank-1" class="drop-blank" data-blank-index="1" data-answer=""></span> 
+                    high 
+                    <span id="q29-blank-2" class="drop-blank" data-blank-index="2" data-answer=""></span> 
+                    I expected.
+                </p>
+                <div id="q29-pool" class="drag-pool">
+                    <span class="order-word" data-word="as" draggable="true">as</span>
+                    <span class="order-word" data-word="than" draggable="true">than</span>
+                    <span class="order-word" data-word="the" draggable="true">the</span>
+                    <span class="order-word" data-word="too" draggable="true">too</span>
+                </div>
+                <input type="hidden" name="q29_order" id="q29_order" value="">
+                <div id="result29" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q30: FILL-IN-THE-BLANK DRAG-AND-DROP (SUPERLATIVE) -->
+             <div class="question-group">
+                <p class="mb-4">30. Arrastra las palabras correctas para formar la oración:</p>
+                <p class="mb-4">He is 
+                    <span id="q30-blank-1" class="drop-blank" data-blank-index="1" data-answer=""></span> 
+                    <span id="q30-blank-2" class="drop-blank" data-blank-index="2" data-answer=""></span> 
+                    intelligent person I know.
+                </p>
+                <div id="q30-pool" class="drag-pool">
+                    <span class="order-word" data-word="most" draggable="true">most</span>
+                    <span class="order-word" data-word="more" draggable="true">more</span>
+                    <span class="order-word" data-word="than" draggable="true">than</span>
+                    <span class="order-word" data-word="the" draggable="true">the</span>
+                </div>
+                <input type="hidden" name="q30_order" id="q30_order" value="">
+                <div id="result30" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">31. Today is ______ (cold) than yesterday.</p>
+                <label><input type="radio" name="q31" value="A"> colder</label>
+                <label><input type="radio" name="q31" value="B"> more cold</label>
+                <label><input type="radio" name="q31" value="C"> the coldest</label>
+                <div id="result31" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">32. The train is always ______ (fast) way to transport heavy material.</p>
+                <label><input type="radio" name="q32" value="A"> the fastest</label>
+                <label><input type="radio" name="q32" value="B"> more faster</label>
+                <label><input type="radio" name="q32" value="C"> fast as</label>
+                <div id="result32" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">33. My watch is ______ (new) than yours.</p>
+                <label><input type="radio" name="q33" value="A"> newer</label>
+                <label><input type="radio" name="q33" value="B"> more new</label>
+                <label><input type="radio" name="q33" value="C"> the newest</label>
+                <div id="result33" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">34. Our project was ______ (bad) one of the year.</p>
+                <label><input type="radio" name="q34" value="A"> the worse</label>
+                <label><input type="radio" name="q34" value="B"> the bad</label>
+                <label><input type="radio" name="q34" value="C"> the worst</label>
+                <div id="result34" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">35. That was ______ (long) meeting in my career.</p>
+                <label><input type="radio" name="q35" value="A"> longer</label>
+                <label><input type="radio" name="q35" value="B"> the longest</label>
+                <label><input type="radio" name="q35" value="C"> the most long</label>
+                <div id="result35" class="result-container hidden-initial"></div>
+            </div>
+
+
+            <hr class="border-t border-gray-300 my-10">
+            
+            <!-- SECCIÓN IV: VOCABULARIO (TRABAJO, CLIMA, ROPA) - 15 PREGUNTAS -->
+             <h2 class="titulo2 my-6 mt-10">Sección IV: Vocabulario</h2>
+            
+
+            <p class="subtitulo mb-6">D. Profesiones y vocabulario laboral.</p>
+
+            <div class="question-group">
+                <p class="mb-4">36. Para referirnos a una fecha límite:</p>
+                <label><input type="radio" name="q36" value="A"> deadline</label>
+                <label><input type="radio" name="q36" value="B"> headline</label>
+                <label><input type="radio" name="q36" value="C"> goal-date</label>
+                <div id="result36" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">37. Persona que diseña edificios.</p>
+                <label><input type="radio" name="q37" value="A"> engineer</label>
+                <label><input type="radio" name="q37" value="B"> architect</label>
+                <label><input type="radio" name="q37" value="C"> manager</label>
+                <div id="result37" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">38. Cuando inicias un nuevo trabajo, a veces tienes un periodo de:</p>
+                <label><input type="radio" name="q38" value="A"> training</label>
+                <label><input type="radio" name="q38" value="B"> work experience</label>
+                <label><input type="radio" name="q38" value="C"> benefits</label>
+                <div id="result38" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">39. El acto de contratar a alguien es:</p>
+                <label><input type="radio" name="q39" value="A"> to apply</label>
+                <label><input type="radio" name="q39" value="B"> to resign</label>
+                <label><input type="radio" name="q39" value="C"> to hire</label>
+                <div id="result39" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">40. ¿Cuál es el término para una reunión de negocios?</p>
+                <label><input type="radio" name="q40" value="A"> meeting</label>
+                <label><input type="radio" name="q40" value="B"> session</label>
+                <label><input type="radio" name="q40" value="C"> goal</label>
+                <div id="result40" class="result-container hidden-initial"></div>
+            </div>
+
+            <p class="subtitulo mb-6 mt-8">E. Clima, ropa, y accesorios.</p>
+
+            <div class="question-group">
+                <p class="mb-4">41. La palabra foggy nos indica que hay:</p>
+                <label><input type="radio" name="q41" value="A"> viento</label>
+                <label><input type="radio" name="q41" value="B"> neblina / niebla</label>
+                <label><input type="radio" name="q41" value="C"> sol</label>
+                <div id="result41" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">42. Si hace mucho frío, ¿qué necesitas?</p>
+                <label><input type="radio" name="q42" value="A"> gloves and a scarf</label>
+                <label><input type="radio" name="q42" value="B"> a t-shirt and shorts</label>
+                <label><input type="radio" name="q42" value="C"> a vest and an umbrella</label>
+                <div id="result42" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">43. ¿Cuál de estos se usa normalmente con una camisa formal y traje?</p>
+                <label><input type="radio" name="q43" value="A"> jacket</label>
+                <label><input type="radio" name="q43" value="B"> tie</label>
+                <label><input type="radio" name="q43" value="C"> uniform</label>
+                <div id="result43" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">44. La condición del clima cuando está nevando es:</p>
+                <label><input type="radio" name="q44" value="A"> raining</label>
+                <label><input type="radio" name="q44" value="B"> snowing</label>
+                <label><input type="radio" name="q44" value="C"> cloudy</label>
+                <div id="result44" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">45. Prenda de ropa formal que se usa en la parte superior del cuerpo:</p>
+                <label><input type="radio" name="q45" value="A"> sneakers</label>
+                <label><input type="radio" name="q45" value="B"> shirt</label>
+                <label><input type="radio" name="q45" value="C"> purse</label>
+                <div id="result45" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">46. Algo que se usa alrededor del cuello.</p>
+                <label><input type="radio" name="q46" value="A"> cap</label>
+                <label><input type="radio" name="q46" value="B"> belt</label>
+                <label><input type="radio" name="q46" value="C"> scarf</label>
+                <div id="result46" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">47. Muchas plantas se secan cuando hay:</p>
+                <label><input type="radio" name="q47" value="A"> flood</label>
+                <label><input type="radio" name="q47" value="B"> drought</label>
+                <label><input type="radio" name="q47" value="C"> breeze</label>
+                <div id="result47" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">48. Si decimos "It's stormy today" nos referimos a que el día está:</p>
+                <label><input type="radio" name="q48" value="A"> soleado</label>
+                <label><input type="radio" name="q48" value="B"> con tormenta</label>
+                <label><input type="radio" name="q48" value="C"> ventoso</label>
+                <div id="result48" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">49. "That ______ was very loud!"</p>
+                <label><input type="radio" name="q49" value="A"> thunder</label>
+                <label><input type="radio" name="q49" value="B"> lightning</label>
+                <label><input type="radio" name="q49" value="C"> snow</label>
+                <div id="result49" class="result-container hidden-initial"></div>
+            </div>
+            
+            <div class="question-group">
+                <p class="mb-4">50. ¿Qué accesorio se usa para ver la hora?</p>
+                <label><input type="radio" name="q50" value="A"> ring</label>
+                <label><input type="radio" name="q50" value="B"> necklace</label>
+                <label><input type="radio" name="q50" value="C"> watch</label>
+                <div id="result50" class="result-container hidden-initial"></div>
+            </div>
+
+
+            <!-- Contenedor para botones y score -->
+            <div class="mb-20">
+
+
+
+
+             <div class="flex flex-col items-center">
+                <!-- Botón de verificación (siempre visible) -->
+                 <button type="button" class="check-button" id="checkButton" onclick="checkQuiz()">Verificar respuestas</button>
+                
+                <!-- Botón de PDF (Inicialmente oculto) -->
+                 <button type="button" class="pdf-button" id="pdfButton" onclick="generatePDF()">Generar PDF de resultados</button>
+            </div>
+            
+            <!-- Puntuación final --><h3 id="finalScore" 
+                class="hidden p-5 border-2 border-gray-800 bg-gray-100 rounded-lg text-2xl mt-10 font-bold flex flex-col justify-center items-center" 
+                style="margin-bottom: 50px; min-height: 100px;">
+            </h3>
+
+</div>
+
+
+        </form>
+
+    </main>
+
+    <script>
+        let draggedItem = null; // Para almacenar el elemento que se está arrastrando
+
+        /**
+         * Inicializa los listeners de arrastrar y soltar para ejercicios de ordenamiento y rellenar huecos.
+         */
+        function initializeDragAndDrop() {
+            // Inicializar contenedores de ordenamiento de sentencia completa (Q16-Q18)
+            document.querySelectorAll('.order-container').forEach(container => {
+                container.addEventListener('dragover', handleDragOverContainer);
+                container.addEventListener('drop', handleDropSentence);
+                container.addEventListener('dragleave', handleDragLeaveContainer); 
+                
+                // Inicializar cada palabra como arrastrable
+                Array.from(container.children).forEach(word => {
+                    word.addEventListener('dragstart', handleDragStart);
+                    word.addEventListener('dragenter', handleDragEnterWord);
+                    word.addEventListener('dragend', handleDragEnd); 
+                });
+            });
+
+            // Inicializar el arrastre de palabras desde el pool (Q7, Q14, Q29, Q30)
+            document.querySelectorAll('.drag-pool .order-word').forEach(word => {
+                word.addEventListener('dragstart', handleDragStart);
+            });
+
+            // Inicializar los drop-blanks como zonas de soltado (Q7, Q14, Q29, Q30)
+            document.querySelectorAll('.drop-blank').forEach(blank => {
+                blank.addEventListener('dragover', handleDragOverBlank);
+                blank.addEventListener('drop', handleDropBlank);
+                blank.addEventListener('dragleave', handleDragLeaveBlank);
+                blank.addEventListener('click', handleBlankClick); // Permite limpiar el hueco al hacer clic
+            });
+
+            // Inicializa los valores ocultos
+            updateOrderingInputs();
+        }
+        
+        // --- Manejo de la palabra que se arrastra (origen) ---
+        function handleDragStart(event) {
+            draggedItem = event.target;
+            const word = draggedItem.dataset.word;
+            event.dataTransfer.setData('text/plain', word); 
+            
+            // Para arrastrar un clon visual y mantener el original en el pool/container
+            draggedItem.classList.add('dragging'); 
+        }
+        function handleDragEnd(event) {
+            if (draggedItem) {
+                draggedItem.classList.remove('dragging');
+                draggedItem.style.opacity = '1';
+            }
+            draggedItem = null; 
+        }
+
+        // --- Manejo del drop para ORDENAMIENTO (Q16-Q18) ---
+        function handleDragOverContainer(event) {
+            event.preventDefault(); 
+            event.currentTarget.classList.add('drag-over'); 
+        }
+        function handleDragLeaveContainer(event) {
+            event.currentTarget.classList.remove('drag-over'); 
+        }
+        function handleDragEnterWord(event) {
+            event.preventDefault();
+            const target = event.target;
+            if (target && target.classList.contains('order-word') && target !== draggedItem) {
+                const container = target.closest('.order-container');
+                const boundingBox = target.getBoundingClientRect();
+                const offset = boundingBox.x + (boundingBox.width / 2);
+
+                if (event.clientX < offset) {
+                    container.insertBefore(draggedItem, target);
+                } else {
+                    container.insertBefore(draggedItem, target.nextSibling);
+                }
+            }
+        }
+        function handleDropSentence(event) {
+            event.preventDefault();
+            const container = event.currentTarget;
+            container.classList.remove('drag-over'); 
+
+            if (draggedItem && container.contains(draggedItem.parentElement)) {
+                // No hace nada si el dragEnter ya movió el item. Solo asegura la limpieza.
+            } else if (draggedItem && draggedItem.parentElement.classList.contains('drag-pool')) {
+                 // Si se suelta desde un pool a un contenedor de ordenamiento
+                 container.appendChild(draggedItem);
+            }
+            updateOrderingInputs(); 
+        }
+        
+        // --- Manejo del drop para RELLENAR HUECOS (Q7, Q14, Q29, Q30) ---
+        function handleDragOverBlank(event) {
+            event.preventDefault(); 
+            event.currentTarget.classList.add('drag-over');
+        }
+        function handleDragLeaveBlank(event) {
+            event.currentTarget.classList.remove('drag-over');
+        }
+        
+        function handleDropBlank(event) {
+            event.preventDefault();
+            const blank = event.currentTarget;
+            blank.classList.remove('drag-over');
+            
+            const droppedWord = event.dataTransfer.getData('text/plain').trim();
+            
+            if (droppedWord) {
+                // 1. Limpiar visualmente el blank anterior (si lo había)
+                blank.textContent = droppedWord;
+                blank.dataset.answer = droppedWord;
+                blank.classList.add('drop-blank-filled');
+                
+                // 2. Actualizar el input oculto para el chequeo
+                updateOrderingInputs(); 
+            }
+        }
+        
+        function handleBlankClick(event) {
+            const blank = event.currentTarget;
+            if (blank.dataset.answer !== "") {
+                // Si hay una respuesta, la limpia al hacer clic
+                blank.textContent = '';
+                blank.dataset.answer = '';
+                blank.classList.remove('drop-blank-filled');
+                updateOrderingInputs(); // Actualiza el input oculto
+            }
+        }
+
+        /**
+         * Recorre todos los contenedores interactivos y actualiza el input oculto 
+         * con la secuencia actual de palabras.
+         */
+        function updateOrderingInputs() {
+            // 1. Preguntas de Ordenamiento (Q16, Q17, Q18)
+            document.querySelectorAll('.order-container').forEach(container => {
+                const qId = container.id.split('-')[0]; 
+                const hiddenInput = document.getElementById(qId + '_order');
+                
+                if (hiddenInput) {
+                    const words = Array.from(container.querySelectorAll('.order-word'));
+                    // Secuencia: MAYUSCULAS-CON-GUIONES
+                    const sequence = words.map(w => w.getAttribute('data-word').toUpperCase().replace(/'/g, '\\\'')).join('-');
+                    hiddenInput.value = sequence;
+                }
+            });
+            
+            // 2. Preguntas de Rellenar Huecos (Q7, Q14, Q29, Q30)
+            ['q7', 'q14', 'q29', 'q30'].forEach(qId => {
+                // Q29 y Q30 tienen 2 huecos. Q7 y Q14 tienen 3 huecos.
+                const numBlanks = (qId === 'q7' || qId === 'q14') ? 3 : 2; 
+                
+                let blanks = [];
+                for(let i = 1; i <= numBlanks; i++) {
+                    const blankEl = document.getElementById(`${qId}-blank-${i}`);
+                    if (blankEl) {
+                        blanks.push(blankEl);
+                    }
+                }
+                
+                const hiddenInput = document.getElementById(qId + '_order');
+                
+                if (hiddenInput) {
+                    const sequence = Array.from(blanks)
+                        .map(b => b.dataset.answer ? b.dataset.answer.toUpperCase().replace(/'/g, '\\\'') : '')
+                        .join('-');
+                    hiddenInput.value = sequence;
+                }
+            });
+        }
+        
+        // Ejecutar la inicialización al cargar la página
+        window.onload = initializeDragAndDrop;
+
+
+        // --- Justificaciones y Respuestas Correctas ---
+        const justifications = {
+            // SECCIÓN I: FUTURO
+            'q1': 'Se usa going to para predicciones basadas en evidencia visible (las nubes oscuras).',
+            'q2': 'Se usa will para decisiones espontáneas o tomadas en el momento de hablar (ofrecerse a cerrar la ventana).',
+            'q3': 'Se usa presente continuo para planes fijos y confirmados, a menudo con una hora o fecha específica.',
+            'q4': 'Se usa will para predicciones basadas en opiniones o creencias personales.',
+            'q5': 'Se usa presente continuo para planes e intenciones que ya han sido confirmados con preparativos (la compra de boletos) y tienen fecha fija.',
+            'q6': 'La forma del presente continuo para I es am working.',
+            
+            // Q7: FiTB (is-going-to)
+            'q7_order': 'La forma correcta de going to con el sujeto she es IS GOING TO.', 
+            
+            'q8': 'La forma negativa de will es will not o su contracción won\'t.',
+            'q9': 'El presente continuo se usa para planes fijos; will es para probabilidad, y going to para predicción.',
+            'q10': 'Las promesas en inglés siempre se forman con will (I will help you...).',
+            'q11': 'Se usa going to para expresar una intención o plan del sujeto (they) de no hacer algo, por ejemplo, basándose en un informe (el clima).',
+            'q12': 'La estructura de pregunta con will es Will + sujeto + verbo.',
+            'q13': 'Se usa going to para expresar una intención o plan que ya está en marcha (planificación de la contratación).',
+            
+            // Q14: FiTB (are-you-leaving)
+            'q14_order': 'La pregunta en presente continuo para un plan fijo es ARE YOU LEAVING (What time are you leaving).', 
+            
+            'q15': 'Se usa will para predicciones generales del clima o situaciones sin evidencia visible en el momento de la conversación (basado en un reporte, no en lo que ves por la ventana).',
+            
+            // SECCIÓN II: MODALES (Q16-Q18: Ordering)
+            'q16_order': 'YOU-SHOULD-SEE-A-DOCTOR', // Respuesta de Ordenamiento: You should see a doctor.
+            'q17_order': 'YOU-MUSTN\\\'T-TALK-DURING-THE-EXAM', // Respuesta de Ordenamiento: You mustn't talk during the exam.
+            'q18_order': 'WE-HAVE-TO-FINISH-THE-REPORT-TODAY', // Respuesta de Ordenamiento: We have to finish the report today.
+            'q19': 'Se usa mustn\'t (must not) para indicar prohibición estricta (no debes hacer esto).',   
+            'q20': 'El has to se utiliza para expresar una obligación impuesta por una autoridad o situación externa (la fecha límite).',   
+            'q21': 'El don\'t have to (o doesn\'t have to) indica la falta de necesidad o ausencia de obligación.',   
+            'q22': 'La estructura correcta de pregunta con have to es Do/Does + sujeto + have to + verbo.',   
+            'q23': 'El should se utiliza para dar un consejo o recomendación.',   
+            'q24': 'El mustn\'t se utiliza para la prohibición estricta.',   
+            'q25': 'El have to se utiliza para obligaciones legales o reglas externas.',   
+            
+            // SECCIÓN III: COMPARATIVOS
+            'q26': 'El comparativo de good es better.',   
+            'q27': 'El superlativo de big es the biggest (se duplica la consonante por la regla CVC).',   
+            'q28': 'Para adjetivos largos (expensive), se usa more + adjetivo en comparativos.',   
+            
+            // Q29: FiTB (as-as)
+            'q29_order': 'AS-AS', 
+
+            // Q30: FiTB (the-most)
+            'q30_order': 'THE-MOST', 
+            
+            'q31': 'Para adjetivos cortos (cold), se añade -er para el comparativo.',   
+            'q32': 'Para adjetivos cortos (fast), se añade the -est para el superlativo.',   
+            'q33': 'Para adjetivos cortos (new), se añade -er para el comparativo.',   
+            'q34': 'El superlativo de bad es the worst.',   
+            'q35': 'Para adjetivos cortos (long), se añade the -est para el superlativo.',   
+            
+            // SECCIÓN D: VOCABULARIO
+            'q36': 'El término para la fecha límite es deadline.',   
+            'q37': 'La profesión es architect (arquitecto).',   
+            'q38': 'Es común tener un periodo de entrenamiento (training) al iniciar un nuevo trabajo.',   
+            'q39': 'El verbo to hire significa contratar.',   
+            'q40': 'El término común para una reunión de negocios es meeting.',   
+            'q41': 'Foggy significa con neblina o niebla.',   
+            'q42': 'Si hace frío, necesitas ropa de abrigo como gloves and a scarf (guantes y bufanda).',   
+            'q43': 'Una tie (corbata) es un accesorio formal.',   
+            'q44': 'La palabra correcta es snowing.',   
+            'q45': 'Una shirt (camisa) es una prenda formal.',   
+            'q46': 'Una scarf (bufanda) se usa en el cuello.',   
+            'q47': 'Drought significa sequía.',   
+            'q48': 'Stormy significa con tormenta/tormentoso.',   
+            'q49': 'El trueno es el único de esos que produce un sonido fuerte.',
+            'q50': 'Un watch (reloj de pulsera) sirve para ver la hora.',   
+        };
+
+        /**
+         * Obtiene el texto de la respuesta para mostrarlo en las justificaciones.
+         */
+        function getExplicitAnswerText(qName, correctValue) {
+            
+            // 1. Check for Radio Buttons and Dropdown (Select)
+            // Lógica existente para opciones múltiples
+
+            const qNumberMatch = qName.match(/\d+/);
+            const qNumber = qNumberMatch ? qNumberMatch[0] : null;
+
+            if (!qName.endsWith('_order')) {
+                const correctInput = document.querySelector(`input[name="q${qNumber}"][value="${correctValue}"]`);
+                if (correctInput && correctInput.parentNode) {
+                    const label = correctInput.parentNode;
+                    let answerText = '';
+                    for (let node of label.childNodes) {
+                        if (node.nodeType === 3 && node.textContent.trim().length > 0) {
+                            answerText += node.textContent;
+                        }
+                    }
+                    const trimmedAnswer = answerText.trim();
+                    return trimmedAnswer ? trimmedAnswer.toUpperCase() : correctValue.toUpperCase();
+                }
+
+                const selectElement = document.querySelector(`select[name="q${qNumber}"]`);
+                if (selectElement) {
+                    const correctOption = selectElement.querySelector(`option[value="${correctValue}"]`);
+                    if (correctOption) {
+                        return correctOption.textContent.toUpperCase();
+                    }
+                }
+            }
+            
+            // 2. Check for Ordering and FiTB Questions (Return the expected sentence/sequence)
+            if (qName.endsWith('_order')) {
+                // Para FiTB, reemplazamos el guion por espacio para hacerlo legible
+                if (['q7_order', 'q14_order', 'q29_order', 'q30_order'].includes(qName)) {
+                    // Quitamos la justificación y solo dejamos la respuesta en sí
+                    const fullSentence = correctValue.toUpperCase().replace(/-/g, ' ').replace(/\\'/g, '\'');
+                    return fullSentence;
+                }
+                
+                // Para Ordenamiento de Frase Completa, reemplazamos el guion por espacio y quitamos el escape
+                return justifications[qName].toUpperCase().replace(/-/g, ' ').replace(/\\'/g, '\''); 
+            }
+            
+            // Fallback
+            return correctValue.toUpperCase();
+        }
+
+        
+        function checkQuiz() {
+            // Asegurarse de que el input de ordenamiento esté actualizado antes de checar
+            updateOrderingInputs(); 
+            
+            // Total de preguntas: 50
+            const totalQuestions = 50; 
+            const correctAnswers = {
+                // Q1-Q6: Radio/Select
+                'q1': 'B', 'q2': 'B', 'q3': 'A', 'q4': 'C', 'q5': 'C', 'q6': 'B', 
+                
+                // Q7: FiTB (is-going-to)
+                'q7_order': 'IS-GOING-TO', 
+                
+                // Q8-Q13: Radio/Select
+                'q8': 'B', 'q9': 'C', 'q10': 'B', 'q11': 'A', 'q12': 'B', 'q13': 'B', 
+                
+                // Q14: FiTB (are-you-leaving)
+                'q14_order': 'ARE-YOU-LEAVING', 
+                'q15': 'B',
+                
+                // Q16-Q18: Ordering
+                'q16_order': 'YOU-SHOULD-SEE-A-DOCTOR', 
+                'q17_order': 'YOU-MUSTN\\\'T-TALK-DURING-THE-EXAM', 
+                'q18_order': 'WE-HAVE-TO-FINISH-THE-REPORT-TODAY', 
+                
+                // Q19-Q28: Radio/Select
+                'q19': 'B', 'q20': 'C', 'q21': 'C', 'q22': 'B', 'q23': 'A', 'q24': 'B', 'q25': 'C',
+                'q26': 'B', 'q27': 'B', 'q28': 'B', 
+                
+                // Q29: FiTB (as-as)
+                'q29_order': 'AS-AS', 
+                
+                // Q30: FiTB (the-most)
+                'q30_order': 'THE-MOST', 
+                
+                // Q31-Q50: Radio/Select
+                'q31': 'A', 'q32': 'A', 'q33': 'A', 'q34': 'C', 'q35': 'B',
+                'q36': 'A', 'q37': 'B', 'q38': 'A', 'q39': 'C', 'q40': 'A', 'q41': 'B', 'q42': 'A', 'q43': 'B', 'q44': 'B', 'q45': 'B', 'q46': 'C', 'q47': 'B', 'q48': 'B', 'q49': 'A', 'q50': 'C'
+            };
+
+
+            let score = 0;
+            let questionKeys = Object.keys(correctAnswers);
+
+            // 1. Validar todas las preguntas (Radio, Select y Arrastre)
+            for (let i = 0; i < questionKeys.length; i++) {
+                const qKey = questionKeys[i]; // q1, q2, q7_order, etc.
+                const qNumber = parseInt(qKey.match(/\d+/)[0]); // 1, 2, 7, etc.
+
+                const resultDiv = document.getElementById('result' + qNumber);
+                const correctAnswerValue = correctAnswers[qKey];
+                
+                let answer = null;
+                
+                // 1.1 Preguntas de Arrastre (Ordenamiento y FiTB)
+                if (qKey.endsWith('_order')) {
+                    const hiddenInput = document.getElementById(qKey);
+                    answer = hiddenInput ? hiddenInput.value : null;
+                    // Para Arrastre, la justificación está en el valor del diccionario
+                    var justificationText = justifications[qKey].replace(/\\'/g, '\'');
+                    
+                } 
+                // 1.2 Preguntas de Opción Múltiple (Radio/Select)
+                else {
+                    const qName = 'q' + qNumber;
+                    const selectEl = document.querySelector(`select[name="${qName}"]`);
+                    
+                    if (selectEl) {
+                        // Es Dropdown
+                        answer = selectEl.value;
+                    } else {
+                        // Es Radio Button
+                        const radioChecked = document.querySelector(`input[name="${qName}"]:checked`);
+                        answer = radioChecked ? radioChecked.value : null;
+                    }
+                    var generalQKey = qKey;
+                    // La justificación debe ser general para todos los tipos de pregunta
+                    var justificationText = justifications[generalQKey] || 'Sin justificación disponible.';
+                }
+
+                if (resultDiv) {
+                    resultDiv.classList.remove('correct', 'incorrect', 'hidden-initial'); 
+                    resultDiv.textContent = '';
+                }
+
+                // Obtener la respuesta correcta explícita (el texto de la opción o la frase ordenada)
+                const displayAnswerText = getExplicitAnswerText(qKey, correctAnswerValue);
+
+                if (answer && answer !== "") { 
+                    const isCorrect = (answer === correctAnswerValue);
+                    
+                    if (isCorrect) {
+                        score++;
+                        if (resultDiv) {
+                            resultDiv.textContent = '¡Correcto!';
+                            resultDiv.classList.add('correct');
+                        }
+                    } else {
+                        if (resultDiv) {
+                            // Mostrar la respuesta incorrecta y la correcta
+                            if (qKey.endsWith('_order')) {
+                                // Para Arrastre, mostramos la secuencia actual y la correcta
+                                const yourAnswer = answer.replace(/-/g, ' ').replace(/\\'/g, '\'');
+                                resultDiv.innerHTML = `Incorrecto. Tu respuesta fue: <em>${yourAnswer}</em>.<br>La respuesta correcta es: ${displayAnswerText}.<br>Justificación: ${justificationText}`;
+                            } else {
+                                // Para Radio/Select, usamos la justificación del diccionario
+                                resultDiv.innerHTML = `Incorrecto. La respuesta correcta es: ${displayAnswerText}.<br>Justificación: ${justificationText}`;
+                            }
+                            resultDiv.classList.add('incorrect');
+                        }
+                    }
+                } else {
+                    // Si no se responde, muestra la respuesta correcta y justificación.
+                    if (resultDiv) {
+                        // Usamos la justificación del diccionario
+                        resultDiv.innerHTML = `Sin responder. La respuesta correcta es: ${displayAnswerText}.<br>Justificación: ${justificationText}`;
+                        resultDiv.classList.add('incorrect');
+                    }
+                }
+            }
+
+
+            // Calcular la calificación (sobre 10)
+            const grade = (score / totalQuestions) * 10;
+            
+            // Texto para los aciertos
+            const aciertosMessage = `Aciertos: ${score} de ${totalQuestions}`;
+            // Texto para la calificación (redondeado a un decimal)
+            const gradeMessage = `${grade.toFixed(1)}`;
+            
+            // Mostrar el resultado final con el formato solicitado
+            const finalScoreElement = document.getElementById('finalScore');
+            
+            // Construir el contenido
+            finalScoreElement.innerHTML = `
+                <p class="text-xl font-semibold text-gray-800">${aciertosMessage}</p>
+                <p class="text-3xl mt-2 font-extrabold text-gray-900">Calificación: ${gradeMessage}</p>
+            `;
+            
+            // Hace visible el elemento al remover la clase hidden 
+            finalScoreElement.classList.remove('hidden');
+            
+            // Mostrar el botón de PDF
+            document.getElementById('pdfButton').style.display = 'block';
+            
+            // Llevar al usuario al resultado
+            finalScoreElement.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * Genera un PDF (usando la función de impresión del navegador) 
+         */
+        function generatePDF() {
+            document.getElementById('finalScore').classList.remove('hidden');
+            document.getElementById('checkButton').style.display = 'none';
+            document.getElementById('pdfButton').style.display = 'none';
+
+            window.print();
+
+            document.getElementById('checkButton').style.display = 'block';
+            document.getElementById('pdfButton').style.display = 'block'; 
+        }
+    </script>
+
+</body>
+</html>
