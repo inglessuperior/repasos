@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 7</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ESTILOS IDÉNTICOS A M5 Y M6 */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .titulo1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2563eb;
+            line-height: 1.25;
+        }
+        .titulo2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .subtitulo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #374151;
+        }
+        .formula {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .question-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            background-color: #f8f8f8;
+        }
+        .result-container {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            line-height: 1.4;
+            font-size: 0.95rem;
+        }
+        .hidden-initial {
+            display: none;
+            padding: 0;
+            margin: 0;
+        }
+        .correct {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+        .check-button {
+            padding: 12px 25px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: 600;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        .check-button:hover {
+            background-color: #1d4ed8;
+        }
+        .pdf-button {
+            padding: 12px 25px;
+            background-color: #10b981;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+            transition: background-color 0.3s;
+        }
+        .pdf-button:hover {
+            background-color: #059669;
+        }
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+        label {
+            display: block;
+            padding: 4px 0;
+            cursor: pointer;
+        }
+        #finalScore {
+            min-height: 100px;
+        }
+        #finalScore p {
+            margin: 0;
+        }
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        .select-dropdown {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px;
+            cursor: pointer;
+        }
+        .order-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            background-color: #e5e7eb;
+            border-radius: 6px;
+            min-height: 50px;
+        }
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            background-color: #f1f5f9;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .drop-blank {
+            display: inline-block;
+            min-width: 60px;
+            min-height: 30px;
+            border-bottom: 2px solid #3b82f6;
+            padding: 2px 5px;
+            margin: 0 4px;
+            text-align: center;
+            color: #1f2937;
+            background-color: #ffffff;
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .drop-blank.drag-over {
+            background-color: #bfdbfe;
+            border-color: #1d4ed8;
+        }
+        .drop-blank-filled {
+            color: #1f2937;
+            font-weight: 700;
+        }
+        .order-word {
+            padding: 6px 12px;
+            background-color: #4f46e5;
+            color: white;
+            border-radius: 4px;
+            cursor: grab;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+            user-select: none;
+        }
+        .order-word:hover {
+            background-color: #4338ca;
+        }
+        .order-word.dragging {
+            opacity: 0.5;
+            border: 2px dashed #f59e0b;
+        }
+        .order-container.drag-over {
+            border: 2px dashed #f59e0b;
+            background-color: #fee2e2;
+        }
+        @media (max-width: 768px) {
+            .titulo1 { font-size: 2.5rem; }
+            .titulo2 { font-size: 1.5rem; }
+            .subtitulo { font-size: 1.1rem; }
+        }
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .check-button,
+            .pdf-button {
+                display: none !important;
+            }
+            #quizForm,
+            main,
+            .question-group,
+            .titulo2,
+            .subtitulo,
+            .flex.flex-col.items-center {
+                display: block !important;
+            }
+            .question-group {
+                border: none !important;
+                background-color: white !important;
+                padding: 5px 0 !important;
+                margin-bottom: 10px !important;
+            }
+            #finalScore {
+                display: flex !important;
+                margin: 30px auto;
+                max-width: 600px;
+                border: 2px solid #000;
+                background-color: white !important;
+            }
+            .select-dropdown {
+                border: 1px solid #000 !important;
+                background-color: #eee !important;
+                max-width: none !important;
+            }
+            input[type="radio"]:checked + label {
+                font-weight: 700;
+            }
+            .result-container {
+                display: block !important;
+                border: 1px solid #ccc;
+                padding: 4px 8px;
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+            }
+            .correct {
+                background-color: #c8e6c9 !important;
+                color: #000 !important;
+                border: 1px solid #81c784 !important;
+            }
+            .incorrect {
+                background-color: #ffcdd2 !important;
+                color: #000 !important;
+                border: 1px solid #e57373 !important;
+            }
+            .order-container, .drag-pool {
+                display: block !important;
+                background-color: #f8f8f8 !important;
+            }
+            .order-word {
+                color: #333 !important;
+                background-color: #ccc !important;
+                margin-right: 5px;
+                display: inline-block;
+                border: 1px solid #aaa;
+                cursor: default !important;
+            }
+            .drop-blank {
+                border-color: #000 !important;
+                color: #333 !important;
+                background-color: #e0e0e0 !important;
+                font-weight: 700 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="max-w-4xl mx-auto text-center" id="header-print">
+        <img src="https://i.imgur.com/7BHucwa.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        <p class="formula mx-auto p-0 text-sm" style="width: fit-content; min-width: 150px; color: #1f2937; border-color: #d1d5db;">MÓDULO: 7</p>
+        <h1 class="titulo1 mt-2 mb-8">Repaso General</h1>
+        <p class="text-lg text-gray-600 mb-10">Instrucciones: Lee cada pregunta con atención y responde correctamente.</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto mt-10">
+        <form id="quizForm" onsubmit="return false;">
+            <hr class="border-t border-gray-300 my-4">
+
+            <!-- SECCIÓN I: PRESENTE PERFECTO - 15 PREGUNTAS -->
+            <h2 class="titulo2 my-6">Sección I: Presente Perfecto</h2>
+            
+            <p class="subtitulo mb-6">A. Forma y uso básico. Elige la opción correcta.</p>
+            
+            <div class="question-group">
+                <p class="mb-4">1. I ______ (live) in this city for ten years.</p>
+                <label><input type="radio" name="q1" value="A"> have lived</label>
+                <label><input type="radio" name="q1" value="B"> lived</label>
+                <label><input type="radio" name="q1" value="C"> am living</label>
+                <div id="result1" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">2. She ______ (not / finish) her report yet.</p>
+                <label><input type="radio" name="q2" value="A"> didn't finish</label>
+                <label><input type="radio" name="q2" value="B"> hasn't finished</label>
+                <label><input type="radio" name="q2" value="C"> doesn't finish</label>
+                <div id="result2" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">3. ______ you ever ______ (travel) to Asia?</p>
+                <label><input type="radio" name="q3" value="A"> Have / traveled</label>
+                <label><input type="radio" name="q3" value="B"> Did / travel</label>
+                <label><input type="radio" name="q3" value="C"> Do / travel</label>
+                <div id="result3" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- PREGUNTA 4 MODIFICADA -->
+            <div class="question-group">
+                <p class="mb-4">4. They haven't finished the report ______. They need more time.</p>
+                <label><input type="radio" name="q4" value="A"> just</label>
+                <label><input type="radio" name="q4" value="B"> already</label>
+                <label><input type="radio" name="q4" value="C"> yet</label>
+                <div id="result4" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q5: DROP-DOWN -->
+            <div class="question-group">
+                <p class="mb-4">5. He ______ (work) here since 2018.</p>
+                <select name="q5" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar conjugación --</option>
+                    <option value="A">worked</option>
+                    <option value="B">has worked</option>
+                    <option value="C">works</option>
+                </select>
+                <div id="result5" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q6: FILL-IN-THE-BLANK DRAG-AND-DROP (FOR/SINCE) -->
+            <div class="question-group">
+                <p class="mb-4">6. Arrastra la palabra correcta (for o since):</p>
+                <p class="mb-4">We have been friends 
+                    <span id="q6-blank-1" class="drop-blank" data-blank-index="1" data-answer=""></span> 
+                    we were children.
+                </p>
+                <div id="q6-pool" class="drag-pool">
+                    <span class="order-word" data-word="for" draggable="true">for</span>
+                    <span class="order-word" data-word="since" draggable="true">since</span>
+                    <span class="order-word" data-word="during" draggable="true">during</span>
+                    <span class="order-word" data-word="from" draggable="true">from</span>
+                </div>
+                <input type="hidden" name="q6_order" id="q6_order" value="">
+                <div id="result6" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">7. I ______ (already / see) that movie three times.</p>
+                <label><input type="radio" name="q7" value="A"> have already seen</label>
+                <label><input type="radio" name="q7" value="B"> already saw</label>
+                <label><input type="radio" name="q7" value="C"> already see</label>
+                <div id="result7" class="result-container hidden-initial"></div>
+            </div>
+
+            <p class="subtitulo mb-6 mt-8">B. Ever, never, just, already, yet.</p>
+
+            <div class="question-group">
+                <p class="mb-4">8. Have you ______ been to Paris?</p>
+                <label><input type="radio" name="q8" value="A"> ever</label>
+                <label><input type="radio" name="q8" value="B"> never</label>
+                <label><input type="radio" name="q8" value="C"> already</label>
+                <div id="result8" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">9. She has ______ finished her degree. She graduated last month.</p>
+                <label><input type="radio" name="q9" value="A"> yet</label>
+                <label><input type="radio" name="q9" value="B"> just</label>
+                <label><input type="radio" name="q9" value="C"> already</label>
+                <div id="result9" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q10: DROP-DOWN (CORREGIDA - reemplaza ordenamiento) -->
+            <div class="question-group">
+                <p class="mb-4">10. Selecciona la forma correcta para completar la pregunta:</p>
+                <p class="mb-4">______ finished the report yet?</p>
+                <select name="q10" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar --</option>
+                    <option value="A">Have you</option>
+                    <option value="B">Did you</option>
+                    <option value="C">Do you</option>
+                </select>
+                <div id="result10" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">11. I have ______ tried sushi. I don't like raw fish.</p>
+                <label><input type="radio" name="q11" value="A"> ever</label>
+                <label><input type="radio" name="q11" value="B"> just</label>
+                <label><input type="radio" name="q11" value="C"> never</label>
+                <div id="result11" class="result-container hidden-initial"></div>
+            </div>
+
+            <p class="subtitulo mb-6 mt-8">C. For vs. Since.</p>
+
+            <div class="question-group">
+                <p class="mb-4">12. We've known each other ______ twenty years.</p>
+                <label><input type="radio" name="q12" value="A"> since</label>
+                <label><input type="radio" name="q12" value="B"> for</label>
+                <label><input type="radio" name="q12" value="C"> from</label>
+                <div id="result12" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">13. He has worked here ______ last June.</p>
+                <label><input type="radio" name="q13" value="A"> for</label>
+                <label><input type="radio" name="q13" value="B"> since</label>
+                <label><input type="radio" name="q13" value="C"> during</label>
+                <div id="result13" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q14: FILL-IN-THE-BLANK DRAG-AND-DROP (EXPRESIONES DE TIEMPO) -->
+            <div class="question-group">
+                <p class="mb-4">14. Arrastra la expresión de tiempo correcta:</p>
+                <p class="mb-4">I have wanted to visit Japan 
+                    <span id="q14-blank-1" class="drop-blank" data-blank-index="1" data-answer=""></span> 
+                    .
+                </p>
+                <div id="q14-pool" class="drag-pool">
+                    <span class="order-word" data-word="all my life" draggable="true">all my life</span>
+                    <span class="order-word" data-word="last year" draggable="true">last year</span>
+                    <span class="order-word" data-word="yesterday" draggable="true">yesterday</span>
+                    <span class="order-word" data-word="in 2010" draggable="true">in 2010</span>
+                </div>
+                <input type="hidden" name="q14_order" id="q14_order" value="">
+                <div id="result14" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">15. Which sentence is correct?</p>
+                <label><input type="radio" name="q15" value="A"> I have studied English since five years.</label>
+                <label><input type="radio" name="q15" value="B"> I have studied English for five years.</label>
+                <label><input type="radio" name="q15" value="C"> I have studied English from five years.</label>
+                <div id="result15" class="result-container hidden-initial"></div>
+            </div>
+
+            <hr class="border-t border-gray-300 my-10">
+
+            <!-- SECCIÓN II: GERUNDIO VS. INFINITIVO - 10 PREGUNTAS -->
+            <h2 class="titulo2 my-6 mt-10">Sección II: Gerundio vs. Infinitivo</h2>
+
+            <p class="subtitulo mb-6">D. Completa con la forma correcta (-ing o to + verbo).</p>
+
+            <!-- Pregunta 16: Respuesta correcta B (middle) -->
+            <div class="question-group">
+                <p class="mb-4">16. I enjoy ______ (read) in my free time.</p>
+                <label><input type="radio" name="q16" value="A"> to read</label>
+                <label><input type="radio" name="q16" value="B"> reading</label>
+                <label><input type="radio" name="q16" value="C"> read</label>
+                <div id="result16" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 17: Respuesta correcta C (last) -->
+            <div class="question-group">
+                <p class="mb-4">17. She needs ______ (buy) a new laptop for work.</p>
+                <label><input type="radio" name="q17" value="A"> buying</label>
+                <label><input type="radio" name="q17" value="B"> buy</label>
+                <label><input type="radio" name="q17" value="C"> to buy</label>
+                <div id="result17" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 18: Dropdown con opción B correcta -->
+            <div class="question-group">
+                <p class="mb-4">18. They finished ______ (work) late last night.</p>
+                <select name="q18" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar forma --</option>
+                    <option value="A">to work</option>
+                    <option value="B">working</option>
+                    <option value="C">work</option>
+                </select>
+                <div id="result18" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 19: Respuesta correcta A (first) -->
+            <div class="question-group">
+                <p class="mb-4">19. He decided ______ (study) engineering in college.</p>
+                <label><input type="radio" name="q19" value="A"> to study</label>
+                <label><input type="radio" name="q19" value="B"> studying</label>
+                <label><input type="radio" name="q19" value="C"> study</label>
+                <div id="result19" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q20: ORDENAMIENTO (VERB PATTERN) -->
+            <div class="question-group">
+                <p class="mb-4">20. Ordena las palabras para formar una oración con gerundio:</p>
+                <div id="q20-words" class="order-container">
+                    <span class="order-word" data-word="avoiding" draggable="true">avoiding</span>
+                    <span class="order-word" data-word="We" draggable="true">We</span>
+                    <span class="order-word" data-word="traffic" draggable="true">traffic</span>
+                    <span class="order-word" data-word="are" draggable="true">are</span>
+                    <span class="order-word" data-word="heavy" draggable="true">heavy</span>
+                </div>
+                <input type="hidden" name="q20_order" id="q20_order" value="">
+                <div id="result20" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 21: Respuesta correcta C (last) -->
+            <div class="question-group">
+                <p class="mb-4">21. I want ______ (visit) my family next month.</p>
+                <label><input type="radio" name="q21" value="A"> visiting</label>
+                <label><input type="radio" name="q21" value="B"> visit</label>
+                <label><input type="radio" name="q21" value="C"> to visit</label>
+                <div id="result21" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 22: Respuesta correcta B (middle) -->
+            <div class="question-group">
+                <p class="mb-4">22. They suggested ______ (go) to the new restaurant.</p>
+                <label><input type="radio" name="q22" value="A"> to go</label>
+                <label><input type="radio" name="q22" value="B"> going</label>
+                <label><input type="radio" name="q22" value="C"> go</label>
+                <div id="result22" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 23: Respuesta correcta A (first) -->
+            <div class="question-group">
+                <p class="mb-4">23. Which verb is followed by an infinitive?</p>
+                <label><input type="radio" name="q23" value="A"> plan</label>
+                <label><input type="radio" name="q23" value="B"> enjoy</label>
+                <label><input type="radio" name="q23" value="C"> finish</label>
+                <div id="result23" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q24: FILL-IN-THE-BLANK DRAG-AND-DROP (BOTH FORMS) -->
+            <div class="question-group">
+                <p class="mb-4">24. Arrastra la forma correcta del verbo:</p>
+                <p class="mb-4">She stopped 
+                    <span id="q24-blank-1" class="drop-blank" data-blank-index="1" data-answer=""></span> 
+                    coffee last year.
+                </p>
+                <div id="q24-pool" class="drag-pool">
+                    <span class="order-word" data-word="drinking" draggable="true">drinking</span>
+                    <span class="order-word" data-word="to drink" draggable="true">to drink</span>
+                    <span class="order-word" data-word="drink" draggable="true">drink</span>
+                </div>
+                <input type="hidden" name="q24_order" id="q24_order" value="">
+                <div id="result24" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 25: Respuesta correcta C (last) -->
+            <div class="question-group">
+                <p class="mb-4">25. We hope ______ (finish) the project by Friday.</p>
+                <label><input type="radio" name="q25" value="A"> finishing</label>
+                <label><input type="radio" name="q25" value="B"> finish</label>
+                <label><input type="radio" name="q25" value="C"> to finish</label>
+                <div id="result25" class="result-container hidden-initial"></div>
+            </div>
+
+            <hr class="border-t border-gray-300 my-10">
+
+            <!-- SECCIÓN III: PRESENTE PERFECTO vs PASADO SIMPLE & QUESTION TAGS - 10 PREGUNTAS -->
+            <h2 class="titulo2 my-6 mt-10">Sección III: Contrastes y Question Tags</h2>
+
+            <p class="subtitulo mb-6">E. Presente Perfecto vs. Pasado Simple.</p>
+
+            <div class="question-group">
+                <p class="mb-4">26. I ______ (visit) London in 2019.</p>
+                <label><input type="radio" name="q26" value="A"> have visited</label>
+                <label><input type="radio" name="q26" value="B"> visited</label>
+                <label><input type="radio" name="q26" value="C"> visit</label>
+                <div id="result26" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">27. She ______ (live) in Madrid for three years, but now she lives in Barcelona.</p>
+                <label><input type="radio" name="q27" value="A"> has lived</label>
+                <label><input type="radio" name="q27" value="B"> lived</label>
+                <label><input type="radio" name="q27" value="C"> lives</label>
+                <div id="result27" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">28. ______ you ______ (eat) at that new restaurant yet?</p>
+                <label><input type="radio" name="q28" value="A"> Did / eat</label>
+                <label><input type="radio" name="q28" value="B"> Have / eaten</label>
+                <label><input type="radio" name="q28" value="C"> Do / eat</label>
+                <div id="result28" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">29. He ______ (not / call) me last week.</p>
+                <label><input type="radio" name="q29" value="A"> hasn't called</label>
+                <label><input type="radio" name="q29" value="B"> didn't call</label>
+                <label><input type="radio" name="q29" value="C"> doesn't call</label>
+                <div id="result29" class="result-container hidden-initial"></div>
+            </div>
+
+            <p class="subtitulo mb-6 mt-8">F. Question Tags.</p>
+
+            <!-- Q30: CORREGIDA (opción múltiple en lugar de ordenamiento) -->
+            <div class="question-group">
+                <p class="mb-4">30. Selecciona la question tag correcta para completar la oración:</p>
+                <p class="mb-4">This view is beautiful, ______?</p>
+                <label><input type="radio" name="q30" value="A"> isn't it</label>
+                <label><input type="radio" name="q30" value="B"> is it</label>
+                <label><input type="radio" name="q30" value="C"> doesn't it</label>
+                <div id="result30" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">31. You work here, ______?</p>
+                <label><input type="radio" name="q31" value="A"> do you</label>
+                <label><input type="radio" name="q31" value="B"> don't you</label>
+                <label><input type="radio" name="q31" value="C"> aren't you</label>
+                <div id="result31" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">32. She hasn't arrived yet, ______?</p>
+                <label><input type="radio" name="q32" value="A"> has she</label>
+                <label><input type="radio" name="q32" value="B"> hasn't she</label>
+                <label><input type="radio" name="q32" value="C"> does she</label>
+                <div id="result32" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">33. They will come to the meeting, ______?</p>
+                <label><input type="radio" name="q33" value="A"> will they</label>
+                <label><input type="radio" name="q33" value="B"> won't they</label>
+                <label><input type="radio" name="q33" value="C"> don't they</label>
+                <div id="result33" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Q34: FILL-IN-THE-BLANK DRAG-AND-DROP (QUESTION TAG) -->
+            <div class="question-group">
+                <p class="mb-4">34. Arrastra la question tag correcta:</p>
+                <p class="mb-4">You can speak French, 
+                    <span id="q34-blank-1" class="drop-blank" data-blank-index="1" data-answer=""></span> 
+                    ?
+                </p>
+                <div id="q34-pool" class="drag-pool">
+                    <span class="order-word" data-word="can you" draggable="true">can you</span>
+                    <span class="order-word" data-word="can't you" draggable="true">can't you</span>
+                    <span class="order-word" data-word="do you" draggable="true">do you</span>
+                </div>
+                <input type="hidden" name="q34_order" id="q34_order" value="">
+                <div id="result34" class="result-container hidden-initial"></div>
+            </div>
+
+            <div class="question-group">
+                <p class="mb-4">35. What is the rule for question tags?</p>
+                <label><input type="radio" name="q35" value="A"> Same auxiliary, opposite polarity</label>
+                <label><input type="radio" name="q35" value="B"> Different auxiliary, same polarity</label>
+                <label><input type="radio" name="q35" value="C"> Always use "do"</label>
+                <div id="result35" class="result-container hidden-initial"></div>
+            </div>
+
+            <hr class="border-t border-gray-300 my-10">
+
+            <!-- SECCIÓN IV: VOCABULARIO - 15 PREGUNTAS -->
+            <h2 class="titulo2 my-6 mt-10">Sección IV: Vocabulario</h2>
+
+            <p class="subtitulo mb-6">G. Logros, Experiencias y Educación.</p>
+
+            <!-- Pregunta 36: Respuesta correcta B (middle) -->
+            <div class="question-group">
+                <p class="mb-4">36. After 40 years of work, he's looking forward to his ______ next year.</p>
+                <label><input type="radio" name="q36" value="A"> graduation</label>
+                <label><input type="radio" name="q36" value="B"> retirement</label>
+                <label><input type="radio" name="q36" value="C"> lesson</label>
+                <div id="result36" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 37: Respuesta correcta C (last) -->
+            <div class="question-group">
+                <p class="mb-4">37. Her ______ to the community project was recognized with an award.</p>
+                <label><input type="radio" name="q37" value="A"> effort</label>
+                <label><input type="radio" name="q37" value="B"> knowledge</label>
+                <label><input type="radio" name="q37" value="C"> contribution</label>
+                <div id="result37" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 38: Dropdown con opción B correcta (middle) -->
+            <div class="question-group">
+                <p class="mb-4">38. A ______ helps students pay for their studies based on merit.</p>
+                <select name="q38" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar opción --</option>
+                    <option value="A">certificate</option>
+                    <option value="B">scholarship</option>
+                    <option value="C">lecture</option>
+                </select>
+                <div id="result38" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 39: Respuesta correcta A (first) -->
+            <div class="question-group">
+                <p class="mb-4">39. She has a master's ______ in business administration.</p>
+                <label><input type="radio" name="q39" value="A"> degree</label>
+                <label><input type="radio" name="q39" value="B"> course</label>
+                <label><input type="radio" name="q39" value="C"> lesson</label>
+                <div id="result39" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 40: Respuesta correcta B (middle) -->
+            <div class="question-group">
+                <p class="mb-4">40. Winning the competition was her greatest ______.</p>
+                <label><input type="radio" name="q40" value="A"> effort</label>
+                <label><input type="radio" name="q40" value="B"> achievement</label>
+                <label><input type="radio" name="q40" value="C"> knowledge</label>
+                <div id="result40" class="result-container hidden-initial"></div>
+            </div>
+
+            <p class="subtitulo mb-6 mt-8">H. Personalidad y Relaciones Personales.</p>
+
+            <!-- Pregunta 41: Respuesta correcta C (last) -->
+            <div class="question-group">
+                <p class="mb-4">41. Someone who always tells the truth is ______.</p>
+                <label><input type="radio" name="q41" value="A"> arrogant</label>
+                <label><input type="radio" name="q41" value="B"> insecure</label>
+                <label><input type="radio" name="q41" value="C"> sincere</label>
+                <div id="result41" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 42: Respuesta correcta A (first) -->
+            <div class="question-group">
+                <p class="mb-4">42. A person who thinks they are better than others is ______.</p>
+                <label><input type="radio" name="q42" value="A"> arrogant</label>
+                <label><input type="radio" name="q42" value="B"> humble</label>
+                <label><input type="radio" name="q42" value="C"> reliable</label>
+                <div id="result42" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 43: Cambiada a opción múltiple (antes ordenamiento) -->
+            <div class="question-group">
+                <p class="mb-4">43. Which two words describe positive personality traits?</p>
+                <label><input type="radio" name="q43" value="A"> arrogant and mean</label>
+                <label><input type="radio" name="q43" value="B"> friendly and reliable</label>
+                <label><input type="radio" name="q43" value="C"> selfish and insecure</label>
+                <div id="result43" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 44: Respuesta correcta B (middle) -->
+            <div class="question-group">
+                <p class="mb-4">44. Understanding how others feel is called ______.</p>
+                <label><input type="radio" name="q44" value="A"> argument</label>
+                <label><input type="radio" name="q44" value="B"> empathy</label>
+                <label><input type="radio" name="q44" value="C"> trust</label>
+                <div id="result44" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 45: Dropdown con opción A correcta (first) -->
+            <div class="question-group">
+                <p class="mb-4">45. A person you know but who is not a close friend is an ______.</p>
+                <select name="q45" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar opción --</option>
+                    <option value="A">acquaintance</option>
+                    <option value="B">argument</option>
+                    <option value="C">commitment</option>
+                </select>
+                <div id="result45" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 46: Cambiada a dropdown (antes drag and drop) -->
+            <div class="question-group">
+                <p class="mb-4">46. He's very ______ - he always wants to learn new things.</p>
+                <select name="q46" class="select-dropdown">
+                    <option value="" selected disabled>-- Seleccionar opción --</option>
+                    <option value="A">curious</option>
+                    <option value="B">selfish</option>
+                    <option value="C">mean</option>
+                </select>
+                <div id="result46" class="result-container hidden-initial"></div>
+            </div>
+
+            <p class="subtitulo mb-6 mt-8">I. Leyes, Derechos y Sociedad.</p>
+
+            <!-- Pregunta 47: Respuesta correcta C (last) -->
+            <div class="question-group">
+                <p class="mb-4">47. Treating people unfairly because of their race or gender is ______.</p>
+                <label><input type="radio" name="q47" value="A"> evidence</label>
+                <label><input type="radio" name="q47" value="B"> respect</label>
+                <label><input type="radio" name="q47" value="C"> discrimination</label>
+                <div id="result47" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 48: Respuesta correcta A (first) -->
+            <div class="question-group">
+                <p class="mb-4">48. In court, lawyers present ______ to prove their case.</p>
+                <label><input type="radio" name="q48" value="A"> evidence</label>
+                <label><input type="radio" name="q48" value="B"> discrimination</label>
+                <label><input type="radio" name="q48" value="C"> commitment</label>
+                <div id="result48" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 49: Respuesta correcta B (middle) -->
+            <div class="question-group">
+                <p class="mb-4">49. A long-term promise or obligation is a ______.</p>
+                <label><input type="radio" name="q49" value="A"> trust</label>
+                <label><input type="radio" name="q49" value="B"> commitment</label>
+                <label><input type="radio" name="q49" value="C"> argument</label>
+                <div id="result49" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- Pregunta 50: Respuesta correcta A (first) -->
+            <div class="question-group">
+                <p class="mb-4">50. A person who doesn't believe in their abilities is ______.</p>
+                <label><input type="radio" name="q50" value="A"> insecure</label>
+                <label><input type="radio" name="q50" value="B"> confident</label>
+                <label><input type="radio" name="q50" value="C"> arrogant</label>
+                <div id="result50" class="result-container hidden-initial"></div>
+            </div>
+
+            <!-- BOTONES Y SCORE -->
+            <div class="mb-20">
+                <div class="flex flex-col items-center">
+                    <button type="button" class="check-button" id="checkButton" onclick="checkQuiz()">Verificar respuestas</button>
+                    <button type="button" class="pdf-button" id="pdfButton" onclick="generatePDF()">Generar PDF de resultados</button>
+                </div>
+                <h3 id="finalScore"
+                    class="hidden p-5 border-2 border-gray-800 bg-gray-100 rounded-lg text-2xl mt-10 font-bold flex flex-col justify-center items-center"
+                    style="margin-bottom: 50px; min-height: 100px;">
+                </h3>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // --- JAVASCRIPT CON TODAS LAS CORRECCIONES APLICADAS ---
+        let draggedItem = null;
+
+        function initializeDragAndDrop() {
+            document.querySelectorAll('.order-container').forEach(container => {
+                container.addEventListener('dragover', handleDragOverContainer);
+                container.addEventListener('drop', handleDropSentence);
+                container.addEventListener('dragleave', handleDragLeaveContainer);
+
+                Array.from(container.children).forEach(word => {
+                    word.addEventListener('dragstart', handleDragStart);
+                    word.addEventListener('dragenter', handleDragEnterWord);
+                    word.addEventListener('dragend', handleDragEnd);
+                });
+            });
+
+            document.querySelectorAll('.drag-pool .order-word').forEach(word => {
+                word.addEventListener('dragstart', handleDragStart);
+            });
+
+            document.querySelectorAll('.drop-blank').forEach(blank => {
+                blank.addEventListener('dragover', handleDragOverBlank);
+                blank.addEventListener('drop', handleDropBlank);
+                blank.addEventListener('dragleave', handleDragLeaveBlank);
+                blank.addEventListener('click', handleBlankClick);
+            });
+
+            updateOrderingInputs();
+        }
+
+        function handleDragStart(event) {
+            draggedItem = event.target;
+            const word = draggedItem.dataset.word;
+            event.dataTransfer.setData('text/plain', word);
+            draggedItem.classList.add('dragging');
+        }
+        function handleDragEnd(event) {
+            if (draggedItem) {
+                draggedItem.classList.remove('dragging');
+                draggedItem.style.opacity = '1';
+            }
+            draggedItem = null;
+        }
+
+        function handleDragOverContainer(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drag-over');
+        }
+        function handleDragLeaveContainer(event) {
+            event.currentTarget.classList.remove('drag-over');
+        }
+        function handleDragEnterWord(event) {
+            event.preventDefault();
+            const target = event.target;
+            if (target && target.classList.contains('order-word') && target !== draggedItem) {
+                const container = target.closest('.order-container');
+                const boundingBox = target.getBoundingClientRect();
+                const offset = boundingBox.x + (boundingBox.width / 2);
+
+                if (event.clientX < offset) {
+                    container.insertBefore(draggedItem, target);
+                } else {
+                    container.insertBefore(draggedItem, target.nextSibling);
+                }
+            }
+        }
+        function handleDropSentence(event) {
+            event.preventDefault();
+            const container = event.currentTarget;
+            container.classList.remove('drag-over');
+
+            if (draggedItem && container.contains(draggedItem.parentElement)) {
+                // No hace nada si el dragEnter ya movió el item.
+            } else if (draggedItem && draggedItem.parentElement.classList.contains('drag-pool')) {
+                 container.appendChild(draggedItem);
+            }
+            updateOrderingInputs();
+        }
+
+        function handleDragOverBlank(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drag-over');
+        }
+        function handleDragLeaveBlank(event) {
+            event.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDropBlank(event) {
+            event.preventDefault();
+            const blank = event.currentTarget;
+            blank.classList.remove('drag-over');
+
+            const droppedWord = event.dataTransfer.getData('text/plain').trim();
+
+            if (droppedWord) {
+                blank.textContent = droppedWord;
+                blank.dataset.answer = droppedWord;
+                blank.classList.add('drop-blank-filled');
+                updateOrderingInputs();
+            }
+        }
+
+        function handleBlankClick(event) {
+            const blank = event.currentTarget;
+            if (blank.dataset.answer !== "") {
+                blank.textContent = '';
+                blank.dataset.answer = '';
+                blank.classList.remove('drop-blank-filled');
+                updateOrderingInputs();
+            }
+        }
+
+        function updateOrderingInputs() {
+            document.querySelectorAll('.order-container').forEach(container => {
+                const qId = container.id.split('-')[0];
+                const hiddenInput = document.getElementById(qId + '_order');
+
+                if (hiddenInput) {
+                    const words = Array.from(container.querySelectorAll('.order-word'));
+                    const sequence = words.map(w => w.getAttribute('data-word').toUpperCase().replace(/'/g, '\\\'')).join('-');
+                    hiddenInput.value = sequence;
+                }
+            });
+
+            ['q6', 'q14', 'q24', 'q34'].forEach(qId => {
+                const numBlanks = 1;
+
+                let blanks = [];
+                for(let i = 1; i <= numBlanks; i++) {
+                    const blankEl = document.getElementById(`${qId}-blank-${i}`);
+                    if (blankEl) {
+                        blanks.push(blankEl);
+                    }
+                }
+
+                const hiddenInput = document.getElementById(qId + '_order');
+
+                if (hiddenInput) {
+                    const sequence = Array.from(blanks)
+                        .map(b => b.dataset.answer ? b.dataset.answer.toUpperCase().replace(/'/g, '\\\'') : '')
+                        .join('-');
+                    hiddenInput.value = sequence;
+                }
+            });
+        }
+
+        window.onload = initializeDragAndDrop;
+
+        // --- JUSTIFICACIONES ACTUALIZADAS PARA EL MÓDULO 7 ---
+        const justifications = {
+            // Sección I: Presente Perfecto (1-15)
+            'q1': 'Presente Perfecto con "for + periodo" para acciones que comenzaron en el pasado y continúan en el presente.',
+            'q2': 'Negativo del Presente Perfecto: have/has + not + past participle. "Yet" indica que la acción no ha ocurrido hasta ahora.',
+            'q3': 'Pregunta en Presente Perfecto con "ever" para experiencias de vida.',
+            'q4': '"Yet" se usa en oraciones negativas para indicar que algo no ha ocurrido hasta el momento presente.',
+            'q5': '"Since + punto específico en el tiempo" requiere Presente Perfecto.',
+            'q6_order': '"Since" se usa con un punto específico en el tiempo (we were children).',
+            'q7': '"Already" se coloca entre el auxiliar "have" y el past participle.',
+            'q8': '"Ever" se usa en preguntas para preguntar sobre experiencias en la vida.',
+            'q9': '"Already" indica que algo ha ocurrido antes de lo esperado o de ahora.',
+            'q10': 'Presente Perfecto con "yet" requiere "Have you" + past participle.',
+            'q11': '"Never" se usa en oraciones afirmativas del Presente Perfecto para indicar "nunca".',
+            'q12': '"For" se usa con un periodo de tiempo (twenty years).',
+            'q13': '"Since" se usa con un punto específico en el tiempo (last June).',
+            'q14_order': '"All my life" es una expresión de tiempo que se usa con Presente Perfecto.',
+            'q15': 'Se usa "for" con periodos de tiempo, "since" con puntos específicos.',
+            // Sección II: Gerundio vs. Infinitivo (16-25) - CON VARIEDAD REAL
+            'q16': '"Enjoy" va seguido de gerundio (-ing).',
+            'q17': '"Need" puede ir seguido de infinitivo (to buy).',
+            'q18': '"Finish" va seguido de gerundio.',
+            'q19': '"Decide" va seguido de infinitivo.',
+            'q20_order': '"Avoid" va seguido de gerundio: We are avoiding heavy traffic.',
+            'q21': '"Want" va seguido de infinitivo.',
+            'q22': '"Suggest" va seguido de gerundio.',
+            'q23': '"Plan" va seguido de infinitivo; "enjoy" y "finish" van con gerundio.',
+            'q24_order': '"Stop + gerundio" significa dejar de hacer algo (dejó de beber café).',
+            'q25': '"Hope" va seguido de infinitivo.',
+            // Sección III: Presente Perfecto vs. Pasado Simple & Question Tags (26-35)
+            'q26': 'Pasado Simple con un tiempo específico en el pasado (in 2019).',
+            'q27': 'Pasado Simple porque la acción terminó (ahora vive en otro lugar).',
+            'q28': 'Presente Perfecto con "yet" para preguntar si algo ha ocurrido hasta ahora.',
+            'q29': 'Pasado Simple con un tiempo específico (last week).',
+            'q30': 'Afirmativo con "is" -> tag negativo "isn\'t". El pronombre para "this view" es "it".',
+            'q31': 'Afirmativo con verbo principal -> tag negativo con "do".',
+            'q32': 'Negativo principal -> tag afirmativo, mismo auxiliar.',
+            'q33': 'Afirmativo con "will" -> tag negativo "won\'t".',
+            'q34_order': 'Afirmativo con "can" -> tag negativo "can\'t".',
+            'q35': 'La regla es: mismo auxiliar, polaridad opuesta (afirmativo -> negativo, negativo -> afirmativo).',
+            // Sección IV: Vocabulario (36-50) - NUEVAS PREGUNTAS
+            'q36': '"Retirement" es la jubilación después de una vida laboral.',
+            'q37': '"Contribution" significa contribución o aporte.',
+            'q38': 'Una "scholarship" es una beca que ayuda a pagar estudios.',
+            'q39': '"Degree" se refiere a un título universitario (master\'s degree).',
+            'q40': '"Achievement" significa logro o hazaña.',
+            'q41': '"Sincere" significa sincero, que dice la verdad.',
+            'q42': '"Arrogant" significa arrogante, que se cree mejor que los demás.',
+            'q43': '"Friendly and reliable" son cualidades positivas. "Arrogant and mean" y "selfish and insecure" son negativas.',
+            'q44': '"Empathy" es la capacidad de entender los sentimientos de otros.',
+            'q45': '"Acquaintance" es un conocido, no un amigo cercano.',
+            'q46': '"Curious" significa curioso, con deseos de aprender.',
+            'q47': '"Discrimination" es discriminación, trato injusto por raza o género.',
+            'q48': '"Evidence" es evidencia o pruebas en un caso legal.',
+            'q49': '"Commitment" es compromiso a largo plazo.',
+            'q50': '"Insecure" significa inseguro, que no confía en sus habilidades.'
+        };
+
+        function getExplicitAnswerText(qName, correctValue) {
+            const qNumberMatch = qName.match(/\d+/);
+            const qNumber = qNumberMatch ? qNumberMatch[0] : null;
+
+            if (!qName.endsWith('_order')) {
+                const correctInput = document.querySelector(`input[name="q${qNumber}"][value="${correctValue}"]`);
+                if (correctInput && correctInput.parentNode) {
+                    const label = correctInput.parentNode;
+                    let answerText = '';
+                    for (let node of label.childNodes) {
+                        if (node.nodeType === 3 && node.textContent.trim().length > 0) {
+                            answerText += node.textContent;
+                        }
+                    }
+                    const trimmedAnswer = answerText.trim();
+                    return trimmedAnswer ? trimmedAnswer.toUpperCase() : correctValue.toUpperCase();
+                }
+
+                const selectElement = document.querySelector(`select[name="q${qNumber}"]`);
+                if (selectElement) {
+                    const correctOption = selectElement.querySelector(`option[value="${correctValue}"]`);
+                    if (correctOption) {
+                        return correctOption.textContent.toUpperCase();
+                    }
+                }
+            }
+
+            if (qName.endsWith('_order')) {
+                if (['q6_order', 'q14_order', 'q24_order', 'q34_order'].includes(qName)) {
+                    const fullSentence = correctValue.toUpperCase().replace(/-/g, ' ').replace(/\\'/g, '\'');
+                    return fullSentence;
+                }
+                return justifications[qName].toUpperCase().replace(/-/g, ' ').replace(/\\'/g, '\'');
+            }
+            return correctValue.toUpperCase();
+        }
+
+        function checkQuiz() {
+            updateOrderingInputs();
+
+            const totalQuestions = 50;
+            const correctAnswers = {
+                // Sección I (1-15) - CON P4 MODIFICADA
+                'q1': 'A', 'q2': 'B', 'q3': 'A', 'q4': 'C', 'q5': 'B',
+                'q6_order': 'SINCE',
+                'q7': 'A', 'q8': 'A', 'q9': 'C', 
+                'q10': 'A',
+                'q11': 'C', 'q12': 'B', 'q13': 'B',
+                'q14_order': 'ALL MY LIFE',
+                'q15': 'B',
+                // Sección II (16-25) - CON VARIEDAD REAL (B, C, B, A, orden, C, B, A, drag, C)
+                'q16': 'B', // reading (middle)
+                'q17': 'C', // to buy (last)
+                'q18': 'B', // working (middle in dropdown)
+                'q19': 'A', // to study (first)
+                'q20_order': 'WE-ARE-AVOIDING-HEAVY-TRAFFIC',
+                'q21': 'C', // to visit (last)
+                'q22': 'B', // going (middle)
+                'q23': 'A', // plan (first)
+                'q24_order': 'DRINKING',
+                'q25': 'C', // to finish (last)
+                // Sección III (26-35) - CON Q30 MODIFICADA
+                'q26': 'B', 'q27': 'B', 'q28': 'B', 'q29': 'B',
+                'q30': 'A',
+                'q31': 'B', 'q32': 'A', 'q33': 'B',
+                'q34_order': 'CAN\\\'T YOU',
+                'q35': 'A',
+                // Sección IV (36-50) - NUEVAS PREGUNTAS CON VARIEDAD DE POSICIONES
+                'q36': 'B', // retirement (middle)
+                'q37': 'C', // contribution (last)
+                'q38': 'B', // scholarship (middle in dropdown)
+                'q39': 'A', // degree (first)
+                'q40': 'B', // achievement (middle)
+                'q41': 'C', // sincere (last)
+                'q42': 'A', // arrogant (first)
+                'q43': 'B', // friendly and reliable (middle)
+                'q44': 'B', // empathy (middle)
+                'q45': 'A', // acquaintance (first in dropdown)
+                'q46': 'A', // curious (first in dropdown)
+                'q47': 'C', // discrimination (last)
+                'q48': 'A', // evidence (first)
+                'q49': 'B', // commitment (middle)
+                'q50': 'A'  // insecure (first)
+            };
+
+            let score = 0;
+            let questionKeys = Object.keys(correctAnswers);
+
+            for (let i = 0; i < questionKeys.length; i++) {
+                const qKey = questionKeys[i];
+                const qNumber = parseInt(qKey.match(/\d+/)[0]);
+
+                const resultDiv = document.getElementById('result' + qNumber);
+                const correctAnswerValue = correctAnswers[qKey];
+
+                let answer = null;
+                let justificationText = '';
+
+                if (qKey.endsWith('_order')) {
+                    const hiddenInput = document.getElementById(qKey);
+                    answer = hiddenInput ? hiddenInput.value : null;
+                    justificationText = justifications[qKey].replace(/\\'/g, '\'');
+                } else {
+                    const qName = 'q' + qNumber;
+                    const selectEl = document.querySelector(`select[name="${qName}"]`);
+
+                    if (selectEl) {
+                        answer = selectEl.value;
+                    } else {
+                        const radioChecked = document.querySelector(`input[name="${qName}"]:checked`);
+                        answer = radioChecked ? radioChecked.value : null;
+                    }
+                    const generalQKey = qKey;
+                    justificationText = justifications[generalQKey] || 'Sin justificación disponible.';
+                }
+
+                if (resultDiv) {
+                    resultDiv.classList.remove('correct', 'incorrect', 'hidden-initial');
+                    resultDiv.textContent = '';
+                }
+
+                const displayAnswerText = getExplicitAnswerText(qKey, correctAnswerValue);
+
+                if (answer && answer !== "") {
+                    const isCorrect = (answer === correctAnswerValue);
+
+                    if (isCorrect) {
+                        score++;
+                        if (resultDiv) {
+                            resultDiv.textContent = '¡Correcto!';
+                            resultDiv.classList.add('correct');
+                        }
+                    } else {
+                        if (resultDiv) {
+                            if (qKey.endsWith('_order')) {
+                                const yourAnswer = answer.replace(/-/g, ' ').replace(/\\'/g, '\'');
+                                resultDiv.innerHTML = `Incorrecto. Tu respuesta fue: <em>${yourAnswer}</em>.<br>La respuesta correcta es: ${displayAnswerText}.<br>Justificación: ${justificationText}`;
+                            } else {
+                                resultDiv.innerHTML = `Incorrecto. La respuesta correcta es: ${displayAnswerText}.<br>Justificación: ${justificationText}`;
+                            }
+                            resultDiv.classList.add('incorrect');
+                        }
+                    }
+                } else {
+                    if (resultDiv) {
+                        resultDiv.innerHTML = `Sin responder. La respuesta correcta es: ${displayAnswerText}.<br>Justificación: ${justificationText}`;
+                        resultDiv.classList.add('incorrect');
+                    }
+                }
+            }
+
+            const grade = (score / totalQuestions) * 10;
+            const aciertosMessage = `Aciertos: ${score} de ${totalQuestions}`;
+            const gradeMessage = `${grade.toFixed(1)}`;
+
+            const finalScoreElement = document.getElementById('finalScore');
+            finalScoreElement.innerHTML = `
+                <p class="text-xl font-semibold text-gray-800">${aciertosMessage}</p>
+                <p class="text-3xl mt-2 font-extrabold text-gray-900">Calificación: ${gradeMessage}</p>
+            `;
+            finalScoreElement.classList.remove('hidden');
+            document.getElementById('pdfButton').style.display = 'block';
+            finalScoreElement.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function generatePDF() {
+            document.getElementById('finalScore').classList.remove('hidden');
+            document.getElementById('checkButton').style.display = 'none';
+            document.getElementById('pdfButton').style.display = 'none';
+            window.print();
+            document.getElementById('checkButton').style.display = 'block';
+            document.getElementById('pdfButton').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
