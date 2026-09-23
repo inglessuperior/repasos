@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 9</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- Logo con ruta corregida -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- Recuadro MÓDULO con width 30% -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 9</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso General</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (TODAS convertidas a opción múltiple)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+            // ============================================================
+            // SECCIÓN I: PASADO PERFECTO
+            // ============================================================
+            {
+                sectionTitle: "Sección I: Pasado Perfecto",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. When I arrived at the party, everyone ______.",
+                                options: [
+                                    "already left",
+                                    "had already left",
+                                    "has already left"
+                                ],
+                                correct: "had already left",
+                                explanation: "Pasado Perfecto para la acción que ocurrió antes que otra en el pasado."
+                            },
+                            {
+                                id: "q2",
+                                type: "radio",
+                                question: "2. She ______ to a concert before last night.",
+                                options: [
+                                    "never went",
+                                    "has never been",
+                                    "had never been"
+                                ],
+                                correct: "had never been",
+                                explanation: "Pasado Perfecto con 'never' para experiencias antes de un momento en el pasado."
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. By the time we got to the movie theater, the movie ______.",
+                                options: [
+                                    "started",
+                                    "had started",
+                                    "has started"
+                                ],
+                                correct: "had started",
+                                explanation: "Pasado Perfecto: la película comenzó antes de que llegáramos."
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. Can we go back home? I just realized that I ______ my phone in my room.",
+                                options: [
+                                    "left",
+                                    "had left",
+                                    "have left"
+                                ],
+                                correct: "left",
+                                explanation: "Pasado simple: la acción de dejar el teléfono ocurrió en el pasado."
+                            },
+                            {
+                                id: "q5",
+                                type: "radio",
+                                question: "5. After they ______ dinner, they went for a walk.",
+                                options: [
+                                    "ate",
+                                    "had eaten",
+                                    "have eaten"
+                                ],
+                                correct: "had eaten",
+                                explanation: "Pasado Perfecto con 'after' para la acción que ocurrió primero."
+                            },
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. She told me she ______ that movie before.",
+                                options: [
+                                    "didn't see",
+                                    "hasn't seen",
+                                    "hadn't seen"
+                                ],
+                                correct: "hadn't seen",
+                                explanation: "Pasado Perfecto negativo en estilo indirecto."
+                            },
+                            {
+                                id: "q7",
+                                type: "radio",
+                                question: "7. Which sentence is correct in past perfect?",
+                                options: [
+                                    "They left the office after they had finished their work.",
+                                    "They left the office after they have finished their work.",
+                                    "They left the office after they finished their work."
+                                ],
+                                correct: "They left the office after they had finished their work.",
+                                explanation: "Pasado perfecto: la acción de terminar el trabajo ocurrió antes de salir de la oficina."
+                            },
+                            {
+                                id: "q8",
+                                type: "radio",
+                                question: "8. The train ______ (already / leave) when we arrived at the station.",
+                                options: [
+                                    "already left",
+                                    "had already left",
+                                    "has already left"
+                                ],
+                                correct: "had already left",
+                                explanation: "Pasado Perfecto con 'already': el tren se fue antes de que llegáramos."
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: "9. He was tired because he ______ (work) all day.",
+                                options: [
+                                    "worked",
+                                    "had worked",
+                                    "has worked"
+                                ],
+                                correct: "had worked",
+                                explanation: "Pasado Perfecto para una causa anterior a otra acción pasada."
+                            },
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. The room was empty because everyone ______ (go) home.",
+                                options: [
+                                    "went",
+                                    "had gone",
+                                    "have gone"
+                                ],
+                                correct: "had gone",
+                                explanation: "Pasado Perfecto: todos se fueron antes de que la habitación estuviera vacía."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN II: TERCER CONDICIONAL
+            // ============================================================
+            {
+                sectionTitle: "Sección II: Tercer Condicional",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: "11. If she ______ (study) harder, she ______ (pass) the exam.",
+                                options: [
+                                    "studied / would pass",
+                                    "had studied / would have passed",
+                                    "has studied / will pass"
+                                ],
+                                correct: "had studied / would have passed",
+                                explanation: "Tercer condicional: If + past perfect, would have + past participle."
+                            },
+                            {
+                                id: "q12",
+                                type: "radio",
+                                question: "12. They ______ (arrive) on time if they ______ (not / miss) the bus.",
+                                options: [
+                                    "would have arrived / hadn't missed",
+                                    "would arrive / didn't miss",
+                                    "will arrive / don't miss"
+                                ],
+                                correct: "would have arrived / hadn't missed",
+                                explanation: "Tercer condicional: estructura completa."
+                            },
+                            {
+                                id: "q13",
+                                type: "radio",
+                                question: "13. Selecciona la opción correcta para completar el tercer condicional: If you ______ me, I ______ you.",
+                                options: [
+                                    "told / would help",
+                                    "had told / would have helped",
+                                    "have told / will help"
+                                ],
+                                correct: "had told / would have helped",
+                                explanation: "Tercer condicional: If + past perfect (had told), would have + past participle (would have helped)."
+                            },
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. What would have happened if you ______ (not / take) that job?",
+                                options: [
+                                    "didn't take",
+                                    "hadn't taken",
+                                    "wouldn't take"
+                                ],
+                                correct: "hadn't taken",
+                                explanation: "Tercer condicional: 'if + past perfect' en la condición."
+                            },
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. We ______ (win) the match if we ______ (practice) more.",
+                                options: [
+                                    "would win / practiced",
+                                    "will win / practice",
+                                    "would have won / had practiced"
+                                ],
+                                correct: "would have won / had practiced",
+                                explanation: "Tercer condicional: habría ganado si hubiéramos practicado más."
+                            },
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. Selecciona la opción correcta para completar el tercer condicional: If I ______ you were coming, I ______ waited.",
+                                options: [
+                                    "had known / would have",
+                                    "knew / would",
+                                    "have known / will have"
+                                ],
+                                correct: "had known / would have",
+                                explanation: "Tercer condicional: If I had known, I would have waited."
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. She ______ (not / be) late if she ______ (leave) earlier.",
+                                options: [
+                                    "wouldn't be / left",
+                                    "wouldn't have been / had left",
+                                    "isn't / leaves"
+                                ],
+                                correct: "wouldn't have been / had left",
+                                explanation: "Tercer condicional negativo."
+                            },
+                            {
+                                id: "q18",
+                                type: "radio",
+                                question: "18. If they ______ (save) more money, they ______ (buy) a house.",
+                                options: [
+                                    "saved / would buy",
+                                    "had saved / would have bought",
+                                    "save / will buy"
+                                ],
+                                correct: "had saved / would have bought",
+                                explanation: "Tercer condicional: si hubieran ahorrado, habrían comprado."
+                            },
+                            {
+                                id: "q19",
+                                type: "radio",
+                                question: "19. I ______ (call) you if I ______ (have) your number.",
+                                options: [
+                                    "would call / had",
+                                    "would have called / had had",
+                                    "will call / have"
+                                ],
+                                correct: "would have called / had had",
+                                explanation: "Tercer condicional con 'had had' (past perfect de 'have')."
+                            },
+                            {
+                                id: "q20",
+                                type: "radio",
+                                question: "20. Which sentence is a third conditional?",
+                                options: [
+                                    "If it rains, we will stay home.",
+                                    "If I were you, I would go.",
+                                    "If he had studied, he would have passed."
+                                ],
+                                correct: "If he had studied, he would have passed.",
+                                explanation: "El tercer condicional habla de situaciones hipotéticas en el pasado."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN III: REPORTED SPEECH Y CONECTORES
+            // ============================================================
+            {
+                sectionTitle: "Sección III: Reported Speech y Conectores",
+                subsections: [
+                    {
+                        subtitle: "A. Reported Speech (consolidación).",
+                        items: [
+                            {
+                                id: "q21",
+                                type: "radio",
+                                question: '21. "I am working on a new project," she said.',
+                                options: [
+                                    "She said she was working on a new project.",
+                                    "She said she is working on a new project.",
+                                    "She said she works on a new project."
+                                ],
+                                correct: "She said she was working on a new project.",
+                                explanation: "Reported speech: presente continuo → pasado continuo."
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: '22. "We have finished the report," they told me.',
+                                options: [
+                                    "They told me they have finished the report.",
+                                    "They told me they had finished the report.",
+                                    "They told me they finished the report."
+                                ],
+                                correct: "They told me they had finished the report.",
+                                explanation: "Reported speech: present perfect → past perfect."
+                            },
+                            {
+                                id: "q23",
+                                type: "radio",
+                                question: '23. "I will call you tomorrow," he promised.',
+                                options: [
+                                    "He promised he will call me tomorrow.",
+                                    "He promised he would call me the next day.",
+                                    "He promised he calls me tomorrow."
+                                ],
+                                correct: "He promised he would call me the next day.",
+                                explanation: 'Reported speech: "will" → "would"; "tomorrow" → "the next day".'
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: '"Can you help me?" she asked.',
+                                options: [
+                                    "She asked if I could help her.",
+                                    "She asked if I can help her.",
+                                    "She asked if I help her."
+                                ],
+                                correct: "She asked if I could help her.",
+                                explanation: 'Reported speech con pregunta: "can" → "could", usar "if".'
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "B. Conectores avanzados: despite, in spite of, whereas, while.",
+                        items: [
+                            {
+                                id: "q25",
+                                type: "radio",
+                                question: "25. ______ the rain, we went for a walk.",
+                                options: ["Despite", "Whereas", "While"],
+                                correct: "Despite",
+                                explanation: '"Despite" + sustantivo o gerundio para expresar contraste.'
+                            },
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. She loves classical music, ______ he prefers rock.",
+                                options: ["despite", "whereas", "in spite of"],
+                                correct: "whereas",
+                                explanation: '"Whereas" se usa para contrastar dos ideas diferentes.'
+                            },
+                            {
+                                id: "q27",
+                                type: "radio",
+                                question: "27. Which sentence correctly uses 'in spite of'?",
+                                options: [
+                                    "In spite of the traffic, we arrived on time.",
+                                    "In spite the traffic, we arrived on time.",
+                                    "In spite of we arrived on time."
+                                ],
+                                correct: "In spite of the traffic, we arrived on time.",
+                                explanation: '"In spite of" + sustantivo (the traffic) para expresar contraste.'
+                            },
+                            {
+                                id: "q28",
+                                type: "radio",
+                                question: "28. ______ I was cooking dinner, my husband cleaned the garage.",
+                                options: ["Despite", "In spite of", "While"],
+                                correct: "While",
+                                explanation: '"While" para acciones simultáneas en el pasado.'
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. ______ having a lot of money, he is not happy.",
+                                options: ["Despite", "Whereas", "While"],
+                                correct: "Despite",
+                                explanation: '"Despite" + gerundio (having).'
+                            },
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: '30. "Despite" is followed by a noun or gerund, while "although" is followed by a ______.',
+                                options: [
+                                    "clause (subject + verb)",
+                                    "noun only",
+                                    "adjective"
+                                ],
+                                correct: "clause (subject + verb)",
+                                explanation: '"Although" va seguido de una cláusula (sujeto + verbo).'
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN IV: PHRASAL VERBS Y ESTRUCTURA PARA CRÍTICAS
+            // ============================================================
+            {
+                sectionTitle: "Sección IV: Phrasal Verbs y Críticas",
+                subsections: [
+                    {
+                        subtitle: "A. Phrasal verbs (consolidación).",
+                        items: [
+                            {
+                                id: "q31",
+                                type: "radio",
+                                question: "31. Can you ______ this word in the dictionary? I don't know what it means.",
+                                options: ["look up", "look after", "look for"],
+                                correct: "look up",
+                                explanation: "Look up = buscar información (en diccionario, internet)."
+                            },
+                            {
+                                id: "q32",
+                                type: "radio",
+                                question: "32. The meeting was ______ because the manager was sick.",
+                                options: ["called off", "canceled down", "turned off"],
+                                correct: "called off",
+                                explanation: "Call off = cancelar."
+                            },
+                            {
+                                id: "q33",
+                                type: "radio",
+                                question: "33. I need to ______ my new laptop, but I've been lazy lately.",
+                                options: ["set down", "set up", "set on"],
+                                correct: "set up",
+                                explanation: "Set up = configurar."
+                            },
+                            {
+                                id: "q34",
+                                type: "radio",
+                                question: "34. She doesn't ______ with her coworkers very well.",
+                                options: ["get along", "go on", "come across"],
+                                correct: "get along",
+                                explanation: "Get along with = llevarse bien con alguien."
+                            },
+                            {
+                                id: "q35",
+                                type: "radio",
+                                question: "35. The plane will ______ at 6 PM.",
+                                options: ["take off", "get off", "put off"],
+                                correct: "take off",
+                                explanation: "Take off = despegar (avión)."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "B. Críticas y reseñas.",
+                        items: [
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. The main ______ of the book is that the ending feels rushed.",
+                                options: ["takeaway", "perspective", "credibility"],
+                                correct: "takeaway",
+                                explanation: "Takeaway = conclusión o punto principal que se aprende."
+                            },
+                            {
+                                id: "q37",
+                                type: "radio",
+                                question: "37. From a reader's ______, the story was very interesting.",
+                                options: ["dialogue", "perspective", "authenticity"],
+                                correct: "perspective",
+                                explanation: "Perspective = perspectiva / punto de vista."
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. Which question asks what the movie is about?",
+                                options: [
+                                    "What is the movie about?",
+                                    "What the movie is about?",
+                                    "Is what the movie about?"
+                                ],
+                                correct: "What is the movie about?",
+                                explanation: "La pregunta correcta es 'What is the movie about?'"
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. The ______ of the characters' emotions made the story believable.",
+                                options: ["authenticity", "dialogue", "takeaway"],
+                                correct: "authenticity",
+                                explanation: "Authenticity = autenticidad, cualidad de ser genuino."
+                            },
+                            {
+                                id: "q40",
+                                type: "radio",
+                                question: "40. The ______ between the two main characters felt very natural.",
+                                options: ["perspective", "credibility", "dialogue"],
+                                correct: "dialogue",
+                                explanation: "Dialogue = diálogo entre personajes."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN V: VOCABULARIO ESPECIALIZADO
+            // ============================================================
+            {
+                sectionTitle: "Sección V: Vocabulario Especializado",
+                subsections: [
+                    {
+                        subtitle: "A. Medio ambiente y naturaleza.",
+                        items: [
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: "41. The ______ is causing temperatures to rise around the world.",
+                                options: ["ecosystem", "greenhouse effect", "wildlife"],
+                                correct: "greenhouse effect",
+                                explanation: "Greenhouse effect = efecto invernadero."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: "42. Many species are ______ due to habitat loss.",
+                                options: ["endangered", "sustainable", "renewable"],
+                                correct: "endangered",
+                                explanation: "Endangered = en peligro de extinción."
+                            },
+                            {
+                                id: "q43",
+                                type: "radio",
+                                question: "43. Protecting natural ______ is essential for biodiversity.",
+                                options: ["habitats", "consumers", "arguments"],
+                                correct: "habitats",
+                                explanation: "Habitats = hábitats naturales."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "B. Ética y valores.",
+                        items: [
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: "44. A leader with ______ always tells the truth and follows moral principles.",
+                                options: ["integrity", "burnout", "automation"],
+                                correct: "integrity",
+                                explanation: "Integrity = integridad, honestidad."
+                            },
+                            {
+                                id: "q45",
+                                type: "radio",
+                                question: "45. Showing ______ means being modest and not arrogant.",
+                                options: ["loyalty", "perseverance", "humility"],
+                                correct: "humility",
+                                explanation: "Humility = humildad."
+                            },
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: "46. Treating everyone equally without favoritism is called ______.",
+                                options: ["fairness", "legal", "optimism"],
+                                correct: "fairness",
+                                explanation: "Fairness = imparcialidad, justicia."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "C. Música y debates.",
+                        items: [
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. The ______ of a song can make you want to dance.",
+                                options: ["lyrics", "rhythm", "soundtrack"],
+                                correct: "rhythm",
+                                explanation: "Rhythm = ritmo de la música."
+                            },
+                            {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. In a debate, a well-supported ______ is stronger than an emotional one.",
+                                options: ["statistic", "argument", "proposal"],
+                                correct: "argument",
+                                explanation: "Argument = argumento razonado en un debate."
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. When everyone in a group agrees, they have reached a ______.",
+                                options: ["stance", "reasoning", "consensus"],
+                                correct: "consensus",
+                                explanation: "Consensus = consenso, acuerdo general."
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: "50. The movie's ______ had music by Hans Zimmer.",
+                                options: ["soundtrack", "lyrics", "rhythm"],
+                                correct: "soundtrack",
+                                explanation: "Soundtrack = banda sonora (de una película)."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+</body>
+</html>

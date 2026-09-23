@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 3</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- Logo con ruta corregida -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- Recuadro MÓDULO con width 30% -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 3</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso General</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (TODAS convertidas a opción múltiple)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+            // ============================================================
+            // SECCIÓN I: VERBOS + -ING PARA GUSTOS
+            // ============================================================
+            {
+                sectionTitle: "Sección I: Verbos + -ing para gustos",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. I ______ (like / read) books in my free time.",
+                                options: ["like read", "like reading", "liking reading"],
+                                correct: "like reading",
+                                explanation: 'Después de "like" se usa el verbo en -ing: like reading.'
+                            },
+                            {
+                                id: "q2",
+                                type: "radio",
+                                question: "2. She ______ (love / watch) movies on weekends.",
+                                options: ["love watch", "loves watch", "loves watching"],
+                                correct: "loves watching",
+                                explanation: 'Con "she" el verbo lleva "s": loves + verbo en -ing.'
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. They ______ (not / like / eat) meat. They are vegetarians.",
+                                options: ["don't like eating", "doesn't like eating", "don't like eat"],
+                                correct: "don't like eating",
+                                explanation: 'Negativo con "they" -> don\'t like + verbo en -ing.'
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. My brother ______ (hate / wake up) early in the morning.",
+                                options: ["hates waking up", "hate waking up", "hates wake up"],
+                                correct: "hates waking up",
+                                explanation: 'Con "my brother" (he) -> hates + verbo en -ing.'
+                            },
+                            {
+                                id: "q5",
+                                type: "radio",
+                                question: "5. We ______ (enjoy / play) tennis on Saturdays.",
+                                options: ["enjoy playing", "enjoy play", "enjoys playing"],
+                                correct: "enjoy playing",
+                                explanation: 'Con "we" -> enjoy + verbo en -ing.'
+                            },
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. Do you ______ (like / cook) dinner?",
+                                options: ["liking cooking", "like cook", "like cooking"],
+                                correct: "like cooking",
+                                explanation: 'Pregunta con "do" -> like + verbo en -ing.'
+                            },
+                            {
+                                id: "q7",
+                                type: "radio",
+                                question: "7. My sister ______ (love / dance) at parties.",
+                                options: ["loves dancing", "love dancing", "loves dance", "does loves dancing", "does love dancing"],
+                                correct: "loves dancing",
+                                explanation: 'Con "my sister" (she) -> loves + verbo en -ing.'
+                            },
+                            {
+                                id: "q8",
+                                type: "radio",
+                                question: "8. He ______ (not / like / swim) in the ocean.",
+                                options: ["doesn't like swimming", "doesn't like swim", "not like swimming"],
+                                correct: "doesn't like swimming",
+                                explanation: 'Negativo con "he" -> doesn\'t like + verbo en -ing.'
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: "9. Which sentence correctly uses 'like' + -ing?",
+                                options: [
+                                    "I like reading interesting books.",
+                                    "I like read interesting books.",
+                                    "I like to reading interesting books."
+                                ],
+                                correct: "I like reading interesting books.",
+                                explanation: "Orden: sujeto + like + verbo en -ing + complemento."
+                            },
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. They ______ (not / like / travel) by plane.",
+                                options: ["don't like traveling", "doesn't like traveling", "don't like travel"],
+                                correct: "don't like traveling",
+                                explanation: 'Negativo con "they" -> don\'t like + verbo en -ing.'
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN II: MODAL CAN/CAN'T
+            // ============================================================
+            {
+                sectionTitle: "Sección II: Modal can / can't",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: "11. She ______ speak three languages.",
+                                options: ["can", "cans", "can to"],
+                                correct: "can",
+                                explanation: "Can es el modal para habilidad o permiso. No cambia con la persona."
+                            },
+                            {
+                                id: "q12",
+                                type: "radio",
+                                question: "12. He ______ drive a car. He is only 10 years old.",
+                                options: ["can't", "cannot", "Las dos opciones anteriores son correctas"],
+                                correct: "Las dos opciones anteriores son correctas",
+                                explanation: "Can't o cannot son las formas negativas correctas."
+                            },
+                            {
+                                id: "q13",
+                                type: "radio",
+                                question: "13. ______ you help me with my homework?",
+                                options: ["Do", "Can", "Las dos opciones anteriores son correctas"],
+                                correct: "Can",
+                                explanation: "Can se usa para hacer preguntas de habilidad o permiso."
+                            },
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. I ______ find my keys. Do you know where they are?",
+                                options: ["can't", "can", "don't can"],
+                                correct: "can't",
+                                explanation: "Can't expresa incapacidad: no puedo encontrar mis llaves."
+                            },
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. She ______ play the piano very well.",
+                                options: ["can", "cans", "is can"],
+                                correct: "can",
+                                explanation: "Can no cambia con la persona (she can)."
+                            },
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. We ______ go for a run today because it's raining.",
+                                options: ["can", "doesn't can", "doesn't can't", "can't", "does can"],
+                                correct: "can't",
+                                explanation: "Can't indica que no es posible debido a la lluvia."
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. Which question correctly uses 'can'?",
+                                options: ["Can you swim?", "You can swim?", "Can swim you?"],
+                                correct: "Can you swim?",
+                                explanation: "Pregunta con can: Can + sujeto + verbo + ?"
+                            },
+                            {
+                                id: "q18",
+                                type: "radio",
+                                question: "18. My grandmother ______ use a computer. She doesn't know how.",
+                                options: ["can", "can't", "is"],
+                                correct: "can't",
+                                explanation: "Can't indica incapacidad (no sabe usar computadora)."
+                            },
+                            {
+                                id: "q19",
+                                type: "radio",
+                                question: "19. ______ you speak Japanese?",
+                                options: ["Do can", "Can", "Are"],
+                                correct: "Can",
+                                explanation: "Can se usa para preguntar sobre habilidad."
+                            },
+                            {
+                                id: "q20",
+                                type: "radio",
+                                question: "20. They ______ come to the party because they are busy.",
+                                options: ["aren't", "can", "can't"],
+                                correct: "can't",
+                                explanation: "Can't expresa incapacidad o imposibilidad."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN III: ADJETIVOS POSESIVOS Y PRONOMBRES OBJETO
+            // ============================================================
+            {
+                sectionTitle: "Sección III: Adjetivos posesivos y pronombres objeto",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q21",
+                                type: "radio",
+                                question: "21. This is ______ house. We live here.",
+                                options: ["our", "our's", "us"],
+                                correct: "our",
+                                explanation: '"Our" es el adjetivo posesivo para "we" (nosotros).'
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: "22. My father loves ______ new car. He bought it last week.",
+                                options: ["her", "his", "him"],
+                                correct: "his",
+                                explanation: '"His" es el adjetivo posesivo para "he" (mi padre).'
+                            },
+                            {
+                                id: "q23",
+                                type: "radio",
+                                question: "23. Sarah is ______ sister. We have the same parents.",
+                                options: ["my", "her", "his"],
+                                correct: "my",
+                                explanation: '"My" es el adjetivo posesivo para "I" (yo).'
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: "24. The dog is chasing ______ tail.",
+                                options: ["this", "it's", "its"],
+                                correct: "its",
+                                explanation: '"Its" es el adjetivo posesivo para "it" (el perro).'
+                            },
+                            {
+                                id: "q25",
+                                type: "radio",
+                                question: "25. ______ names are John and Robert. They are my cousins.",
+                                options: ["Our", "They", "Their", "They're", "Their're"],
+                                correct: "Their",
+                                explanation: '"Their" es el adjetivo posesivo para "they" (ellos).'
+                            },
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. I love my parents. I call ______ every day.",
+                                options: ["them", "they", "their"],
+                                correct: "them",
+                                explanation: '"Them" es el pronombre objeto para "they" (mis padres).'
+                            },
+                            {
+                                id: "q27",
+                                type: "radio",
+                                question: "27. She is my friend. I always talk to ______ when we meet.",
+                                options: ["she", "her", "hers"],
+                                correct: "her",
+                                explanation: '"Her" es el pronombre objeto para "she" (mi amiga).'
+                            },
+                            {
+                                id: "q28",
+                                type: "radio",
+                                question: "28. Which question correctly uses an object pronoun?",
+                                options: ["Can you help me?", "Can you help I?", "Can you help my?"],
+                                correct: "Can you help me?",
+                                explanation: '"Can you help me?" es la pregunta correcta con el pronombre objeto "me".'
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. We are busy. Please don't talk to ______.",
+                                options: ["our", "us", "we"],
+                                correct: "us",
+                                explanation: '"Us" es el pronombre objeto para "we" (nosotros).'
+                            },
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: "30. I don't know ______ very well. He is new here.",
+                                options: ["he", "his", "him"],
+                                correct: "him",
+                                explanation: '"Him" es el pronombre objeto para "he" (él).'
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN IV: CUANTIFICADORES SOME/ANY
+            // ============================================================
+            {
+                sectionTitle: "Sección IV: Cuantificadores some / any",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q31",
+                                type: "radio",
+                                question: "31. We need ______ eggs for the cake.",
+                                options: ["some", "any", "a lot"],
+                                correct: "some",
+                                explanation: '"Some" se usa en oraciones afirmativas.'
+                            },
+                            {
+                                id: "q32",
+                                type: "radio",
+                                question: "32. Do you have ______ questions?",
+                                options: ["some", "a lot", "any"],
+                                correct: "any",
+                                explanation: '"Any" se usa en preguntas.'
+                            },
+                            {
+                                id: "q33",
+                                type: "radio",
+                                question: "33. I don't have ______ money right now.",
+                                options: ["some", "any", "many"],
+                                correct: "any",
+                                explanation: '"Any" se usa en oraciones negativas.'
+                            },
+                            {
+                                id: "q34",
+                                type: "radio",
+                                question: "34. There are ______ apples on the table.",
+                                options: ["some", "any", "much"],
+                                correct: "some",
+                                explanation: '"Some" se usa en oraciones afirmativas.'
+                            },
+                            {
+                                id: "q35",
+                                type: "radio",
+                                question: "35. She doesn't have ______ pets at home.",
+                                options: ["some", "any", "no", "much"],
+                                correct: "any",
+                                explanation: '"Any" se usa en oraciones negativas.'
+                            },
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. Would you like ______ water?",
+                                options: ["some", "any", "no"],
+                                correct: "some",
+                                explanation: '"Some" se usa en preguntas que ofrecen algo.'
+                            },
+                            {
+                                id: "q37",
+                                type: "radio",
+                                question: "37. We need ______ bananas for the smoothie.",
+                                options: ["some", "any", "no"],
+                                correct: "some",
+                                explanation: '"Some" se usa en oraciones afirmativas.'
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. Which sentence correctly uses 'some'?",
+                                options: [
+                                    "We have some delicious snacks.",
+                                    "We have any delicious snacks.",
+                                    "We have delicious some snacks."
+                                ],
+                                correct: "We have some delicious snacks.",
+                                explanation: '"We have some delicious snacks." es la oración correcta con "some".'
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. Is there ______ meat in the fridge?",
+                                options: ["some", "none", "any"],
+                                correct: "any",
+                                explanation: '"Any" se usa en preguntas.'
+                            },
+                            {
+                                id: "q40",
+                                type: "radio",
+                                question: "40. There aren't ______ cookies left.",
+                                options: ["some", "any", "no"],
+                                correct: "any",
+                                explanation: '"Any" se usa en oraciones negativas.'
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN V: VOCABULARIO
+            // ============================================================
+            {
+                sectionTitle: "Sección V: Vocabulario",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: '41. "Nephew" is the son of your ______.',
+                                options: ["uncle", "son", "sibling"],
+                                correct: "sibling",
+                                explanation: "Nephew = hijo de tu hermano(a) (sibling)."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: '42. "Niece" is the daughter of your ______.',
+                                options: ["brother", "aunt", "mother"],
+                                correct: "brother",
+                                explanation: "Niece = hija de tu hermano(a) (brother)."
+                            },
+                            {
+                                id: "q43",
+                                type: "radio",
+                                question: '43. A "snack" is a ______.',
+                                options: ["big meal", "small amount of food", "drink"],
+                                correct: "small amount of food",
+                                explanation: "Snack = pequeña cantidad de comida entre comidas (botana)."
+                            },
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: '44. Food (usually sweet) that you eat at the end of your meal is called ______.',
+                                options: ["desert", "dessert", "dessertt"],
+                                correct: "dessert",
+                                explanation: "Dessert = se come al final de la comida."
+                            },
+                            {
+                                id: "q45",
+                                type: "radio",
+                                question: "45. I need to ______ the answer to this question or I'll be thinking about it all day.",
+                                options: ["respond", "answer", "find"],
+                                correct: "find",
+                                explanation: "Find = encontrar la respuesta."
+                            },
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: '46. A "relative" is a member of your ______.',
+                                options: ["school", "family", "work", "friends"],
+                                correct: "family",
+                                explanation: "Relative = miembro de tu familia."
+                            },
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. My father-in-law is my wife's ______.",
+                                options: ["father", "husband", "brother"],
+                                correct: "father",
+                                explanation: "Father-in-law = padre de tu esposa o esposo."
+                            },
+                            {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. She is ______ a beautiful dress today.",
+                                options: ["wear", "wearing", "wears"],
+                                correct: "wearing",
+                                explanation: "Wearing es el presente continuo de 'wear'."
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. I need to ______ my mother for permission.",
+                                options: ["answer", "find", "ask"],
+                                correct: "ask",
+                                explanation: "Ask = preguntar."
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: '50. "Meat" is food that comes from ______.',
+                                options: ["plants", "animals", "fruits"],
+                                correct: "animals",
+                                explanation: "Meat = comida que viene de animales."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+</body>
+</html>

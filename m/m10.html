@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 10</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- Logo con ruta corregida -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- Recuadro MÓDULO con width 30% -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 10</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso Módulo 10</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona o escribe la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <!-- Botones y Resultados -->
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (100 preguntas - exactamente igual que antes)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+            // ============================================================
+            // SECCIÓN I: EXPRESIONES IDIOMÁTICAS Y FRASES
+            // ============================================================
+            {
+                sectionTitle: "Sección I: Expresiones idiomáticas y frases",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la mejor opción para completar la frase.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. The exam was very easy. It was a ____________.",
+                                options: ["piece of cake", "once in a blue moon", "blessing in disguise"],
+                                correct: "piece of cake",
+                                explanation: "La expresión 'piece of cake' significa que algo es muy fácil."
+                            },
+                            {
+                                id: "q2",
+                                type: "radio",
+                                question: "2. We need to leave now. It's time to ____________.",
+                                options: ["break the ice", "hit the road", "cut corners"],
+                                correct: "hit the road",
+                                explanation: "La frase 'hit the road' se usa para indicar que es momento de emprender el camino."
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. This new car ____________. It was incredibly expensive.",
+                                options: ["cost an arm and a leg", "went the extra mile", "broke the ice"],
+                                correct: "cost an arm and a leg",
+                                explanation: "La expresión 'cost an arm and a leg' significa que algo fue muy caro."
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. I only go to the movies ____________. I prefer watching movies at home.",
+                                options: ["under the weather", "in a nutshell", "once in a blue moon"],
+                                correct: "once in a blue moon",
+                                explanation: "La frase 'once in a blue moon' indica que algo ocurre muy rara vez."
+                            },
+                            {
+                                id: "q5",
+                                type: "radio",
+                                question: "5. Stop ____________ and tell me what you really think.",
+                                options: ["hanging in there", "cutting corners", "beating around the bush"],
+                                correct: "beating around the bush",
+                                explanation: "La expresión 'beat around the bush' significa evitar decir algo directamente."
+                            },
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. The project was getting too expensive and we needed more people. The situation was ____________.",
+                                options: ["getting out of hand", "going the extra mile", "raining on your parade"],
+                                correct: "getting out of hand",
+                                explanation: "La frase 'getting out of hand' se usa cuando una situación se vuelve difícil de controlar."
+                            },
+                            {
+                                id: "q7",
+                                type: "radio",
+                                question: "7. She always ____________ to help her colleagues. She's very dedicated.",
+                                options: ["cuts corners", "goes the extra mile", "beats around the bush"],
+                                correct: "goes the extra mile",
+                                explanation: "La expresión 'go the extra mile' significa hacer un esfuerzo extra."
+                            },
+                            {
+                                id: "q8",
+                                type: "radio",
+                                question: "8. '____________!' I told her when she was feeling sad after making a mistake.",
+                                options: ["Break a leg", "Don't beat around the bush", "Hang in there"],
+                                correct: "Hang in there",
+                                explanation: "La frase 'hang in there' se usa para animar a alguien a no rendirse / aguantar."
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: "9. Losing that job was a ______. Now I have a much better one.",
+                                options: ["piece of cake", "blessing in disguise", "once in a blue moon"],
+                                correct: "blessing in disguise",
+                                explanation: "La frase 'blessing in disguise' significa que algo aparentemente negativo resultó ser positivo."
+                            },
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. I'm feeling ______ today. I think I need to rest.",
+                                options: ["under the weather", "over the moon", "butterflies in my stomach"],
+                                correct: "under the weather",
+                                explanation: "La frase 'under the weather' se usa para decir que alguien se siente enfermo o mal."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN II: TÉRMINOS ACADÉMICOS Y FORMALES
+            // ============================================================
+            {
+                sectionTitle: "Sección II: Términos académicos y formales",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la mejor opción para completar la frase.",
+                        items: [
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: "11. The scientist proposed a new ______ to explain the results.",
+                                options: ["theory", "protocol", "program"],
+                                correct: "theory",
+                                explanation: "'Theory' es la propuesta para explicar resultados."
+                            },
+                            {
+                                id: "q12",
+                                type: "radio",
+                                question: "12. The government uses ______ cameras to monitor public spaces.",
+                                options: ["renewable", "surveillance", "analysis"],
+                                correct: "surveillance",
+                                explanation: "Las 'surveillance cameras' son cámaras de vigilancia."
+                            },
+                            {
+                                id: "q13",
+                                type: "radio",
+                                question: "13. We need to do a detailed ______ of the data before drawing conclusions.",
+                                options: ["theory", "protocol", "analysis"],
+                                correct: "analysis",
+                                explanation: "Un 'analysis' es el examen detallado de datos antes de sacar conclusiones."
+                            },
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. The CEO asked for a ______ report before making a decision.",
+                                options: ["quick", "bothersome", "formal"],
+                                correct: "formal",
+                                explanation: "Un 'formal report' es un informe oficial y estructurado."
+                            },
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. She made a formal ______ for more information about the position.",
+                                options: ["refusal", "request", "complaint"],
+                                correct: "request",
+                                explanation: "'Request' es una solicitud."
+                            },
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. The new manager established a strict ______ for handling complaints.",
+                                options: ["protocol", "hypothesis", "punishment"],
+                                correct: "protocol",
+                                explanation: "Un 'protocol' es un conjunto de reglas o procedimientos."
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. Solar and wind energy are examples of ______.",
+                                options: ["renewable resources", "non-renewable resources", "carbon-based energy"],
+                                correct: "renewable resources",
+                                explanation: "La energía solar y eólica son 'renewable resources' porque se regeneran naturalmente."
+                            },
+                            {
+                                id: "q18",
+                                type: "radio",
+                                question: "18. Her ______ to the proposal surprised everyone. They thought she would accept.",
+                                options: ["courtesy", "request", "refusal"],
+                                correct: "refusal",
+                                explanation: "Un 'refusal' es una negativa formal a aceptar algo."
+                            },
+                            {
+                                id: "q19",
+                                type: "radio",
+                                question: "19. The ______ is that population growth will continue to rise.",
+                                options: ["analysis", "hypothesis", "inflation"],
+                                correct: "hypothesis",
+                                explanation: "Una 'hypothesis' es una suposición o predicción basada en evidencia."
+                            },
+                            {
+                                id: "q20",
+                                type: "radio",
+                                question: "20. The rising cost of living is because of ______.",
+                                options: ["inflation", "surveillance", "market crashes"],
+                                correct: "inflation",
+                                explanation: "La 'inflation' es el aumento general de precios."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN III: TIEMPOS VERBALES
+            // ============================================================
+            {
+                sectionTitle: "Sección III: Tiempos verbales",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la forma verbal correcta.",
+                        items: [
+                            {
+                                id: "q21",
+                                type: "radio",
+                                question: "21. She ______ (work) at the hospital for three years before she moved to another city.",
+                                options: ["worked", "had worked", "has worked"],
+                                correct: "had worked",
+                                explanation: "Se usa 'had worked' para indicar una acción completada antes de otra en el pasado."
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: "22. I ______ (meet) my friends at the café tomorrow at 5 PM.",
+                                options: ["am meeting", "meet", "would meet"],
+                                correct: "am meeting",
+                                explanation: "El presente continuo 'am meeting' se usa para planes futuros ya organizados."
+                            },
+                            {
+                                id: "q23",
+                                type: "text",
+                                question: "23. They ______ (watch) TV when the power went out.",
+                                correct: ["were watching"],
+                                explanation: "El pasado continuo 'were watching' describe una acción en progreso interrumpida por otra."
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: "24. He ______ (not / finish) his homework yet.",
+                                options: ["didn't finish", "hasn't finished", "hadn't finished"],
+                                correct: "hasn't finished",
+                                explanation: "El presente perfecto 'hasn't finished' se usa con 'yet' para indicar que algo aún no ocurre."
+                            },
+                            {
+                                id: "q25",
+                                type: "radio",
+                                question: "25. We ______ (take) the train to London next month.",
+                                options: ["are taking", "will taking", "take"],
+                                correct: "are taking",
+                                explanation: "El presente continuo 'are taking' se usa para planes futuros ya decididos."
+                            },
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. I ______ (never / visit) Paris before 2015.",
+                                options: ["had never visited", "have never visited", "never visited"],
+                                correct: "had never visited",
+                                explanation: "El pasado perfecto 'had never visited' indica que nunca había ocurrido antes de un momento pasado."
+                            },
+                            {
+                                id: "q27",
+                                type: "text",
+                                question: "27. She ______ (study) Italian for five years now.",
+                                correct: ["has studied"],
+                                explanation: "El presente perfecto 'has studied' se usa para acciones que comenzaron en el pasado y continúan en el presente."
+                            },
+                            {
+                                id: "q28",
+                                type: "radio",
+                                question: "28. He ______ (bake) a delicious pie for me yesterday, I loved it.",
+                                options: ["will bake", "didn't bake", "baked"],
+                                correct: "baked",
+                                explanation: "El pasado simple 'baked' se usa para acciones completadas en un momento específico del pasado."
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. While he ______ (walk) to work, he saw an accident.",
+                                options: ["was walking", "walked", "has walked"],
+                                correct: "was walking",
+                                explanation: "El pasado continuo 'was walking' describe una acción en progreso cuando ocurrió otra."
+                            },
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: "30. They ______ (live) in London for over a decade before moving to the countryside.",
+                                options: ["lived", "had lived", "have lived"],
+                                correct: "had lived",
+                                explanation: "El pasado perfecto 'had lived' indica que la acción se completó antes de otra en el pasado."
+                            },
+                            {
+                                id: "q31",
+                                type: "radio",
+                                question: "31. Water ______ (boil) at 100 degrees Celsius.",
+                                options: ["is boiling", "boils", "will boil"],
+                                correct: "boils",
+                                explanation: "El presente simple 'boils' se usa para hechos científicos o verdades universales."
+                            },
+                            {
+                                id: "q32",
+                                type: "radio",
+                                question: "32. He ______ (already / eat) when we arrived at the restaurant.",
+                                options: ["already ate", "had already eaten", "has already eaten"],
+                                correct: "had already eaten",
+                                explanation: "El pasado perfecto 'had already eaten' indica que la acción ocurrió antes de otra en el pasado."
+                            },
+                            {
+                                id: "q33",
+                                type: "radio",
+                                question: "33. Look at those clouds! It ______ (rain) soon.",
+                                options: ["has rained", "will rain", "is going to rain"],
+                                correct: "is going to rain",
+                                explanation: "Se usa 'is going to rain' porque hay evidencia presente de un evento futuro."
+                            },
+                            {
+                                id: "q34",
+                                type: "radio",
+                                question: "34. She ______ (always / complain) about her job. It's annoying.",
+                                options: ["complains", "is always complaining", "has always complained"],
+                                correct: "is always complaining",
+                                explanation: "El presente continuo con 'always' enfatiza una acción repetitiva que resulta molesta, reforzada por 'It's annoying'."
+                            },
+                            {
+                                id: "q35",
+                                type: "text",
+                                question: "35. I ______ (not / see) that movie yet.",
+                                correct: ["haven't seen"],
+                                explanation: "El presente perfecto 'haven't seen' se usa con 'yet' para indicar que algo aún no ocurre."
+                            },
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. At 6 PM yesterday, we ______ (drive) to the airport.",
+                                options: ["drove", "were driving", "have driven"],
+                                correct: "were driving",
+                                explanation: "El pasado continuo 'were driving' describe una acción en progreso en un momento específico del pasado."
+                            },
+                            {
+                                id: "q37",
+                                type: "text",
+                                question: "37. She usually ______ (wake up) at 6 AM.",
+                                correct: ["wakes up"],
+                                explanation: "El presente simple 'wakes up' se usa para rutinas."
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. I promise I ______ (help) you with your project.",
+                                options: ["am helping", "help", "will help"],
+                                correct: "will help",
+                                explanation: "Se usa 'will' para promesas o decisiones espontáneas."
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. Before she left, she ______ (finish) her report.",
+                                options: ["finished", "has finished", "had finished"],
+                                correct: "had finished",
+                                explanation: "El pasado perfecto 'had finished' indica que la acción ocurrió antes de otra en el pasado."
+                            },
+                            {
+                                id: "q40",
+                                type: "radio",
+                                question: "40. I ______ (call) you when I get home.",
+                                options: ["call", "will call", "would call"],
+                                correct: "will call",
+                                explanation: "Se usa 'will call' para expresar una acción futura."
+                            },
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: "41. They ______ (not / finish) the construction of the bridge until next year.",
+                                options: ["aren't finished", "won't finish", "don't finish"],
+                                correct: "won't finish",
+                                explanation: "El futuro 'won't finish' indica que la acción no se completará hasta un momento futuro."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: "42. He ______ (live) in Madrid for three years when he was a student.",
+                                options: ["lived", "has lived", "had lived"],
+                                correct: "lived",
+                                explanation: "El pasado simple 'lived' se usa para acciones terminadas en un punto del pasado."
+                            },
+                            {
+                                id: "q43",
+                                type: "text",
+                                question: "43. She ______ (work) on the report when her boss interrupted her.",
+                                correct: ["was working"],
+                                explanation: "El pasado continuo 'was working' describe una acción en progreso interrumpida por otra."
+                            },
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: "44. I ______ (not / hear) from him since last week.",
+                                options: ["didn't hear", "haven't heard", "hadn't heard"],
+                                correct: "haven't heard",
+                                explanation: "El presente perfecto 'haven't heard' se usa para indicar que no ha habido contacto desde un punto en el pasado hasta ahora."
+                            },
+                            {
+                                id: "q45",
+                                type: "radio",
+                                question: "45. The train ______ (arrive) at 8 PM.",
+                                options: ["will arrive", "is arriving", "arrives"],
+                                correct: "arrives",
+                                explanation: "Usamos 'arrives' (presente) al hablar de un horario fijo o programado."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN IV: CONDICIONALES
+            // ============================================================
+            {
+                sectionTitle: "Sección IV: Condicionales",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la forma verbal correcta.",
+                        items: [
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: "46. If you heat water to 100°C, it ______ (boil).",
+                                options: ["boils", "boiled", "would boil"],
+                                correct: "boils",
+                                explanation: "El 0 condicional usa presente simple para expresar verdades científicas."
+                            },
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. If she ______ (study) harder, she would have passed the exam.",
+                                options: ["studied", "had studied", "has studied"],
+                                correct: "had studied",
+                                explanation: "El 3º condicional usa pasado perfecto para hablar de situaciones no realizadas en el pasado."
+                            },
+                            {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. If I were you, I ______ (accept) the job offer.",
+                                options: ["accept", "will accept", "would accept"],
+                                correct: "would accept",
+                                explanation: "El 2º condicional se usa para dar consejos o hablar de situaciones hipotéticas en presente/futuro."
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. If it rains tomorrow, we ______ (stay) home.",
+                                options: ["stay", "will stay", "would stay"],
+                                correct: "will stay",
+                                explanation: "El 1º condicional usa 'will' para expresar consecuencias reales en el futuro."
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: "50. If you mix red and blue, you ______ (get) purple.",
+                                options: ["get", "will get", "would get"],
+                                correct: "get",
+                                explanation: "El 0 condicional usa presente simple para expresar resultados científicos."
+                            },
+                            {
+                                id: "q51",
+                                type: "text",
+                                question: "51. If I ______ (know) the answer, I would tell you.",
+                                correct: ["knew"],
+                                explanation: "El 2º condicional usa pasado simple para hipótesis en el presente."
+                            },
+                            {
+                                id: "q52",
+                                type: "radio",
+                                question: "52. If he had studied, he ______ (not / fail) the test.",
+                                options: ["wouldn't fail", "won't fail", "wouldn't have failed"],
+                                correct: "wouldn't have failed",
+                                explanation: "El 3º condicional usa 'wouldn't have + participio' para resultados pasados hipotéticos."
+                            },
+                            {
+                                id: "q53",
+                                type: "radio",
+                                question: "53. If we leave now, we ______ (arrive) on time.",
+                                options: ["arrive", "will arrive", "would arrive"],
+                                correct: "will arrive",
+                                explanation: "El 1º condicional expresa consecuencias reales en el futuro."
+                            },
+                            {
+                                id: "q54",
+                                type: "radio",
+                                question: "54. If I ______ (have) more time, I would travel around the world.",
+                                options: ["have", "had", "had had"],
+                                correct: "had",
+                                explanation: "El 2º condicional usa pasado simple para hipótesis presentes."
+                            },
+                            {
+                                id: "q55",
+                                type: "radio",
+                                question: "55. If she ______ (take) the medicine, she would have felt better.",
+                                options: ["took", "had taken", "has taken"],
+                                correct: "had taken",
+                                explanation: "El 3º condicional usa pasado perfecto para condiciones no cumplidas en el pasado."
+                            },
+                            {
+                                id: "q56",
+                                type: "radio",
+                                question: "56. If you freeze water, it ______ (become) ice.",
+                                options: ["becomes", "can become", "would become"],
+                                correct: "becomes",
+                                explanation: "El 0 condicional usa presente simple para verdades universales."
+                            },
+                            {
+                                id: "q57",
+                                type: "radio",
+                                question: "57. If I had known, I ______ (come) to the meeting.",
+                                options: ["would come", "will come", "would have come"],
+                                correct: "would have come",
+                                explanation: "El 3º condicional expresa acciones pasadas que no ocurrieron."
+                            },
+                            {
+                                id: "q58",
+                                type: "radio",
+                                question: "58. If she ______ (not / study) so much, she would be more relaxed.",
+                                options: ["hasn't studied", "didn't study", "hadn't studied"],
+                                correct: "didn't study",
+                                explanation: "El 2º condicional usa pasado simple para hipótesis presentes."
+                            },
+                            {
+                                id: "q59",
+                                type: "radio",
+                                question: "59. If we don't hurry, we ______ (miss) the train.",
+                                options: ["miss", "will miss", "would miss"],
+                                correct: "will miss",
+                                explanation: "El 1º condicional expresa consecuencias reales en el futuro."
+                            },
+                            {
+                                id: "q60",
+                                type: "radio",
+                                question: "60. If he ______ (not / be) so tired, he would have finished the project.",
+                                options: ["wasn't", "weren't", "hadn't been"],
+                                correct: "hadn't been",
+                                explanation: "El 3º condicional usa pasado perfecto para condiciones no cumplidas en el pasado."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN V: VOZ PASIVA
+            // ============================================================
+            {
+                sectionTitle: "Sección V: Voz pasiva",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la forma pasiva correcta.",
+                        items: [
+                            {
+                                id: "q61",
+                                type: "radio",
+                                question: "61. The report ______ (write) by the team last week.",
+                                options: ["wrote", "was written", "has been written"],
+                                correct: "was written",
+                                explanation: "'Was written' indica en voz pasiva que el reporte fue escrito en un momento específico del pasado."
+                            },
+                            {
+                                id: "q62",
+                                type: "radio",
+                                question: "62. The new office building was designed ______ a famous architect.",
+                                options: ["from", "of", "by"],
+                                correct: "by",
+                                explanation: "En la voz pasiva se usa 'by' para indicar el agente que realiza la acción."
+                            },
+                            {
+                                id: "q63",
+                                type: "radio",
+                                question: "63. The package ______ (deliver) by tomorrow morning.",
+                                options: ["will be delivered", "is delivered", "was delivered"],
+                                correct: "will be delivered",
+                                explanation: "'Will be delivered' indica en voz pasiva que la acción ocurrirá en el futuro."
+                            },
+                            {
+                                id: "q64",
+                                type: "radio",
+                                question: "64. The books ______ (not / return) to the library yet.",
+                                options: ["haven't been returned", "weren't returned", "aren't returned"],
+                                correct: "haven't been returned",
+                                explanation: "'Haven't been returned' se usa con 'yet' en voz pasiva para indicar que algo aún no ha ocurrido."
+                            },
+                            {
+                                id: "q65",
+                                type: "radio",
+                                question: "65. The company sells many products.",
+                                options: [
+                                    "Many products have been sold by the company",
+                                    "Many products were sold by the company",
+                                    "Many products are sold by the company"
+                                ],
+                                correct: "Many products are sold by the company",
+                                explanation: "'Are sold' en voz pasiva expresa algo que ocurre."
+                            },
+                            {
+                                id: "q66",
+                                type: "radio",
+                                question: "66. The old building ______ (demolish) next month.",
+                                options: ["will demolish", "will be demolished", "is demolished"],
+                                correct: "will be demolished",
+                                explanation: "El futuro 'will be demolished' indica en voz pasiva que la acción ocurrirá en el futuro."
+                            },
+                            {
+                                id: "q67",
+                                type: "radio",
+                                question: "67. The car ______ (repair) at the moment.",
+                                options: ["repaired", "is being repaired", "is repaired"],
+                                correct: "is being repaired",
+                                explanation: "El presente continuo 'is being repaired' indica en voz pasiva que la acción está en progreso ahora."
+                            },
+                            {
+                                id: "q68",
+                                type: "radio",
+                                question: "68. The letters ______ (send) yesterday.",
+                                options: ["were sent", "have been sent", "are sent"],
+                                correct: "were sent",
+                                explanation: "El pasado simple 'were sent' indica en voz pasiva que la acción ocurrió en un momento del pasado."
+                            },
+                            {
+                                id: "q69",
+                                type: "radio",
+                                question: "69. The invitation ______ (not / receive) by many guests yet.",
+                                options: ["hasn't been received", "wasn't received", "isn't received"],
+                                correct: "hasn't been received",
+                                explanation: "El presente perfecto 'hasn't been received' con 'yet' indica en voz pasiva que algo aún no ha ocurrido."
+                            },
+                            {
+                                id: "q70",
+                                type: "radio",
+                                question: "70. The final decision ______ (make) by the committee next week.",
+                                options: ["will make", "will be made", "is made"],
+                                correct: "will be made",
+                                explanation: "El futuro 'will be made' indica en voz pasiva que la acción ocurrirá en el futuro."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN VI: INFINITIVO VS GERUNDIO
+            // ============================================================
+            {
+                sectionTitle: "Sección VI: Infinitivo vs Gerundio",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la forma correcta.",
+                        items: [
+                            {
+                                id: "q71",
+                                type: "radio",
+                                question: "71. She stopped ______ (smoke) last year. Now she is much healthier.",
+                                options: ["to smoke", "smoking", "smoke"],
+                                correct: "smoking",
+                                explanation: "Se usa 'stopped smoking' para indicar que dejó el hábito. 'Stopped to smoke' significaría que se detuvo para fumar."
+                            },
+                            {
+                                id: "q72",
+                                type: "radio",
+                                question: "72. I'll never forget ______ (meet) my idol for the first time.",
+                                options: ["to meet", "meeting", "meet"],
+                                correct: "meeting",
+                                explanation: "Se usa 'forget meeting' para hablar del recuerdo de una experiencia pasada. 'Forget to meet' sería olvidar algo que tienes que hacer."
+                            },
+                            {
+                                id: "q73",
+                                type: "radio",
+                                question: "73. She needs ______ (buy) a new laptop for her studies.",
+                                options: ["to buy", "buying", "buy"],
+                                correct: "to buy",
+                                explanation: "Después de 'need' se usa infinitivo: 'needs to buy'."
+                            },
+                            {
+                                id: "q74",
+                                type: "radio",
+                                question: "74. He enjoys ______ (play) the guitar in his free time.",
+                                options: ["to play", "playing", "play"],
+                                correct: "playing",
+                                explanation: "Después de 'enjoy' siempre va gerundio: 'enjoys playing'."
+                            },
+                            {
+                                id: "q75",
+                                type: "radio",
+                                question: "75. Please remember ______ (turn off) the lights when you leave.",
+                                options: ["turning off", "to turning off", "to turn off"],
+                                correct: "to turn off",
+                                explanation: "Se usa 'remember to turn off' para recordar hacer algo en el futuro."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN VII: CONECTORES DE SUMA Y CONSECUENCIA
+            // ============================================================
+            {
+                sectionTitle: "Sección VII: Conectores de suma y consecuencia",
+                subsections: [
+                    {
+                        subtitle: "A. Elige el conector correcto.",
+                        items: [
+                            {
+                                id: "q76",
+                                type: "radio",
+                                question: "76. The new policy is effective. ______, it has improved productivity.",
+                                options: ["However", "Although", "Consequently"],
+                                correct: "Consequently",
+                                explanation: "El conector 'consequently' introduce una consecuencia lógica del hecho mencionado."
+                            },
+                            {
+                                id: "q77",
+                                type: "radio",
+                                question: "77. She is an excellent manager. ______, she has great communication skills.",
+                                options: ["So", "Therefore", "Moreover"],
+                                correct: "Moreover",
+                                explanation: "El conector 'moreover' añade información adicional que refuerza la idea anterior."
+                            },
+                            {
+                                id: "q78",
+                                type: "radio",
+                                question: "78. We didn't have enough money, ______ we decided to postpone the project.",
+                                options: ["also", "so", "furthermore"],
+                                correct: "so",
+                                explanation: "El conector 'so' introduce una consecuencia directa."
+                            },
+                            {
+                                id: "q79",
+                                type: "radio",
+                                question: "79. The bosses thought the employees were forgetting the protocols and rules, ______ they received additional training.",
+                                options: ["additionally", "furthermore", "so"],
+                                correct: "so",
+                                explanation: "El conector 'so' muestra la consecuencia de la situación descrita."
+                            },
+                            {
+                                id: "q80",
+                                type: "radio",
+                                question: "80. The economy is growing. ______, more jobs are being created.",
+                                options: ["Also", "However", "Consequently"],
+                                correct: "Consequently",
+                                explanation: "El conector 'consequently' introduce el resultado de un crecimiento económico."
+                            },
+                            {
+                                id: "q81",
+                                type: "radio",
+                                question: "81. The product is high quality. ______, it comes with a three-year warranty.",
+                                options: ["However", "Also", "So"],
+                                correct: "Also",
+                                explanation: "El conector 'also' añade información adicional."
+                            },
+                            {
+                                id: "q82",
+                                type: "radio",
+                                question: "82. The weather was terrible, ______ we decided to stay home.",
+                                options: ["so", "also", "moreover"],
+                                correct: "so",
+                                explanation: "El conector 'so' introduce la consecuencia lógica de la situación."
+                            },
+                            {
+                                id: "q83",
+                                type: "radio",
+                                question: "83. She has a lot of experience. ______, she has a PhD in the field.",
+                                options: ["Consequently", "So", "Furthermore"],
+                                correct: "Furthermore",
+                                explanation: "El conector 'furthermore' añade información adicional en un registro formal."
+                            },
+                            {
+                                id: "q84",
+                                type: "radio",
+                                question: "84. There were delays at the airport, ______ we missed our connection.",
+                                options: ["also", "so", "moreover"],
+                                correct: "so",
+                                explanation: "El conector 'so' introduce la consecuencia directa de los retrasos."
+                            },
+                            {
+                                id: "q85",
+                                type: "radio",
+                                question: "85. The new software is user-friendly. ______, it looks very pretty.",
+                                options: ["Therefore", "Also", "Consequently"],
+                                correct: "Also",
+                                explanation: "El conector 'also' introduce información adicional."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN VIII: REGISTRO FORMAL VS INFORMAL
+            // ============================================================
+            {
+                sectionTitle: "Sección VIII: Registro formal vs informal",
+                subsections: [
+                    {
+                        subtitle: "A. Identifica la opción más adecuada.",
+                        items: [
+                            {
+                                id: "q86",
+                                type: "radio",
+                                question: "86. Which of the following is more formal?",
+                                options: ["I'd like to request...", "I want...", "I need..."],
+                                correct: "I'd like to request...",
+                                explanation: "La frase 'I'd like to request...' es más educada/formal que 'I want' o 'I need'."
+                            },
+                            {
+                                id: "q87",
+                                type: "radio",
+                                question: "87. Which sentence is appropriate for a formal email?",
+                                options: [
+                                    "Hey, can you send me the info?",
+                                    "I would appreciate it if you could send me the information.",
+                                    "Please send me the information, ty."
+                                ],
+                                correct: "I would appreciate it if you could send me the information.",
+                                explanation: "La estructura 'I would appreciate it if...' es formal y adecuada para correos profesionales."
+                            },
+                            {
+                                id: "q88",
+                                type: "radio",
+                                question: "88. Which word is more formal?",
+                                options: ["assistance", "help", "give a hand"],
+                                correct: "assistance",
+                                explanation: "'Assistance' es un término más formal que 'help' o 'give a hand'."
+                            },
+                            {
+                                id: "q89",
+                                type: "radio",
+                                question: "89. 'We are writing to inform you...' is an example of ______ register.",
+                                options: ["formal", "informal", "A y B son correctas"],
+                                correct: "formal",
+                                explanation: "'We are writing to inform you...' es típico del registro formal en cartas o correos."
+                            },
+                            {
+                                id: "q90",
+                                type: "radio",
+                                question: "90. Which expression is appropriate for a formal refusal?",
+                                options: ["Sorry, can't make it.", "I regret to inform you that I cannot attend.", "No thanks."],
+                                correct: "I regret to inform you that I cannot attend.",
+                                explanation: "La expresión 'I regret to inform you...' es una forma diplomática/formal de dar malas noticias."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN IX: COLOCACIONES COMUNES
+            // ============================================================
+            {
+                sectionTitle: "Sección IX: Colocaciones comunes",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la colocación correcta.",
+                        items: [
+                            {
+                                id: "q91",
+                                type: "radio",
+                                question: "91. She loves to have a cup of ______ coffee in the morning.",
+                                options: ["intense", "strong", "heavy"],
+                                correct: "strong",
+                                explanation: "La colocación correcta es 'strong coffee' para referirse a un café cargado."
+                            },
+                            {
+                                id: "q92",
+                                type: "radio",
+                                question: "92. Saying hello to strangers on the street is ______ practice in small towns.",
+                                options: ["regular", "normal", "common"],
+                                correct: "common",
+                                explanation: "La colocación 'common practice' se usa para describir algo habitual."
+                            },
+                            {
+                                id: "q93",
+                                type: "radio",
+                                question: "93. The storm brought ______ winds and ______ rain.",
+                                options: ["strong / heavy", "heavy / strong", "big / intense"],
+                                correct: "strong / heavy",
+                                explanation: "Las colocaciones correctas son 'strong winds' y 'heavy rain'."
+                            },
+                            {
+                                id: "q94",
+                                type: "radio",
+                                question: "94. She ______ a flight to visit her parents next month.",
+                                options: ["paid", "booked", "bought"],
+                                correct: "booked",
+                                explanation: "La colocación correcta es 'book a flight'."
+                            },
+                            {
+                                id: "q95",
+                                type: "radio",
+                                question: "95. He ______ a mistake in the report and had to correct it.",
+                                options: ["made", "did", "took"],
+                                correct: "made",
+                                explanation: "La colocación correcta es 'make a mistake'."
+                            },
+                            {
+                                id: "q96",
+                                type: "radio",
+                                question: "96. Not everyone knows how to ______ a business.",
+                                options: ["run", "conduct", "make"],
+                                correct: "run",
+                                explanation: "La colocación correcta es 'run a business'."
+                            },
+                            {
+                                id: "q97",
+                                type: "radio",
+                                question: "97. She ______ a lot of progress in her English this year.",
+                                options: ["made", "did", "took"],
+                                correct: "made",
+                                explanation: "La colocación correcta es 'make progress'."
+                            },
+                            {
+                                id: "q98",
+                                type: "radio",
+                                question: "98. He always ______ his best to help others.",
+                                options: ["makes", "does", "takes"],
+                                correct: "does",
+                                explanation: "La colocación correcta es 'do your best'."
+                            },
+                            {
+                                id: "q99",
+                                type: "radio",
+                                question: "99. The company ______ an important announcement yesterday.",
+                                options: ["did", "made", "took"],
+                                correct: "made",
+                                explanation: "La colocación correcta es 'make an announcement'."
+                            },
+                            {
+                                id: "q100",
+                                type: "radio",
+                                question: "100. I should ______ a break, I just answered 100 questions.",
+                                options: ["make", "rest", "take"],
+                                correct: "take",
+                                explanation: "La colocación correcta es 'take a break'."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+    <!-- ============================================================
+         INICIALIZACIÓN ESPECÍFICA DE ESTE REPASO
+         ============================================================ -->
+    <script>
+        window.onload = function() {
+            renderQuiz(sectionsData);
+
+            document.getElementById('checkButton')?.addEventListener('click', function() {
+                checkQuiz(sectionsData);
+            });
+
+            document.getElementById('pdfButton')?.addEventListener('click', generatePDF);
+        };
+    </script>
+
+</body>
+</html>

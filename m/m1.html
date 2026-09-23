@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 1</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 1</p>
+        <h1 class="titulo1 mt-2 mb-4">Repaso Módulo 1</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        const sectionsData = [
+            // ============================================================
+            // SECCIÓN I: SALUDOS Y PRESENTACIONES (5 preguntas)
+            // ============================================================
+            {
+                sectionTitle: "Sección I: Saludos y presentaciones",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. ¿Cómo saludarías por la mañana?",
+                                options: ["Good morning", "Good afternoon", "Good Good night"],
+                                correct: "Good morning",
+                                explanation: "'Good morning' se usa por la mañana."
+                            },
+                            {
+                                id: "q2",
+                                type: "text",
+                                question: "2. ¿Cómo dirías <b>hasta luego/nos vemos luego</b>?",
+                                correct: ["see you later"],
+                                explanation: "'See you later' significa 'nos vemos luego'."
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. '____________' 'I'm fine, thanks.'",
+                                options: ["What's your name?", "How are you?", "Where are you from?"],
+                                correct: "How are you?",
+                                explanation: "'How are you?' es para preguntar cómo está alguien."
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. ¿Cómo le preguntarías a alguien su nombre?",
+                                options: ["How old are you?", "What's your name?", "Where are you from?"],
+                                correct: "What's your name?",
+                                explanation: "'What's your name?' es para preguntar el nombre."
+                            },
+                            {
+                                id: "q5",
+                                type: "radio",
+                                question: "5. '____________' 'I'm from Mexico.'",
+                                options: ["How old are you?", "What's your name?", "Where are you from?"],
+                                correct: "Where are you from?",
+                                explanation: "'Where are you from?' es para preguntar de dónde es alguien."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN II: NÚMEROS, DÍAS, MESES Y ESTACIONES (8 preguntas)
+            // ============================================================
+            {
+                sectionTitle: "Sección II: Números, días, meses, y estaciones",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. ¿Cómo es el número 17?",
+                                options: ["seventeen", "seventeenth", "ten and seven"],
+                                correct: "seventeen",
+                                explanation: "'Seventeen' es el número 17."
+                            },
+                            {
+                                id: "q7",
+                                type: "text",
+                                question: "7. ¿Qué número obtenemos al sumar <b>five</b>, <b>twenty</b>, y <b>three</b>?",
+                                correct: ["twenty-eight"],
+                                explanation: "'Twenty-eight' es el número 28."
+                            },
+                            {
+                                id: "q8",
+                                type: "radio",
+                                question: "8. ¿Qué día sigue después del sábado?",
+                                options: ["Monday", "Sunday", "Saturday"],
+                                correct: "Sunday",
+                                explanation: "'Sunday' es 'domingo'."
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: "9. Los bancos normalmente no abren durante:",
+                                options: ["weekend", "weekdays", "week"],
+                                correct: "weekend",
+                                explanation: "'Weekend' es 'fin de semana'."
+                            },
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. ¿Cuál es el <b>third</b> mes del año?",
+                                options: ["April", "February", "March"],
+                                correct: "March",
+                                explanation: "'March' es 'marzo', el tercer mes del año."
+                            },
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: "11. ¿Qué estación tiene clima frío e incluso nieve en algunos lugares?",
+                                options: ["summer", "spring", "winter"],
+                                correct: "winter",
+                                explanation: "'Winter' es 'invierno'."
+                            },
+                            {
+                                id: "q12",
+                                type: "text",
+                                question: "12. Escribe 'mes' en inglés.",
+                                correct: ["month"],
+                                explanation: "'Month' es 'mes'."
+                            },
+                            {
+                                id: "q13",
+                                type: "text",
+                                question: "13. Las estaciones son: <b>winter, summer, spring,</b> y ______.",
+                                correct: ["fall", "autumn"],
+                                explanation: "'Fall/autumn' es 'otoño', la estación faltante."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN III: VOCABULARIO - COLORES, FAMILIA Y OBJETOS (7 preguntas)
+            // ============================================================
+            {
+                sectionTitle: "Sección III: Colores, familia, y objetos",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. I have two ______ , a boy and a girl.",
+                                options: ["child", "childs", "children"],
+                                correct: "children",
+                                explanation: "'Children' es 'niños'."
+                            },
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. ¿De qué color es el pasto?",
+                                options: ["green", "yellow", "orange"],
+                                correct: "green",
+                                explanation: "'Green' es 'verde'."
+                            },
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. ¿Qué palabra usamos para referirnos a los papás?",
+                                options: ["family", "parents", "children"],
+                                correct: "parents",
+                                explanation: "'Parents' es 'padres'."
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. ¿Cómo se dice 'madre' en inglés?",
+                                options: ["mother", "sister", "grandmother"],
+                                correct: "mother",
+                                explanation: "'Mother' es 'madre'."
+                            },
+                            {
+                                id: "q18",
+                                type: "text",
+                                question: "18. Nombra algo que puedes usar para escribir en tu libreta:",
+                                correct: ["pen", "pencil"],
+                                explanation: "Para escribir en tu libreta, puedes usar 'pen' (pluma) o 'pencil' (lápiz)."
+                            },
+                            {
+                                id: "q19",
+                                type: "radio",
+                                question: "19. ¿Cómo se dice 'mochila' en inglés?",
+                                options: ["desk", "backpack", "window"],
+                                correct: "backpack",
+                                explanation: "'Backpack' es 'mochila'."
+                            },
+                            {
+                                id: "q20",
+                                type: "text",
+                                question: "20. ¿Cómo se dice 'ventana' en inglés?",
+                                correct: ["window"],
+                                explanation: "'Window' es 'ventana'."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN IV: PRONOMBRES Y VERBO TO BE (10 preguntas)
+            // ============================================================
+            {
+                sectionTitle: "Sección IV: Pronombres y verbo to be",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q21",
+                                type: "radio",
+                                question: "21. My dog ______ big.",
+                                options: ["am", "is", "are"],
+                                correct: "is",
+                                explanation: "Con 'he/she/it' se usa 'is'."
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: "22. I ______ a student.",
+                                options: ["am", "is", "are"],
+                                correct: "am",
+                                explanation: "Con 'I' se usa 'am'."
+                            },
+                            {
+                                id: "q23",
+                                type: "radio",
+                                question: "23. Maria ______ a doctor.",
+                                options: ["am", "is", "are"],
+                                correct: "is",
+                                explanation: "Con 'he/she/it' (Maria=she) se usa 'is'."
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: "24. They ______ happy.",
+                                options: ["am", "is", "are"],
+                                correct: "are",
+                                explanation: "Con 'they' se usa 'are'."
+                            },
+                            {
+                                id: "q25",
+                                type: "radio",
+                                question: "25. ______ they your friends?",
+                                options: ["am", "is", "are"],
+                                correct: "are",
+                                explanation: "Con 'they' se usa 'are'. En preguntas, el verbo to be va antes que el sujeto."
+                            },
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. Pablo ______ here.",
+                                options: ["is'nt", "isn't", "isen't"],
+                                correct: "isn't",
+                                explanation: "La contracción de 'is not' es 'isn't'."
+                            },
+                            {
+                                id: "q27",
+                                type: "radio",
+                                question: "27. You ______ a good friend.",
+                                options: ["am", "is", "are"],
+                                correct: "are",
+                                explanation: "Con 'you' se usa 'are'."
+                            },
+                            {
+                                id: "q28",
+                                type: "radio",
+                                question: "28. I ______ not from Mexico.",
+                                options: ["am", "is", "are"],
+                                correct: "am",
+                                explanation: "Con 'I' se usa 'am'."
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. ______ Adam your teacher?",
+                                options: ["am", "is", "are"],
+                                correct: "is",
+                                explanation: "Con 'he' se usa 'is' (Adam=he). En preguntas, el verbo to be va antes que el sujeto."
+                            },
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: "30. Brenda ______ sad.",
+                                options: ["am", "is", "are"],
+                                correct: "is",
+                                explanation: "Con 'she' (Brenda=she) se usa 'is'."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN V: INFORMACIÓN PERSONAL Y POSESIVOS (6 preguntas)
+            // ============================================================
+            {
+                sectionTitle: "Sección V: Información personal y posesivos",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q31",
+                                type: "radio",
+                                question: "31. ¿Qué palabra nos dice a qué país perteneces?",
+                                options: ["nationality", "occupation", "age"],
+                                correct: "nationality",
+                                explanation: "'Nationality' es 'nacionalidad'."
+                            },
+                            {
+                                id: "q32",
+                                type: "text",
+                                question: "32. ¿Cómo se dice 'dirección' en inglés?",
+                                correct: ["address"],
+                                explanation: "'Address' es 'dirección'."
+                            },
+                            {
+                                id: "q33",
+                                type: "radio",
+                                question: "33. This is ______ car. (el carro de mi papá)",
+                                options: ["my fathers", "my father's", "my father"],
+                                correct: "my father's",
+                                explanation: "Se usa 's para posesión: 'my father's car'."
+                            },
+                            {
+                                id: "q34",
+                                type: "radio",
+                                question: "34. This is ______ book. (el libro de Laura)",
+                                options: ["Laura's", "Lauras'", "Laura"],
+                                correct: "Maria's",
+                                explanation: "Se usa 's para posesión: 'Maria's books'."
+                            },
+                            {
+                                id: "q35",
+                                type: "radio",
+                                question: "35. Jamal and Maya's house ______ white.",
+                                options: ["am", "is", "are"],
+                                correct: "is",
+                                explanation: "El sujeto 'Jamal and Maya's house' es singular (es la casa), por lo que se usa 'is'."
+                            },
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. This is ______ backpack. (la mochila de mi hermano)",
+                                options: ["my brother", "my brothers", "my brother's"],
+                                correct: "my brother's",
+                                explanation: "Se usa 's para posesión: 'my brother's backpack'."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN VI: VOCABULARIO - ADJETIVOS BÁSICOS (7 preguntas)
+            // ============================================================
+            {
+                sectionTitle: "Sección VI: Vocabulario - Adjetivos básicos",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q37",
+                                type: "radio",
+                                question: "37. ¿Cuál es el antónimo de 'lento'?",
+                                options: ["big", "fast", "slow"],
+                                correct: "fast",
+                                explanation: "'Fast' es 'rápido'."
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. An elephant is big, a cat is ______.",
+                                options: ["small", "tall", "short"],
+                                correct: "small",
+                                explanation: "'Small' es 'pequeño'."
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. My grandfather is ______.",
+                                options: ["new", "young", "old"],
+                                correct: "old",
+                                explanation: "'Old' es 'viejo'."
+                            },
+                            {
+                                id: "q40",
+                                type: "text",
+                                question: "40. ¿Cómo se dice 'barato' en inglés?",
+                                correct: ["cheap"],
+                                explanation: "'Cheap' es 'barato'."
+                            },
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: "41. Today is a good day, I'm ______.",
+                                options: ["sad", "angry", "happy"],
+                                correct: "happy",
+                                explanation: "'Happy' es 'feliz'."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: "42. It's very ______! (no funciona la calefacción)",
+                                options: ["hot", "cold", "warm"],
+                                correct: "cold",
+                                explanation: "'Cold' es 'frío'."
+                            },
+                            {
+                                id: "q43",
+                                type: "radio",
+                                question: "43. The kitchen is ______. (no han limpiado)",
+                                options: ["clean", "dirty", "new"],
+                                correct: "dirty",
+                                explanation: "'Dirty' es 'sucio'."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN VII: ARTÍCULOS Y NÚMEROS ORDINALES (7 preguntas)
+            // ============================================================
+            {
+                sectionTitle: "Sección VII: Artículos y números ordinales",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: "44. She asked Santa Claus for ______ unicorn.",
+                                options: ["a", "an", "the"],
+                                correct: "a",
+                                explanation: "'A' se usa antes de palabras que empiezan con consonante o sonido de consonante (unicorn)."
+                            },
+                            {
+                                id: "q45",
+                                type: "radio",
+                                question: "45. I have ______ dog. His name is Firulais.",
+                                options: ["a", "an", "the"],
+                                correct: "a",
+                                explanation: "'A' se usa antes de palabras que empiezan con consonante o sonido de consonante (dog)."
+                            },
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: "46. I play ______ guitar.",
+                                options: ["a", "an", "the"],
+                                correct: "the",
+                                explanation: "Para instrumentos musicales usamos 'the': play the guitar, play the piano, play the drums."
+                            },
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. 'Where is Paul?' 'He is in ______ bathroom.'",
+                                options: ["a", "an", "the"],
+                                correct: "the",
+                                explanation: "Se usa 'the' porque estamos hablando de un baño específico (el que Paul está usando), no de cualquier baño."
+                            },
+                                                        {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. I eat ______ apple every day",
+                                options: ["a", "an", "the"],
+                                correct: "an",
+                                explanation: "'An' se usa antes de palabras que empiezan con vocal o sonido de vocal (apple)."
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. Terry won ______ place. (se llevó la medalla de oro)",
+                                options: ["first", "second", "third"],
+                                correct: "first",
+                                explanation: "'First' es 'primero/primer'."
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: "50. We live on the ______ floor. (el segundo piso del edificio)",
+                                options: ["first", "second", "third"],
+                                correct: "second",
+                                explanation: "'Second' es 'segundo'."
+                            }
+
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <script src="../assets/js/repasos.js"></script>
+
+    <script>
+        window.onload = function() {
+            renderQuiz(sectionsData);
+
+            document.getElementById('checkButton')?.addEventListener('click', function() {
+                checkQuiz(sectionsData);
+            });
+
+            document.getElementById('pdfButton')?.addEventListener('click', generatePDF);
+        };
+    </script>
+
+</body>
+</html>

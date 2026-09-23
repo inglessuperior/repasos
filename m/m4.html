@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 4</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- SOLO CAMBIO: ruta del logo -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- SOLO CAMBIO: width 30% en el recuadro -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 4</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso Módulo 4</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona o escribe la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (exactamente igual que en tu original)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+  {
+    sectionTitle: "Sección I: Verbo to be (y otros verbos) en pasado",
+    subsections: [
+      {
+        subtitle: "A. Escribe o selecciona la forma correcta.",
+        items: [
+          {
+            id: "q1",
+            type: "radio",
+            question: "1. My brother ______ very tired after the trip.",
+            options: ["was", "were"],
+            correct: "was",
+            explanation: "Usamos 'was' para sujetos en singular (my brother / he)."
+          },
+          {
+            id: "q2",
+            type: "radio",
+            question: "2. The children ______ playing in the park yesterday.",
+            options: ["was", "were"],
+            correct: "were",
+            explanation: "Usamos 'were' para sujetos en plural (the children / they)."
+          },
+          {
+            id: "q3",
+            type: "radio",
+            question: "3. I ______ at home last Sunday morning.",
+            options: ["was", "were"],
+            correct: "was",
+            explanation: "El pronombre 'I' lleva el verbo 'was' en pasado simple."
+          },
+          {
+            id: "q4",
+            type: "radio",
+            question: "4. The weather ______ cold last week.",
+            options: ["was", "were"],
+            correct: "was",
+            explanation: "'The weather' es un 'it', por lo que usa 'was'."
+          },
+          {
+            id: "q5",
+            type: "radio",
+            question: "5. They ______ very excited about the concert.",
+            options: ["was", "were"],
+            correct: "were",
+            explanation: "El pronombre plural 'they' requiere 'were'."
+          },
+
+          {
+            id: "q6",
+            type: "text",
+            question: "6. Escribe la forma negativa de: \"I was in the city last month.\"",
+            correct: [
+              "I wasn't in the city last month",
+              "I was not in the city last month"
+            ],
+            explanation: "El negativo de 'was' es 'was not' o 'wasn't'."
+          },
+          {
+            id: "q7",
+            type: "radio",
+            question: "7. Selecciona la forma interrogativa de: \"She was angry.\"",
+            options: ["Was she angry?", "Were she angry?", "Did she was angry?"],
+            correct: "Was she angry?",
+            explanation: "Invertimos el orden del verbo to be: Was/Were + sujeto."
+          },
+          {
+            id: "q8",
+            type: "radio",
+            question: "8. We ______ happy about the result.",
+            options: ["wasn't", "didn't", "weren't"],
+            correct: "weren't",
+            explanation: "La forma negativa del verbo to be en pasado para 'we' es 'weren't'."
+          },
+          {
+            id: "q9",
+            type: "radio",
+            question: "9. ______ they at the party on Saturday?",
+            options: ["Was", "Were", "Did"],
+            correct: "Were",
+            explanation: "Las preguntas de ser/estar con el sujeto 'they' inician con 'were'."
+          }
+        ]
+      },
+      {
+        subtitle: "B. Escribe el pasado simple o elige el correcto.",
+        items: [
+          {
+            id: "q10",
+            type: "text",
+            question: "10. Escribe el pasado de <b>write</b>.",
+            correct: ["wrote"],
+            explanation: "El pasado de 'write' es 'wrote'."
+          },
+          {
+            id: "q11",
+            type: "radio",
+            question: "11. El pasado de <b>stop</b> es:",
+            options: ["stopd", "stoped", "stopped"],
+            correct: "stopped",
+            explanation: "Los verbos consonante-vocal-consonante (cvc) duplican la última consonante al agregar -ed."
+          },
+          {
+            id: "q12",
+            type: "radio",
+            question: "12. I ____ my homework after class.",
+            options: ["did", "made", "done"],
+            correct: "did",
+            explanation: "El pasado de 'do' es 'did'."
+          },
+          {
+            id: "q13",
+            type: "radio",
+            question: "13. They ____ a lot of things when they ____ to Italy.",
+            options: ["buyed / went", "bought / goed", "bought / went"],
+            correct: "bought / went",
+            explanation: "Ambos verbos deben ir en pasado simple: buy -> bought, go -> went."
+          },
+          {
+            id: "q14",
+            type: "text",
+            question: "14. Escribe el pasado de <b>study</b>",
+            correct: ["studied"],
+            explanation: "Los verbos terminados en consonante + y cambian a -ied."
+          },
+          {
+            id: "q15",
+            type: "text",
+            question: "15. Escribe el pasado de <b>feel</b>",
+            correct: ["felt"],
+            explanation: "El pasado de 'feel' es 'felt'."
+          },
+          {
+            id: "q16",
+            type: "radio",
+            question: "16. El pasado de <b>become</b> es:",
+            options: ["became", "becomed", "become"],
+            correct: "became",
+            explanation: "El pasado de 'become' es 'became'."
+          },
+          {
+            id: "q17",
+            type: "radio",
+            question: "17. Mary ____ lunch at home yesterday.",
+            options: ["eat", "ate", "eating"],
+            correct: "ate",
+            explanation: "El pasado de 'eat' es 'ate'."
+          },
+          {
+            id: "q18",
+            type: "text",
+            question: "18. Escribe sólo el verbo de esta oración en pasado simple: We (see) a black cat last night.",
+            correct: ["saw"],
+            explanation: "El pasado de 'see' es 'saw'."
+          }
+        ]
+      }
+    ]
+  },
+    {
+    sectionTitle: "Sección II: Pasado simple",
+    subsections: [
+      {
+        subtitle: "C. Transforma la oración.",
+        items: [
+          {
+            id: "q19",
+            type: "text",
+            question: "19. Escribe la forma negativa de: \"Sarah and Ben saw a good movie.\"",
+            correct: [
+              "Sarah and Ben didn't see a good movie",
+              "Sarah and Ben did not see a good movie"
+            ],
+            explanation: "Usamos 'didn't' (o 'did not') y el verbo en su forma base ('see')."
+          },
+          {
+            id: "q20",
+            type: "radio",
+            question: "20. ¿Cuál es la forma interrogativa de: \"She bought a new phone\"?",
+            options: [
+              "Bought she a new phone?",
+              "Did she bought a new phone?",
+              "Did she buy a new phone?"
+            ],
+            correct: "Did she buy a new phone?",
+            explanation: "Las preguntas en pasado usan 'did' y el verbo en su forma base ('buy')."
+          },
+          {
+            id: "q21",
+            type: "radio",
+            question: "21. Selecciona la forma negativa de: \"He drank orange juice this morning.\"",
+            options: [
+              "He didn't drank orange juice this morning.",
+              "He wasn't drink orange juice this morning.",
+              "He didn't drink orange juice this morning."
+            ],
+            correct: "He didn't drink orange juice this morning.",
+            explanation: "Estructura correcta: Sujeto + didn't + verbo base."
+          },
+          {
+            id: "q22",
+            type: "text",
+            question: "22. Escribe la forma interrogativa de: \"The cat slept on the couch.\"",
+            correct: [
+              "Did the cat sleep on the couch",
+              "Did the cat sleep on the couch?"
+            ],
+            explanation: "Iniciamos con 'did' y usamos el verbo en su forma base ('sleep')."
+          },
+          {
+            id: "q23",
+            type: "radio",
+            question: "23. Selecciona la forma negativa de: \"They traveled to Paris last month.\"",
+            options: [
+              "They wasn't travel to Paris last month.",
+              "They didn't travel to Paris last month.",
+              "They weren't traveling to Paris last month."
+            ],
+            correct: "They didn't travel to Paris last month.",
+            explanation: "Usamos 'didn't' seguido del verbo en su forma base ('travel')."
+          },
+          {
+            id: "q24",
+            type: "text",
+            question: "24. Escribe la forma interrogativa de: \"They lived here last year.\"",
+            correct: [
+              "Did they live here last year",
+              "Did they live here last year?"
+            ],
+            explanation: "Iniciamos con 'did' y el verbo en forma base ('live')."
+          },
+          {
+            id: "q25",
+            type: "radio",
+            question: "25. Selecciona la respuesta negativa para: \"Did you finish the book?\"",
+            options: [
+              "No, I didn't.",
+              "No, I didn't finished.",
+              "No, I wasn't."
+            ],
+            correct: "No, I didn't.",
+            explanation: "Las respuestas cortas negativas son 'No, [sujeto] didn't'."
+          },
+          {
+            id: "q26",
+            type: "text",
+            question: "26. Escribe la forma negativa de: \"They ran in the marathon.\"",
+            correct: [
+              "They didn't run in the marathon",
+              "They did not run in the marathon"
+            ],
+            explanation: "Usamos 'didn't' y el verbo en su forma base ('run')."
+          }
+        ]
+      },
+      {
+        subtitle: "D. Escribe o selecciona la pregunta wh- correcta para cada respuesta.",
+        items: [
+          {
+            id: "q27",
+            type: "text",
+            question: "27. Respuesta: I went to the park yesterday (la pregunta es sobre el lugar).",
+            correct: [
+              "Where did you go yesterday",
+              "Where did you go yesterday?"
+            ],
+            explanation: "Para preguntar por lugares usamos 'where'."
+          },
+          {
+            id: "q28",
+            type: "radio",
+            question: "28. Respuesta: I bought a new coat because mine was too old (la pregunta es sobre la razón).",
+            options: [
+              "What did you buy?",
+              "Why did you buy a new coat?",
+              "How much did the new coat cost?"
+            ],
+            correct: "Why did you buy a new coat?",
+            explanation: "Para preguntar la razón de algo usamos 'why'."
+          },
+          {
+            id: "q29",
+            type: "radio",
+            question: "29. Respuesta: We watched TV all afternoon (la pregunta es sobre el sujeto que realizó la acción).",
+            options: [
+              "Who watched TV all afternoon?",
+              "What did we do all afternoon?",
+              "What time did we watch TV?"
+            ],
+            correct: "Who watched TV all afternoon?",
+            explanation: "Cuando preguntamos por el sujeto que realizó la acción usamos 'who'."
+          },
+          {
+            id: "q30",
+            type: "text",
+            question: "30. Respuesta: She woke up at seven (la pregunta es sobre la hora).",
+            correct: [
+              "What time did she wake up",
+              "What time did she wake up?",
+              "At what time did she wake up?"
+            ],
+            explanation: "Para preguntar por una hora específica usamos 'what time' o 'at what time'."
+          },
+          {
+            id: "q31",
+            type: "radio",
+            question: "31. Respuesta: I met my best friend today (la pregunta es sobre la persona).",
+            options: [
+              "Why did you meet today?",
+              "Who did you meet today?",
+              "When did you meet today?"
+            ],
+            correct: "Who did you meet today?",
+            explanation: "Para preguntar por una persona como objeto de la oración usamos 'who'."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    sectionTitle: "Sección III: Vocabulario",
+    subsections: [
+      {
+        subtitle: "E. Lugares y medios de transporte.",
+        items: [
+          {
+            id: "q32",
+            type: "radio",
+            question: "32. Puedes depositar o retirar dinero aquí.",
+            options: ["Hospital", "Bank", "Restaurant"],
+            correct: "Bank",
+            explanation: "Un banco ('bank') es una institución financiera."
+          },
+          {
+            id: "q33",
+            type: "radio",
+            question: "33. Vehículo grande que se utiliza para transportar personas o carga por agua:",
+            options: ["Bus", "Subway", "Ship"],
+            correct: "Ship",
+            explanation: "Un barco ('ship') navega por el agua."
+          },
+          {
+            id: "q34",
+            type: "radio",
+            question: "34. Es el lugar donde los aviones despegan y aterrizan.",
+            options: ["Train station", "Airport", "Port"],
+            correct: "Airport",
+            explanation: "El aeropuerto ('airport') es donde los aviones operan."
+          },
+          {
+            id: "q35",
+            type: "radio",
+            question: "35. ¿Qué medio de transporte viaja bajo tierra?",
+            options: ["Submarine", "Subway", "Train"],
+            correct: "Subway",
+            explanation: "El metro ('subway') opera bajo tierra."
+          },
+          {
+            id: "q36",
+            type: "radio",
+            question: "36. El lugar donde puedes comprar medicinas es:",
+            options: ["Store", "Market", "Pharmacy"],
+            correct: "Pharmacy",
+            explanation: "La farmacia ('pharmacy') vende medicinas."
+          }
+        ]
+      },
+      {
+        subtitle: "F. Expresiones de tiempo.",
+        items: [
+          {
+            id: "q37",
+            type: "radio",
+            question: "37. Olivia called her sister two days ____.",
+            options: ["last", "ago", "since"],
+            correct: "ago",
+            explanation: "Usamos 'ago' al final de la frase para indicar hace cuánto tiempo pasó algo."
+          },
+          {
+            id: "q38",
+            type: "radio",
+            question: "38. Tony cooked dinner ____ night.",
+            options: ["ago", "yesterday", "last"],
+            correct: "last",
+            explanation: "Usamos 'last night' para referirnos a la noche anterior."
+          },
+          {
+            id: "q39",
+            type: "radio",
+            question: "39. Usamos yesterday para referirnos a:",
+            options: [
+              "el día anterior al de hoy.",
+              "un momento no determinado en el pasado.",
+              "un día anterior de la semana."
+            ],
+            correct: "el día anterior al de hoy.",
+            explanation: "'Yesterday' significa 'ayer'."
+          },
+                    {
+            id: "q40",
+            type: "radio",
+            question: "40. I finished my art project ____ November.",
+            options: ["last", "yesterday", "ago"],
+            correct: "last",
+            explanation: "Utilizamos 'last' para indicar el periodo de tiempo anterior al actual ('last November')."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    sectionTitle: "Sección IV: Conectores y phrasal verbs",
+    subsections: [
+      {
+        subtitle: "G. Conectores narrativos.",
+        items: [
+          {
+            id: "q41",
+            type: "radio",
+            question: "41. We left home late, ____ we took a taxi (indica resultado/consecuencia).",
+            options: ["and", "but", "so"],
+            correct: "so",
+            explanation: "'So' conecta una idea con su consecuencia directa."
+          },
+          {
+            id: "q42",
+            type: "radio",
+            question: "42. She loved the museum, ____ she thought it was too dirty (indica contraste).",
+            options: ["but", "because", "so"],
+            correct: "but",
+            explanation: "'But' se usa para introducir una idea opuesta o de contraste."
+          },
+          {
+            id: "q43",
+            type: "radio",
+            question: "43. I cleaned my desk, ____ I went to the kitchen for a snack (indica secuencia).",
+            options: ["because", "then", "so"],
+            correct: "then",
+            explanation: "'Then' indica el siguiente paso en una secuencia cronológica."
+          },
+          {
+            id: "q44",
+            type: "radio",
+            question: "44. The store was closed ____ it was a national holiday (indica razón).",
+            options: ["so", "because", "but"],
+            correct: "because",
+            explanation: "'Because' introduce la justificación o causa de un hecho."
+          }
+        ]
+      },
+      {
+        subtitle: "H. Phrasal verbs.",
+        items: [
+          {
+            id: "q45",
+            type: "radio",
+            question: "45. I need to look up this word. ¿Qué significa <b>look up</b>?",
+            options: [
+              "buscar (información)",
+              "mirar hacia arriba",
+              "buscar (un objeto perdido)"
+            ],
+            correct: "buscar (información)",
+            explanation: "'Look up' se usa para buscar información."
+          },
+          {
+            id: "q46",
+            type: "radio",
+            question: "46. We checked in at the hotel. ¿Qué significa <b>check in</b>?",
+            options: [
+              "salir del hotel",
+              "registrarse / confirmar llegada",
+              "revisar (el contenido de algo)"
+            ],
+            correct: "registrarse / confirmar llegada",
+            explanation: "'Check in' describe el proceso de registro al llegar a un hotel o vuelo."
+          },
+          {
+            id: "q47",
+            type: "radio",
+            question: "47. El phrasal verb <b>turn off</b> significa:",
+            options: ["apagar", "encender", "cancelar"],
+            correct: "apagar",
+            explanation: "'Turn off' se usa para apagar aparatos o luces."
+          },
+          {
+            id: "q48",
+            type: "radio",
+            question: "48. El phrasal verb <b>take off</b> (hablando de un avión o ropa) significa:",
+            options: ["despegar / quitarse", "despegar / ponerse", "subirse / irse"],
+            correct: "despegar / quitarse",
+            explanation: "'Take off' se usa para despegar (avión) o quitarse prendas."
+          },
+          {
+            id: "q49",
+            type: "radio",
+            question: "49. El phrasal verb <b>put on</b> (hablando de ropa) significa:",
+            options: ["quitarse", "ponerse", "guardar"],
+            correct: "ponerse",
+            explanation: "'Put on' indica la acción de ponerse ropa o accesorios."
+          },
+          {
+            id: "q50",
+            type: "radio",
+            question: "50. El phrasal verb <b>get up</b> significa:",
+            options: [
+              "levantarse",
+              "darse por vencido",
+              "ir a la cama"
+            ],
+            correct: "levantarse",
+            explanation: "'Get up' se refiere a levantarse (de la cama, del suelo, etc)."
+          }
+        ]
+      }
+    ]
+  }
+];
+  
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO (TODA la lógica está aquí)
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 8</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- Logo con ruta corregida -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- Recuadro MÓDULO con width 30% -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 8</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso General</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (TODAS convertidas a opción múltiple)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+            // ============================================================
+            // SECCIÓN I: SEGUNDO CONDICIONAL
+            // ============================================================
+            {
+                sectionTitle: "Sección I: Segundo condicional",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. If I ______ (win) the lottery, I ______ (travel) around the world.",
+                                options: [
+                                    "had won / would have traveled",
+                                    "win / will travel",
+                                    "won / would travel"
+                                ],
+                                correct: "won / would travel",
+                                explanation: "Segundo condicional: If + past simple, would + infinitive."
+                            },
+                            {
+                                id: "q2",
+                                type: "radio",
+                                question: "2. What ______ you ______ (do) if you ______ (have) more free time?",
+                                options: [
+                                    "would / did / would have",
+                                    "would / do / had",
+                                    "will / do / have"
+                                ],
+                                correct: "would / do / had",
+                                explanation: "Pregunta en segundo condicional: would + sujeto + infinitivo, if + sujeto + past simple."
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. If she ______ (be) the CEO, she ______ (change) the company policies.",
+                                options: [
+                                    "is / would change",
+                                    "were / would change",
+                                    "was / will change"
+                                ],
+                                correct: "were / would change",
+                                explanation: "En segundo condicional, se usa 'were' para todos los sujetos (forma subjuntiva)."
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. If they ______ (not / have) to work tomorrow, they ______ (come) to the party.",
+                                options: [
+                                    "didn't have / would come",
+                                    "don't have / will come",
+                                    "hadn't / would have come"
+                                ],
+                                correct: "didn't have / would come",
+                                explanation: "Negativo en segundo condicional: didn't have en la condición, would + verbo en el resultado."
+                            },
+                            {
+                                id: "q5",
+                                type: "radio",
+                                question: "5. I ______ (buy) a new car if I had enough money.",
+                                options: [
+                                    "would bought",
+                                    "will buy",
+                                    "would buy"
+                                ],
+                                correct: "would buy",
+                                explanation: "Segundo condicional: would + verbo en la cláusula principal."
+                            },
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. If I ______ you, I ______ (apologize) immediately.",
+                                options: [
+                                    "am / apologize",
+                                    "were / would apologize",
+                                    "was / will apologize"
+                                ],
+                                correct: "were / would apologize",
+                                explanation: "'If I were you' es una expresión fija en segundo condicional."
+                            },
+                            {
+                                id: "q7",
+                                type: "radio",
+                                question: "7. Which sentence is correct in second conditional?",
+                                options: [
+                                    "If I had a better job, I would be happier.",
+                                    "If I have a better job, I would be happier.",
+                                    "If I had a better job, I will be happier."
+                                ],
+                                correct: "If I had a better job, I would be happier.",
+                                explanation: "La estructura del segundo condicional es: If + past simple, would + infinitivo."
+                            },
+                            {
+                                id: "q8",
+                                type: "radio",
+                                question: "8. Which sentence describes an imaginary or unlikely situation in the present?",
+                                options: [
+                                    "If I had a million dollars, I'd buy a house.",
+                                    "If it rains, we'll stay home.",
+                                    "If I had studied, I would have passed."
+                                ],
+                                correct: "If I had a million dollars, I'd buy a house.",
+                                explanation: "El segundo condicional describe situaciones imaginarias o improbables en el presente o futuro."
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: "9. Which question is correct in second conditional?",
+                                options: [
+                                    "What would you do if you were president?",
+                                    "What will you do if you were president?",
+                                    "What did you do if you were president?"
+                                ],
+                                correct: "What would you do if you were president?",
+                                explanation: "Pregunta en segundo condicional: 'What would you do if you were president?'"
+                            },
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. If I ______ (be) you, I ______ (not / go) to that meeting alone.",
+                                options: [
+                                    "were / wouldn't go",
+                                    "was / wouldn't go",
+                                    "am / won't go"
+                                ],
+                                correct: "were / wouldn't go",
+                                explanation: "'If I were you' requiere 'wouldn't' en la cláusula principal."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN II: VERBOS MODALES AVANZADOS Y EXPRESIONES
+            // ============================================================
+            {
+                sectionTitle: "Sección II: Modales avanzados y expresiones",
+                subsections: [
+                    {
+                        subtitle: "A. Might, could, may, ought to. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: "11. Take an umbrella. It ______ rain later.",
+                                options: ["will", "might", "must"],
+                                correct: "might",
+                                explanation: "'Might' expresa posibilidad."
+                            },
+                            {
+                                id: "q12",
+                                type: "radio",
+                                question: "12. You ______ to see a doctor about that cough.",
+                                options: ["must", "should", "ought"],
+                                correct: "ought",
+                                explanation: "'Ought to' es equivalente a 'should' pero siempre va seguido de 'to'."
+                            },
+                            {
+                                id: "q13",
+                                type: "radio",
+                                question: "13. She ______ be at home; I saw her car in the driveway.",
+                                options: ["must", "might", "could"],
+                                correct: "must",
+                                explanation: "'Must' se usa para deducciones lógicas con evidencia."
+                            },
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. This ______ be the solution to our problem. I'm not sure.",
+                                options: ["must", "could", "will"],
+                                correct: "could",
+                                explanation: "'Could' expresa posibilidad."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "B. Preferencias y sugerencias: would rather, had better, prefer.",
+                        items: [
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. I ______ stay home than go out tonight.",
+                                options: ["prefer to", "would rather", "had better"],
+                                correct: "would rather",
+                                explanation: "'Would rather' va seguido de infinitivo sin 'to' y expresa preferencia."
+                            },
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. You ______ finish that report today. The deadline is tomorrow.",
+                                options: ["would rather", "might", "had better"],
+                                correct: "had better",
+                                explanation: "'Had better' expresa una fuerte recomendación o advertencia."
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. I ______ coffee ______ tea.",
+                                options: [
+                                    "prefer / to",
+                                    "would rather / than",
+                                    "had better / to"
+                                ],
+                                correct: "prefer / to",
+                                explanation: "'Prefer' va seguido de 'to' cuando se compara (prefer X to Y)."
+                            },
+                            {
+                                id: "q18",
+                                type: "radio",
+                                question: "18. We ______ to work remotely rather than commute.",
+                                options: ["prefer", "had better", "would rather"],
+                                correct: "prefer",
+                                explanation: "'Prefer' va seguido de 'to' cuando se compara (prefer X to Y)."
+                            },
+                            {
+                                id: "q19",
+                                type: "radio",
+                                question: "19. Which sentence expresses a strong recommendation?",
+                                options: [
+                                    "You might want to check your email.",
+                                    "You had better apologize to her.",
+                                    "You could try calling again."
+                                ],
+                                correct: "You had better apologize to her.",
+                                explanation: "'Had better' expresa una fuerte recomendación."
+                            },
+                            {
+                                id: "q20",
+                                type: "radio",
+                                question: "20. She ______ not attend the meeting if she's sick.",
+                                options: ["had better", "might", "ought"],
+                                correct: "might",
+                                explanation: "'Might' expresa posibilidad."
+                            },
+                            {
+                                id: "q21",
+                                type: "radio",
+                                question: "21. Which sentence correctly uses 'would rather'?",
+                                options: [
+                                    "I would rather cook dinner at home.",
+                                    "I would rather to cook dinner at home.",
+                                    "I would rather cooking dinner at home."
+                                ],
+                                correct: "I would rather cook dinner at home.",
+                                explanation: "'Would rather' va seguido de infinitivo sin 'to': 'I would rather cook dinner at home.'"
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: "22. What's the difference between 'might' and 'must'?",
+                                options: [
+                                    "Might = possibility; Must = certainty/deduction",
+                                    "They mean the same thing.",
+                                    "Might = obligation; Must = permission"
+                                ],
+                                correct: "Might = possibility; Must = certainty/deduction",
+                                explanation: "'Might' expresa posibilidad; 'must' expresa certeza o deducción."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN III: CONECTORES DE CONTRASTE Y VOZ PASIVA
+            // ============================================================
+            {
+                sectionTitle: "Sección III: Conectores y voz pasiva",
+                subsections: [
+                    {
+                        subtitle: "C. However, though, although, even though.",
+                        items: [
+                            {
+                                id: "q23",
+                                type: "radio",
+                                question: "23. ______ it was raining, we went for a walk.",
+                                options: ["Although", "Despite", "However"],
+                                correct: "Although",
+                                explanation: "'Although' introduce una cláusula de contraste."
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: "24. He's very busy; ______, he always finds time for his family.",
+                                options: ["although", "however", "even though"],
+                                correct: "however",
+                                explanation: "'However' se usa para conectar ideas contrastantes, normalmente seguido de coma."
+                            },
+                            {
+                                id: "q25",
+                                type: "radio",
+                                question: "25. She passed the exam ______ she didn't study much.",
+                                options: ["however", "even though", "despite"],
+                                correct: "even though",
+                                explanation: "'Even though' introduce una cláusula de contraste y es más enfático que 'although'."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "D. Voz Pasiva (presente y pasado simple).",
+                        items: [
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. The Mona Lisa ______ (paint) by Leonardo da Vinci.",
+                                options: ["was painted", "painted", "is painted"],
+                                correct: "was painted",
+                                explanation: "Voz pasiva en pasado simple: was/were + past participle."
+                            },
+                            {
+                                id: "q27",
+                                type: "radio",
+                                question: "27. English ______ (speak) all over the world.",
+                                options: ["is speak", "was spoken", "is spoken"],
+                                correct: "is spoken",
+                                explanation: "Voz pasiva en presente simple: am/is/are + past participle."
+                            },
+                            {
+                                id: "q28",
+                                type: "radio",
+                                question: "28. The emails ______ (send) yesterday morning.",
+                                options: ["were sent", "are sent", "sent"],
+                                correct: "were sent",
+                                explanation: "Voz pasiva en pasado simple con sujeto plural: were + past participle."
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. Which sentence is in passive voice?",
+                                options: [
+                                    "Hamlet was written by Shakespeare.",
+                                    "Shakespeare wrote Hamlet.",
+                                    "Shakespeare is writing Hamlet."
+                                ],
+                                correct: "Hamlet was written by Shakespeare.",
+                                explanation: "Voz pasiva: objeto + was/were + past participle + by + agente."
+                            },
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: "30. These products ______ in China.",
+                                options: ["are made", "make", "have been made"],
+                                correct: "are made",
+                                explanation: "Voz pasiva en presente simple: are + past participle."
+                            },
+                            {
+                                id: "q31",
+                                type: "radio",
+                                question: "31. The new policy ______ (announce) by the CEO last week.",
+                                options: ["announced", "was announced", "is announced"],
+                                correct: "was announced",
+                                explanation: "Voz pasiva en pasado simple con sujeto singular: was + past participle."
+                            },
+                            {
+                                id: "q32",
+                                type: "radio",
+                                question: "32. Rice ______ (grow) in many countries.",
+                                options: ["grows", "is grown", "was grown"],
+                                correct: "is grown",
+                                explanation: "Voz pasiva en presente simple: is + past participle."
+                            },
+                            {
+                                id: "q33",
+                                type: "radio",
+                                question: "33. The meeting ______ (hold) in the conference room yesterday.",
+                                options: ["held", "is held", "was held"],
+                                correct: "was held",
+                                explanation: "Voz pasiva en pasado simple con sujeto singular: was + past participle."
+                            },
+                            {
+                                id: "q34",
+                                type: "radio",
+                                question: "34. Which sentence is in passive voice?",
+                                options: [
+                                    "A delicious meal was cooked by the chef.",
+                                    "The chef cooked a delicious meal.",
+                                    "The chef is cooking a delicious meal."
+                                ],
+                                correct: "A delicious meal was cooked by the chef.",
+                                explanation: "La voz pasiva enfatiza la acción o el objeto, no el sujeto que la realiza."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN IV: PRESENTE PERFECTO CONTINUO
+            // ============================================================
+            {
+                sectionTitle: "Sección IV: Presente perfecto continuo",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q35",
+                                type: "radio",
+                                question: "35. She ______ (work) here for five years.",
+                                options: ["has worked", "has been working", "is working"],
+                                correct: "has been working",
+                                explanation: "Presente perfecto continuo para acciones que empezaron en el pasado y continúan."
+                            },
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. I'm tired because I ______ (run).",
+                                options: ["have been running", "have run", "ran"],
+                                correct: "have been running",
+                                explanation: "Presente perfecto continuo para enfatizar el resultado o efecto en el presente."
+                            },
+                            {
+                                id: "q37",
+                                type: "radio",
+                                question: "37. How long ______ (you / wait) for the bus?",
+                                options: [
+                                    "have you been waiting",
+                                    "have you waited",
+                                    "did you wait"
+                                ],
+                                correct: "have you been waiting",
+                                explanation: "Pregunta en presente perfecto continuo: have/has + sujeto + been + verbo-ing."
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. They ______ (travel) all day, so they're exhausted.",
+                                options: ["traveled", "have been traveling", "have traveled"],
+                                correct: "have been traveling",
+                                explanation: "Presente perfecto continuo para enfatizar la duración de la acción."
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. We ______ for this moment our whole lives.",
+                                options: ["have been waiting", "have waited", "are waiting"],
+                                correct: "have been waiting",
+                                explanation: "Presente perfecto continuo: have/has + been + verbo-ing. Enfatiza la duración de la espera."
+                            },
+                            {
+                                id: "q40",
+                                type: "radio",
+                                question: "40. When do we use present perfect continuous?",
+                                options: [
+                                    "To emphasize the result of a completed action.",
+                                    "To emphasize the duration or ongoing nature of an action.",
+                                    "To talk about a finished action at a specific time."
+                                ],
+                                correct: "To emphasize the duration or ongoing nature of an action.",
+                                explanation: "El presente perfecto continuo enfatiza la duración o el proceso de la acción."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN V: RELATIVE CLAUSES Y REPORTED SPEECH
+            // ============================================================
+            {
+                sectionTitle: "Sección V: Relative clauses y reported speech",
+                subsections: [
+                    {
+                        subtitle: "E. Relative clauses (who, which, that).",
+                        items: [
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: "41. The woman ______ lives next door is a doctor.",
+                                options: ["who", "which", "where"],
+                                correct: "who",
+                                explanation: "'Who' se usa para personas."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: "42. The car ______ I bought last year is very reliable.",
+                                options: ["where", "which", "who"],
+                                correct: "which",
+                                explanation: "'Which' se usa para cosas."
+                            },
+                            {
+                                id: "q43",
+                                type: "radio",
+                                question: "43. That's the restaurant ______ we had our first date.",
+                                options: ["which", "who", "where"],
+                                correct: "where",
+                                explanation: "'Where' se usa para lugares."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "F. Reported Speech.",
+                        items: [
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: '44. Direct speech: "I am tired." <br> Reported speech: He said that he ______ tired.',
+                                options: ["was", "is", "has been"],
+                                correct: "was",
+                                explanation: "En reported speech, el presente simple ('am') cambia a pasado simple ('was')."
+                            },
+                            {
+                                id: "q45",
+                                type: "radio",
+                                question: '45. Direct speech: "I will call you." <br> Reported speech: She said that she ______ call me.',
+                                options: ["will", "would", "can"],
+                                correct: "would",
+                                explanation: "En reported speech, 'will' cambia a 'would'."
+                            },
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: '46. Direct speech: "He is busy." <br> Reported speech: He said ______.',
+                                options: [
+                                    "that he is busy",
+                                    "that he was busy",
+                                    "that he has been busy"
+                                ],
+                                correct: "that he was busy",
+                                explanation: "En reported speech, el presente simple ('is') cambia a pasado simple ('was')."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN VI: VOCABULARIO
+            // ============================================================
+            {
+                sectionTitle: "Sección VI: Vocabulario",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. A person who has no home is a ______.",
+                                options: ["homeless person", "refugee", "competitor"],
+                                correct: "homeless person",
+                                explanation: "'Homeless person' significa persona sin hogar."
+                            },
+                            {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. The local ______ of greeting involves shaking hands.",
+                                options: ["ancestry", "heritage", "custom"],
+                                correct: "custom",
+                                explanation: "'Custom' significa costumbre."
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. A person who starts a business is an ______.",
+                                options: ["employee", "entrepreneur", "competitor"],
+                                correct: "entrepreneur",
+                                explanation: "'Entrepreneur' significa emprendedor."
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: "50. Extreme tiredness caused by stress is called ______.",
+                                options: ["grief", "burnout", "loneliness"],
+                                correct: "burnout",
+                                explanation: "'Burnout' significa agotamiento por estrés."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 2</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- Logo con ruta corregida -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- Recuadro MÓDULO con width 30% -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 2</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso General</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (TODAS convertidas a opción múltiple)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+            // ============================================================
+            // SECCIÓN I: PRESENTE SIMPLE Y ADVERBIOS DE FRECUENCIA
+            // ============================================================
+            {
+                sectionTitle: "Sección I: Presente simple y adverbios de frecuencia",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. My sister ______ (read) a book every night.",
+                                options: ["read", "reads", "reading"],
+                                correct: "reads",
+                                explanation: 'Presente simple con "she" -> verbo + "s".'
+                            },
+                            {
+                                id: "q2",
+                                type: "radio",
+                                question: "2. They ______ (walk) to school every morning.",
+                                options: ["walk", "walks", "are walk"],
+                                correct: "walk",
+                                explanation: 'Presente simple con "they" -> forma base del verbo.'
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. She ______ (not / listen) to music at work.",
+                                options: ["doesn't listen", "don't listen", "listens not"],
+                                correct: "doesn't listen",
+                                explanation: 'Negativo en presente simple con "she" -> doesn\'t + forma base.'
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. Do you ______ (write) emails to your clients every day?",
+                                options: ["write", "writes", "am writing"],
+                                correct: "write",
+                                explanation: 'Presente simple con "I" -> forma base del verbo.'
+                            },
+                            {
+                                id: "q5",
+                                type: "radio",
+                                question: "5. The children never ______ (jump) on the bed.",
+                                options: ["jumps", "jump", "do jump"],
+                                correct: "jump",
+                                explanation: 'Presente simple con "the children" (they) -> forma base.'
+                            },
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. ¿Cuál opción tiene el adverbio de frecuencia en el lugar correcto?",
+                                options: [
+                                    "Always I wake up at 7 AM.",
+                                    "I wake always up at 7 AM.",
+                                    "I always wake up at 7 AM."
+                                ],
+                                correct: "I always wake up at 7 AM.",
+                                explanation: "El adverbio de frecuencia va antes del verbo principal."
+                            },
+                            {
+                                id: "q7",
+                                type: "radio",
+                                question: "7. We ______ (not / go) to the gym on weekends.",
+                                options: ["don't go", "doesn't go", "don't goes"],
+                                correct: "don't go",
+                                explanation: 'Presente Simple negativo con "we" -> don\'t + forma base del verbo.'
+                            },
+                            {
+                                id: "q8",
+                                type: "radio",
+                                question: "8. He ______ (usually / take) the bus to work.",
+                                options: ["usually take", "usually takes", "take usually"],
+                                correct: "usually takes",
+                                explanation: '"Usually" + verbo en tercera persona singular (takes).'
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: '9. ¿Cuál adverbio significa "0% of the time"?',
+                                options: ["always", "sometimes", "never"],
+                                correct: "never",
+                                explanation: '"Never" significa 0%, nunca.'
+                            },
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. My father ______ (cook) dinner for us on Sundays.",
+                                options: ["cook", "cooks", "cooking"],
+                                correct: "cooks",
+                                explanation: 'Presente Simple con "my father" (he) -> verbo + "s".'
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN II: PREGUNTAS WH Y RUTINAS
+            // ============================================================
+            {
+                sectionTitle: "Sección II: Preguntas wh y rutinas",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: '11. ______ time do you wake up in the morning? - I wake up at 8 AM.',
+                                options: ["How", "Where", "What"],
+                                correct: "What",
+                                explanation: '"What time" pregunta por la hora exacta.'
+                            },
+                            {
+                                id: "q12",
+                                type: "radio",
+                                question: '12. ______ does she live? - She lives in Toronto.',
+                                options: ["Where", "When", "Why"],
+                                correct: "Where",
+                                explanation: '"Where" pregunta por la ubicación.'
+                            },
+                            {
+                                id: "q13",
+                                type: "radio",
+                                question: '13. ______ do you eat for breakfast? - I eat pancakes.',
+                                options: ["When", "Who", "What"],
+                                correct: "What",
+                                explanation: '"What" pregunta por cosas o actividades.'
+                            },
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. I usually ______ (take / shower) before breakfast.",
+                                options: ["take a shower", "takes a shower", "take shower"],
+                                correct: "take a shower",
+                                explanation: '"Take a shower" es una actividad diaria común.'
+                            },
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. My mother always ______ (prepare) breakfast for the family.",
+                                options: ["prepare", "prepares", "is preparing"],
+                                correct: "prepares",
+                                explanation: 'Presente simple con "my mother" (she) -> verbo + "s".'
+                            },
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. ______ often do you go to the supermarket?",
+                                options: ["What", "How", "Who", "Why", "Which"],
+                                correct: "How",
+                                explanation: '"How often" pregunta por la frecuencia.'
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. He ______ (arrive) at work at 9 AM every day.",
+                                options: ["arrive", "arrives", "arriving"],
+                                correct: "arrives",
+                                explanation: 'Presente simple con "he" -> verbo + "s".'
+                            },
+                            {
+                                id: "q18",
+                                type: "radio",
+                                question: "18. Which sentence correctly describes a daily routine?",
+                                options: [
+                                    "I go to bed at 11 PM.",
+                                    "I go to bed 11 at PM.",
+                                    "I to bed go at 11 PM."
+                                ],
+                                correct: "I go to bed at 11 PM.",
+                                explanation: "Orden: sujeto + verbo + complemento."
+                            },
+                            {
+                                id: "q19",
+                                type: "radio",
+                                question: "19. We ______ dinner at 7 PM.",
+                                options: ["has", "have", "are have"],
+                                correct: "have",
+                                explanation: 'Presente Simple con "we" -> forma base del verbo.'
+                            },
+                            {
+                                id: "q20",
+                                type: "radio",
+                                question: '20. ______ does he go to work? - He takes the bus.',
+                                options: ["When", "How", "Where"],
+                                correct: "How",
+                                explanation: '"How" pregunta por el medio o la manera.'
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN III: PREPOSICIONES, DEMOSTRATIVOS Y EXISTENCIA
+            // ============================================================
+            {
+                sectionTitle: "Sección III: Preposiciones y demostrativos",
+                subsections: [
+                    {
+                        subtitle: "A. Preposiciones de lugar y tiempo: in, on, at.",
+                        items: [
+                            {
+                                id: "q21",
+                                type: "radio",
+                                question: "21. I usually wake up ______ 7 AM.",
+                                options: ["in", "on", "at"],
+                                correct: "at",
+                                explanation: 'Se usa "at" para la hora específica.'
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: "22. My birthday is ______ July.",
+                                options: ["in", "on", "at"],
+                                correct: "in",
+                                explanation: 'Se usa "in" para meses.'
+                            },
+                            {
+                                id: "q23",
+                                type: "radio",
+                                question: "23. The meeting is ______ Monday.",
+                                options: ["in", "on", "at"],
+                                correct: "on",
+                                explanation: 'Se usa "on" para días de la semana.'
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: "24. The keys are ______ the table.",
+                                options: ["in", "on", "at"],
+                                correct: "on",
+                                explanation: 'Se usa "on" para superficies.'
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "B. There is / there are y demostrativos.",
+                        items: [
+                            {
+                                id: "q25",
+                                type: "radio",
+                                question: "25. ______ a blanket on the bed.",
+                                options: ["There is", "There are", "Is there"],
+                                correct: "There is",
+                                explanation: '"There is" para un sustantivo singular.'
+                            },
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. ______ two glasses on the shelf.",
+                                options: ["There is", "There are", "There does"],
+                                correct: "There are",
+                                explanation: '"There are" para un sustantivo plural.'
+                            },
+                            {
+                                id: "q27",
+                                type: "radio",
+                                question: "27. Look at ______ book here. It's very interesting.",
+                                options: ["this", "that", "those"],
+                                correct: "this",
+                                explanation: '"This" para algo cercano.'
+                            },
+                            {
+                                id: "q28",
+                                type: "radio",
+                                question: "28. ______ shoes are expensive (los zapatos no están cerca).",
+                                options: ["This", "That", "Those"],
+                                correct: "Those",
+                                explanation: '"Those" para objetos plurales lejanos.'
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. ______ is my favorite jacket. (la chaqueta está cerca)",
+                                options: ["This", "That", "These"],
+                                correct: "This",
+                                explanation: '"This" para un objeto singular cercano.'
+                            },
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: "30. ______ are my favorite songs. (mostrando las canciones en tu celular)",
+                                options: ["This", "That", "These", "Those", "Them"],
+                                correct: "These",
+                                explanation: '"These" para objetos plurales cercanos.'
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN IV: VOCABULARIO Y PREPOSICIONES
+            // ============================================================
+            {
+                sectionTitle: "Sección IV: Vocabulario y preposiciones",
+                subsections: [
+                    {
+                        subtitle: "A. Vocabulario.",
+                        items: [
+                            {
+                                id: "q31",
+                                type: "radio",
+                                question: "31. The part of the body between your hand and your shoulder is the ______.",
+                                options: ["elbow", "knee", "toe"],
+                                correct: "elbow",
+                                explanation: 'El "elbow" es la parte entre la mano y el hombro.'
+                            },
+                            {
+                                id: "q32",
+                                type: "radio",
+                                question: "32. You have ten ______ on your feet.",
+                                options: ["knees", "toes", "fingers"],
+                                correct: "toes",
+                                explanation: 'Los "toes" son los dedos de los pies.'
+                            },
+                            {
+                                id: "q33",
+                                type: "radio",
+                                question: "33. You bend your ______ when you sit down. (tip: bend=doblar)",
+                                options: ["toes", "feet", "knees"],
+                                correct: "knees",
+                                explanation: 'Las "knees" son las rodillas que se doblan al sentarse.'
+                            },
+                            {
+                                id: "q34",
+                                type: "radio",
+                                question: "34. He needs ______ to see better.",
+                                options: ["windows", "glasses", "mirrors"],
+                                correct: "glasses",
+                                explanation: 'Glasses = lentes.'
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "B. Preposiciones de lugar.",
+                        items: [
+                            {
+                                id: "q35",
+                                type: "radio",
+                                question: "35. The cat is sleeping ______ the couch.",
+                                options: ["under", "at", "between"],
+                                correct: "under",
+                                explanation: '"Under" significa debajo de algo.'
+                            },
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. The grocery store is ______ Main St.",
+                                options: ["on", "at", "in"],
+                                correct: "on",
+                                explanation: 'Se usa "on" para calles (no direcciones exactas).'
+                            },
+                            {
+                                id: "q37",
+                                type: "radio",
+                                question: "37. The box is ______ the table, so I can't see it from here.",
+                                options: ["on", "above", "under"],
+                                correct: "under",
+                                explanation: '"Under" significa debajo de algo, por lo tanto no se ve.'
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. Which sentence correctly indicates the location of an object?",
+                                options: [
+                                    "The building is in front of the park.",
+                                    "The building in front of the park is.",
+                                    "In front of the park the building is."
+                                ],
+                                correct: "The building is in front of the park.",
+                                explanation: "Orden correcto: The building is in front of the park."
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. The restaurant is ______ the store. (están uno al lado del otro)",
+                                options: ["behind", "in front of", "next to"],
+                                correct: "next to",
+                                explanation: '"Next to" significa al lado de algo.'
+                            },
+                            {
+                                id: "q40",
+                                type: "radio",
+                                question: "40. He usually does his homework ______ dinner.",
+                                options: ["after", "from", "until", "between"],
+                                correct: "after",
+                                explanation: '"After" significa después de algo.'
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN V: MESES, ESTACIONES, HORA Y PREPOSICIONES DE TIEMPO
+            // ============================================================
+            {
+                sectionTitle: "Sección V: Meses, estaciones, hora, preposiciones",
+                subsections: [
+                    {
+                        subtitle: "Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: "41. Which is the first month of the year?",
+                                options: ["December", "January", "February"],
+                                correct: "January",
+                                explanation: "January es el primer mes del año."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: "42. What season comes after winter?",
+                                options: ["Spring", "Summer", "Fall"],
+                                correct: "Spring",
+                                explanation: "Spring viene después del invierno."
+                            },
+                            {
+                                id: "q43",
+                                type: "radio",
+                                question: "43. What time is it? (2:30)",
+                                options: [
+                                    "It's two thirty",
+                                    "It's half past two",
+                                    "Both A and B are correct"
+                                ],
+                                correct: "Both A and B are correct",
+                                explanation: '2:30 puede decirse "two thirty" o "half past two".'
+                            },
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: '44. Where does Mark live? - He lives ______ 451 Oak St.',
+                                options: ["in", "on", "at"],
+                                correct: "at",
+                                explanation: 'Se usa "at" para direcciones completas/precisas.'
+                            },
+                            {
+                                id: "q45",
+                                type: "radio",
+                                question: "45. What time is it? (5:45)",
+                                options: [
+                                    "It's five fifty-five",
+                                    "It's a quarter to six",
+                                    "Both A and B are correct"
+                                ],
+                                correct: "It's a quarter to six",
+                                explanation: '5:45 se dice "quarter to six" (faltan 15 minutos para las 6).'
+                            },
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: "46. The store is open ______ 10 AM and 8 PM.",
+                                options: ["until", "between", "during"],
+                                correct: "between",
+                                explanation: '"Between" se usa para indicar un intervalo entre dos horas.'
+                            },
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. He stayed at the office ______ 10 PM.",
+                                options: ["before", "until", "during"],
+                                correct: "until",
+                                explanation: '"Until" significa "hasta" un momento específico.'
+                            },
+                            {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. They always watch TV ______ dinner, never before.",
+                                options: ["after", "before", "until"],
+                                correct: "after",
+                                explanation: '"After" significa "después de" algo, indicado por "never before".'
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. The school is closed ______ summer.",
+                                options: ["in", "on", "at", "until", "before"],
+                                correct: "in",
+                                explanation: 'Se usa "in" para estaciones del año.'
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: "50. Porfirio Díaz was born ______ 1830.",
+                                options: ["at", "in", "on"],
+                                correct: "in",
+                                explanation: 'Se usa "in" para años.'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+</body>
+</html>

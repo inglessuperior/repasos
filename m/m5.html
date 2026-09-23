@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 5</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- Logo con ruta corregida -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- Recuadro MÓDULO con width 30% -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 5</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso Módulo 5</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona o escribe la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <!-- Botones y Resultados -->
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (exactamente igual que antes)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+            {
+                sectionTitle: "Sección I: Futuro",
+                subsections: [
+                    {
+                        subtitle: "A. Elige la mejor opción para expresar el futuro.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. Look at those dark clouds! It ______ (rain) soon.",
+                                options: ["will rain", "is going to rain", "is raining"],
+                                correct: "is going to rain",
+                                explanation: "Se utiliza 'is going to rain' porque hay evidencia visual inmediata en el presente (las nubes oscuras) que indica un evento futuro inminente."
+                            },
+                            {
+                                id: "q2",
+                                type: "radio",
+                                question: "2. 'I'm cold.' 'Don't worry, I ______ (close) the window.'",
+                                options: ["am going to close", "close", "will close"],
+                                correct: "will close",
+                                explanation: "Se usa 'will' para decisiones espontáneas o promesas hechas en el momento ante una situación repentina."
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. We ______ (have) a team meeting at 10 AM tomorrow.",
+                                options: ["will have", "are going to have", "are having"],
+                                correct: "are having",
+                                explanation: "Se usa el presente continuo ('are having') para expresar un plan o cita fija agendada previamente."
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. I think she ______ (get) a promotion next year.",
+                                options: ["will get", "is going to get", "is getting"],
+                                correct: "will get",
+                                explanation: "Se usa 'will' acompañado de verbos de opinión o creencia como 'I think' para predicciones basadas en opiniones personales sobre el futuro."
+                            },
+                            {
+                                id: "q5",
+                                type: "radio",
+                                question: "5. They already bought the tickets. They ______ (fly) to Paris next week.",
+                                options: ["will fly", "are flying", "are going to fly"],
+                                correct: "are going to fly",
+                                explanation: "Se usa 'are going to fly' porque ya existe una intención previa y una preparación formal (comprar los boletos)."
+                            },
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. I ______ (work) on the report after lunch.",
+                                options: ["will work", "am working", "am going to work"],
+                                correct: "am working",
+                                explanation: "Se usa el presente continuo para planes futuros ya organizados/establecidos ('after lunch')."
+                            },
+                            {
+                                id: "q7",
+                                type: "radio",
+                                question: "7. Look at the schedule posted on the wall! The train ______ (leave) in five minutes.",
+                                options: ["is leaving", "will leave", "leaves"],
+                                correct: "leaves",
+                                explanation: "Se utiliza el presente simple ('leaves') para hablar de horarios oficiales, itinerarios, o rutinas programadas de transportes."
+                            },
+                            {
+                                id: "q8",
+                                type: "radio",
+                                question: "8. I promise I ______ (not/tell) anyone your secret.",
+                                options: ["don't tell", "won't tell", "am not going to tell"],
+                                correct: "won't tell",
+                                explanation: "Se utiliza 'won't' (will not) de manera estándar para promesas."
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: "9. What ______ (you/do) this weekend? Do you have plans?",
+                                options: ["are you doing", "do you do", "will you do"],
+                                correct: "are you doing",
+                                explanation: "Se usa el presente continuo ('are you doing') para preguntar sobre planes y acuerdos personales ya establecidos."
+                            },
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. Hang on, I ______ (help) you carry those boxes.",
+                                options: ["help", "am going to help", "will help"],
+                                correct: "will help",
+                                explanation: "Se emplea 'will' para ofrecer ayuda de manera espontánea."
+                            },
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: "11. According to her schedule, she ______ (meet) clients all morning.",
+                                options: ["will meet", "meets", "is meeting"],
+                                correct: "is meeting",
+                                explanation: "Se emplea el presente continuo ('is meeting') para actividades que ya están programadas y agendadas."
+                            },
+                            {
+                                id: "q12",
+                                type: "radio",
+                                question: "12. I'm sure humans ______ (travel) to Mars in the future.",
+                                options: ["will travel", "are traveling", "are going to travel"],
+                                correct: "will travel",
+                                explanation: "Se usa 'will' para expresar una predicción basada en opiniones o creencias."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "Sección II: Verbos modales",
+                subsections: [
+                    {
+                        subtitle: "A. Uso de should, must, have to, y sus negativos.",
+                        items: [
+                            {
+                                id: "q13",
+                                type: "radio",
+                                question: "13. You ______ (wear) a helmet when riding a motorbike. (Obligación de ley)",
+                                options: ["should", "can", "must"],
+                                correct: "must",
+                                explanation: "Se usa 'must' para expresar una obligación fuerte o de ley."
+                            },
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. You ______ (eat) more vegetables if you want to stay healthy. (Consejo)",
+                                options: ["mustn't", "should", "have to"],
+                                correct: "should",
+                                explanation: "Se usa 'should' para dar recomendaciones, sugerencias, o consejos."
+                            },
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. I ______ (finish) this report by 5 PM today. (Obligación externa)",
+                                options: ["should", "mustn't", "have to"],
+                                correct: "have to",
+                                explanation: "Se emplea 'have to' para indicar una obligación impuesta por un factor o autoridad externa (como el jefe en la oficina)."
+                            },
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. You ______ (smoke) in the office. It's strictly forbidden.",
+                                options: ["don't have to", "shouldn't", "mustn't"],
+                                correct: "mustn't",
+                                explanation: "Se usa 'mustn't' para prohibiciones explícitas, indicando que algo está completamente prohibido."
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. Tomorrow is Sunday, so I ______ (get up) early.",
+                                options: ["mustn't", "shouldn't", "don't have to"],
+                                correct: "don't have to",
+                                explanation: "Se utiliza 'don't have to' para expresar ausencia de obligación o necesidad (no es necesario madrugar)."
+                            },
+                            {
+                                id: "q18",
+                                type: "radio",
+                                question: "18. She looks exhausted. She ______ (take) a break right now.",
+                                options: ["must", "has to", "should"],
+                                correct: "should",
+                                explanation: "Se emplea 'should' para sugerir una acción conveniente u oportuna ante una situación evidente (parece agotada)."
+                            },
+                            {
+                                id: "q19",
+                                type: "radio",
+                                question: "19. Visitors ______ (show) their ID at the entrance desk.",
+                                options: ["should", "must", "don't have to"],
+                                correct: "must",
+                                explanation: "Se usa 'must' para señalar un requisito obligatorio y formal establecido por la administración del edificio."
+                            },
+                            {
+                                id: "q20",
+                                type: "radio",
+                                question: "20. You ______ (tell) him the truth; it will only hurt him more. (Consejo)",
+                                options: ["mustn't", "don't have to", "shouldn't"],
+                                correct: "shouldn't",
+                                explanation: "Se utiliza 'shouldn't' para desaconsejar una acción, indicando que no es una buena idea."
+                            },
+                            {
+                                id: "q21",
+                                type: "radio",
+                                question: "21. Do we ______ (pay) in advance for the tickets?",
+                                options: ["have to", "must", "should"],
+                                correct: "have to",
+                                explanation: "Se usa 'have to' en preguntas formuladas con el auxiliar 'do' para consultar acerca de una obligación o requisito externo."
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: "22. He ______ (work) late every Friday to finish his tasks.",
+                                options: ["should", "has to", "must"],
+                                correct: "has to",
+                                explanation: "Se usa 'has to' para indicar una obligación externa y rutinaria impuesta por el trabajo."
+                            },
+                            {
+                                id: "q23",
+                                type: "radio",
+                                question: "23. You ______ (worry) about it; I've already solved the problem.",
+                                options: ["mustn't", "shouldn't", "don't have to"],
+                                correct: "don't have to",
+                                explanation: "Se utiliza 'don't have to' para expresar ausencia de necesidad o requisito (no es necesario preocuparse)."
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: "24. Passengers ______ (fasten) their seatbelts during takeoff.",
+                                options: ["must", "should", "can"],
+                                correct: "must",
+                                explanation: "Se usa 'must' para indicar una regla estricta de seguridad y de cumplimiento obligatorio."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "Sección III: Comparativos y Superlativos",
+                subsections: [
+                    {
+                        subtitle: "A. Completa correctamente los comparativos y superlativos.",
+                        items: [
+                            {
+                                id: "q25",
+                                type: "text",
+                                question: "25. This job offer is ______ (good) than my current one.",
+                                correct: ["better"],
+                                explanation: "El comparativo de 'good' es 'better'. Sabemos que es comparativo por la presencia de 'than'."
+                            },
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. This is ______ (big) office in the entire building.",
+                                options: ["the most big", "the bigest", "the biggest"],
+                                correct: "the biggest",
+                                explanation: "Al tratarse de un adjetivo corto ('big'), el superlativo se forma duplicando la consonante final y añadiendo '-est' precedido por 'the'."
+                            },
+                            {
+                                id: "q27",
+                                type: "radio",
+                                question: "27. My new monthly salary is ______ (high) than the previous one.",
+                                options: ["more high", "higher", "the highest"],
+                                correct: "higher",
+                                explanation: "Para adjetivos cortos como 'high', se añade el sufijo '-er' seguido de 'than' para construir un comparativo."
+                            },
+                            {
+                                id: "q28",
+                                type: "text",
+                                question: "28. He is ______ (intelligent) person I have ever worked with.",
+                                correct: ["the most intelligent"],
+                                explanation: "Para el superlativo de adjetivos largos como 'intelligent', se coloca antes 'the most'."
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. My car is ______ (expensive) than yours.",
+                                options: ["expensiver", "the most expensive", "more expensive"],
+                                correct: "more expensive",
+                                explanation: "Tratándose de un adjetivo largo ('expensive'), el comparativo usa 'more' antes."
+                            },
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: "30. She is ______ (fast) typist in the whole department.",
+                                options: ["the fastest", "faster", "the most fast"],
+                                correct: "the fastest",
+                                explanation: "Se usa 'the' + el adjetivo con '-est' para comunicar que el sujeto tiene la cualidad máxima del grupo."
+                            },
+                            {
+                                id: "q31",
+                                type: "radio",
+                                question: "31. Today has been ______ (bad) day of my career.",
+                                options: ["worse", "the baddest", "the worst"],
+                                correct: "the worst",
+                                explanation: "El adjetivo 'bad' es irregular y su forma superlativa es 'the worst'."
+                            },
+                            {
+                                id: "q32",
+                                type: "radio",
+                                question: "32. Economics is ______ (difficult) than history for most students.",
+                                options: ["difficulter", "the most difficult", "more difficult"],
+                                correct: "more difficult",
+                                explanation: "Para adjetivos largos como 'difficult', el comparativo usa 'more' antes."
+                            },
+                            {
+                                id: "q33",
+                                type: "radio",
+                                question: "33. My brother is not as ______ (tall) as me.",
+                                options: ["taller", "the tallest", "tall"],
+                                correct: "tall",
+                                explanation: "En los comparativos de igualdad (not as ... as), el adjetivo se mantiene en su forma base original ('tall')."
+                            },
+                            {
+                                id: "q34",
+                                type: "text",
+                                question: "34. This exercise is ______ (easy) than the previous one.",
+                                correct: ["easier"],
+                                explanation: "Para comparativos con un adjetivo corto terminado en 'y' ('easy'), se cambia la 'y' por 'i' y se añade '-er' ('easier')."
+                            },
+                            {
+                                id: "q35",
+                                type: "radio",
+                                question: "35. Mount Everest is ______ (high) mountain in the world.",
+                                options: ["higher than", "more high", "the highest"],
+                                correct: "the highest",
+                                explanation: "Para expresar el superlativo de un adjetivo corto como 'high', se usa 'the' antes y la terminación '-est' ('the highest')."
+                            },
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. Travelling by train is ______ (cheap) than flying.",
+                                options: ["more cheap", "the cheapest", "cheaper"],
+                                correct: "cheaper",
+                                explanation: "Para el comparativo de 'cheap', se añade el sufijo '-er' ('cheaper')."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "Sección IV: Vocabulario (Laboral, Clima y Ropa)",
+                subsections: [
+                    {
+                        subtitle: "A. Selecciona el término correcto según el contexto.",
+                        items: [
+                            {
+                                id: "q37",
+                                type: "text",
+                                question: "37. La palabra para referirnos a la fecha límite de algo es:",
+                                correct: ["deadline"],
+                                explanation: "Usamos el término 'deadline' para hablar de la fecha u hora límite de algo."
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. La palabra 'foggy' nos indica que las condiciones del clima presentan:",
+                                options: ["viento fuerte", "lluvia ligera", "neblina / niebla"],
+                                correct: "neblina / niebla",
+                                explanation: "El adjetivo 'foggy' describe un ambiente atmosférico con neblina o niebla."
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. ¿Qué significa el verbo 'to hire' en el ámbito laboral?",
+                                options: ["Despedir a un empleado", "Promover a un empleado", "Contratar a un empleado"],
+                                correct: "Contratar a un empleado",
+                                explanation: "El verbo 'to hire' se traduce como contratar a alguien."
+                            },
+                            {
+                                id: "q40",
+                                type: "radio",
+                                question: "40. ¿Cómo se le llama comúnmente a una junta o encuentro de trabajo?",
+                                options: ["salary", "meeting", "contract"],
+                                correct: "meeting",
+                                explanation: "La palabra 'meeting' se usa para referirse a una reunión o junta de trabajo."
+                            },
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: "41. 'Stormy' se refiere específicamente a un clima:",
+                                options: ["Soleado", "Ventoso", "Tormentoso"],
+                                correct: "Tormentoso",
+                                explanation: "El adjetivo 'stormy' proviene de 'storm' y significa tormentoso."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: "42. Prenda o accesorio de protección que los trabajadores 'must wear' en una zona de construcción:",
+                                options: ["scarf", "helmet", "socks"],
+                                correct: "helmet",
+                                explanation: "Un casco ('helmet') es una prenda de protección obligatoria en áreas de construcción."
+                            },
+                            {
+                                id: "q43",
+                                type: "radio",
+                                question: "43. La remuneración económica regular que recibe un empleado por su trabajo:",
+                                options: ["interview", "bonus", "salary"],
+                                correct: "salary",
+                                explanation: "'Salary' es el sueldo o salario regular que recibe un trabajador."
+                            },
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: "44. Un clima caracterizado por la caída de nieve se describe como:",
+                                options: ["rainy", "snowy", "cloudy"],
+                                correct: "snowy",
+                                explanation: "El adjetivo 'snowy' se usa para describir caracterizar un clima o día nevado."
+                            },
+                            {
+                                id: "q45",
+                                type: "text",
+                                question: "45. Accesorio de invierno que se usa alrededor del cuello para abrigarse:",
+                                correct: ["scarf"],
+                                explanation: "Una bufanda ('scarf') es un accesorio diseñado para abrigar el cuello."
+                            },
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: "46. El proceso formal de evaluar a un candidato para un puesto de trabajo:",
+                                options: ["deadline", "contract", "interview"],
+                                correct: "interview",
+                                explanation: "Una entrevista ('interview') es el proceso para evaluar postulantes."
+                            },
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. Cuando el clima es muy caluroso y brillante debido al sol, decimos que está:",
+                                options: ["windy", "cloudy", "sunny"],
+                                correct: "sunny",
+                                explanation: "El adjetivo 'sunny' describe condiciones soleadas."
+                            },
+                            {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. Prenda ligera de vestir que cubre la parte superior del cuerpo y tiene mangas:",
+                                options: ["helmet", "jacket", "shirt"],
+                                correct: "shirt",
+                                explanation: "Una camisa ('shirt') es una prenda ligera que cubre el torso y los brazos."
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. Acción de finalizar la relación laboral con un trabajador:",
+                                options: ["hire", "promote", "fire / dismiss"],
+                                correct: "fire / dismiss",
+                                explanation: "Los términos 'fire' o 'dismiss' significan despedir a un empleado de su puesto."
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: "50. Un día con fuertes corrientes de aire se describe con el adjetivo:",
+                                options: ["cloudy", "rainy", "windy"],
+                                correct: "windy",
+                                explanation: "El adjetivo 'windy' se usa para indicar que un día es ventoso."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO (TODA la lógica está aquí)
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+    <!-- ============================================================
+         INICIALIZACIÓN ESPECÍFICA DE ESTE REPASO
+         ============================================================ -->
+    <script>
+        window.onload = function() {
+            renderQuiz(sectionsData);
+
+            document.getElementById('checkButton')?.addEventListener('click', function() {
+                checkQuiz(sectionsData);
+            });
+
+            document.getElementById('pdfButton')?.addEventListener('click', generatePDF);
+        };
+    </script>
+
+</body>
+</html>

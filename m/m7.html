@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 7</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- Logo con ruta corregida -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- Recuadro MÓDULO con width 30% -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 7</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso General</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (TODAS convertidas a opción múltiple)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+            // ============================================================
+            // SECCIÓN I: PRESENTE PERFECTO
+            // ============================================================
+            {
+                sectionTitle: "Sección I: Presente Perfecto",
+                subsections: [
+                    {
+                        subtitle: "A. Forma y uso básico. Elige la opción correcta.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. I ______ (live) in this city for ten years.",
+                                options: ["have lived", "lived", "am living"],
+                                correct: "have lived",
+                                explanation: "Presente Perfecto con 'for + periodo' para acciones que comenzaron en el pasado y continúan en el presente."
+                            },
+                            {
+                                id: "q2",
+                                type: "radio",
+                                question: "2. She ______ (not / finish) her report yet.",
+                                options: ["didn't finish", "hasn't finished", "doesn't finish"],
+                                correct: "hasn't finished",
+                                explanation: "Negativo del Presente Perfecto: have/has + not + past participle. 'Yet' indica que la acción no ha ocurrido hasta ahora."
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. ______ you ever ______ (travel) to Asia?",
+                                options: ["Have / traveled", "Did / travel", "Do / travel"],
+                                correct: "Have / traveled",
+                                explanation: "Pregunta en Presente Perfecto con 'ever' para experiencias de vida."
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. They haven't finished the report ______. They need more time.",
+                                options: ["just", "already", "yet"],
+                                correct: "yet",
+                                explanation: "'Yet' se usa en oraciones negativas para indicar que algo no ha ocurrido hasta el momento presente."
+                            },
+                            {
+                                id: "q5",
+                                type: "radio",
+                                question: "5. He ______ (work) here since 2018.",
+                                options: ["worked", "has worked", "works"],
+                                correct: "has worked",
+                                explanation: "'Since + punto específico en el tiempo' requiere Presente Perfecto."
+                            },
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. We have been friends ______ we were children.",
+                                options: ["for", "since", "during", "from"],
+                                correct: "since",
+                                explanation: "'Since' se usa con un punto específico en el tiempo (we were children)."
+                            },
+                            {
+                                id: "q7",
+                                type: "radio",
+                                question: "7. I ______ (already / see) that movie three times.",
+                                options: ["have already seen", "already saw", "already see"],
+                                correct: "have already seen",
+                                explanation: "'Already' se coloca entre el auxiliar 'have' y el past participle."
+                            },
+                            {
+                                id: "q8",
+                                type: "radio",
+                                question: "8. Have you ______ been to Paris?",
+                                options: ["ever", "never", "already"],
+                                correct: "ever",
+                                explanation: "'Ever' se usa en preguntas para preguntar sobre experiencias en la vida."
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: "9. She has ______ finished her degree. She graduated last month.",
+                                options: ["yet", "just", "already"],
+                                correct: "already",
+                                explanation: "'Already' indica que algo ha ocurrido antes de lo esperado o de ahora."
+                            },
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. ______ finished the report yet?",
+                                options: ["Have you", "Did you", "Do you"],
+                                correct: "Have you",
+                                explanation: "Presente Perfecto con 'yet' requiere 'Have you' + past participle."
+                            },
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: "11. I have ______ tried sushi. I don't like raw fish.",
+                                options: ["ever", "just", "never"],
+                                correct: "never",
+                                explanation: "'Never' se usa en oraciones afirmativas del Presente Perfecto para indicar 'nunca'."
+                            },
+                            {
+                                id: "q12",
+                                type: "radio",
+                                question: "12. We've known each other ______ twenty years.",
+                                options: ["since", "for", "from"],
+                                correct: "for",
+                                explanation: "'For' se usa con un periodo de tiempo (twenty years)."
+                            },
+                            {
+                                id: "q13",
+                                type: "radio",
+                                question: "13. He has worked here ______ last June.",
+                                options: ["for", "since", "during"],
+                                correct: "since",
+                                explanation: "'Since' se usa con un punto específico en el tiempo (last June)."
+                            },
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. I have wanted to visit Japan ______.",
+                                options: ["all my life", "last year", "yesterday", "in 2010"],
+                                correct: "all my life",
+                                explanation: "'All my life' es una expresión de tiempo que se usa con Presente Perfecto."
+                            },
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. Which sentence is correct?",
+                                options: [
+                                    "I have studied English since five years.",
+                                    "I have studied English for five years.",
+                                    "I have studied English from five years."
+                                ],
+                                correct: "I have studied English for five years.",
+                                explanation: "Se usa 'for' con periodos de tiempo, 'since' con puntos específicos."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN II: GERUNDIO VS. INFINITIVO
+            // ============================================================
+            {
+                sectionTitle: "Sección II: Gerundio vs. Infinitivo",
+                subsections: [
+                    {
+                        subtitle: "D. Completa con la forma correcta (-ing o to + verbo).",
+                        items: [
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. I enjoy ______ (read) in my free time.",
+                                options: ["to read", "reading", "read"],
+                                correct: "reading",
+                                explanation: "'Enjoy' va seguido de gerundio (-ing)."
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. She needs ______ (buy) a new laptop for work.",
+                                options: ["buying", "buy", "to buy"],
+                                correct: "to buy",
+                                explanation: "'Need' puede ir seguido de infinitivo (to buy)."
+                            },
+                            {
+                                id: "q18",
+                                type: "radio",
+                                question: "18. They finished ______ (work) late last night.",
+                                options: ["to work", "working", "work"],
+                                correct: "working",
+                                explanation: "'Finish' va seguido de gerundio."
+                            },
+                            {
+                                id: "q19",
+                                type: "radio",
+                                question: "19. He decided ______ (study) engineering in college.",
+                                options: ["to study", "studying", "study"],
+                                correct: "to study",
+                                explanation: "'Decide' va seguido de infinitivo."
+                            },
+                            {
+                                id: "q20",
+                                type: "radio",
+                                question: "20. Which sentence is correct?",
+                                options: [
+                                    "We are avoiding heavy traffic.",
+                                    "We are avoid heavy traffic.",
+                                    "We are to avoid heavy traffic."
+                                ],
+                                correct: "We are avoiding heavy traffic.",
+                                explanation: "'Avoid' va seguido de gerundio: We are avoiding heavy traffic."
+                            },
+                            {
+                                id: "q21",
+                                type: "radio",
+                                question: "21. I want ______ (visit) my family next month.",
+                                options: ["visiting", "visit", "to visit"],
+                                correct: "to visit",
+                                explanation: "'Want' va seguido de infinitivo."
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: "22. They suggested ______ (go) to the new restaurant.",
+                                options: ["to go", "going", "go"],
+                                correct: "going",
+                                explanation: "'Suggest' va seguido de gerundio."
+                            },
+                            {
+                                id: "q23",
+                                type: "radio",
+                                question: "23. Which verb is followed by an infinitive?",
+                                options: ["plan", "enjoy", "finish"],
+                                correct: "plan",
+                                explanation: "'Plan' va seguido de infinitivo; 'enjoy' y 'finish' van con gerundio."
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: "24. She stopped ______ coffee last year.",
+                                options: ["drinking", "to drink", "drink"],
+                                correct: "drinking",
+                                explanation: "'Stop + gerundio' significa dejar de hacer algo (dejó de beber café)."
+                            },
+                            {
+                                id: "q25",
+                                type: "radio",
+                                question: "25. We hope ______ (finish) the project by Friday.",
+                                options: ["finishing", "finish", "to finish"],
+                                correct: "to finish",
+                                explanation: "'Hope' va seguido de infinitivo."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN III: PRESENTE PERFECTO vs PASADO SIMPLE & QUESTION TAGS
+            // ============================================================
+            {
+                sectionTitle: "Sección III: Contrastes y Question Tags",
+                subsections: [
+                    {
+                        subtitle: "E. Presente Perfecto vs. Pasado Simple.",
+                        items: [
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. I ______ (visit) London in 2019.",
+                                options: ["have visited", "visited", "visit"],
+                                correct: "visited",
+                                explanation: "Pasado Simple con un tiempo específico en el pasado (in 2019)."
+                            },
+                            {
+                                id: "q27",
+                                type: "radio",
+                                question: "27. She ______ (live) in Madrid for three years, but now she lives in Barcelona.",
+                                options: ["has lived", "lived", "lives"],
+                                correct: "lived",
+                                explanation: "Pasado Simple porque la acción terminó (ahora vive en otro lugar)."
+                            },
+                            {
+                                id: "q28",
+                                type: "radio",
+                                question: "28. ______ you ______ (eat) at that new restaurant yet?",
+                                options: ["Did / eat", "Have / eaten", "Do / eat"],
+                                correct: "Have / eaten",
+                                explanation: "Presente Perfecto con 'yet' para preguntar si algo ha ocurrido hasta ahora."
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. He ______ (not / call) me last week.",
+                                options: ["hasn't called", "didn't call", "doesn't call"],
+                                correct: "didn't call",
+                                explanation: "Pasado Simple con un tiempo específico (last week)."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "F. Question Tags.",
+                        items: [
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: "30. This view is beautiful, ______?",
+                                options: ["isn't it", "is it", "doesn't it"],
+                                correct: "isn't it",
+                                explanation: "Afirmativo con 'is' → tag negativo 'isn't'. El pronombre para 'this view' es 'it'."
+                            },
+                            {
+                                id: "q31",
+                                type: "radio",
+                                question: "31. You work here, ______?",
+                                options: ["do you", "don't you", "aren't you"],
+                                correct: "don't you",
+                                explanation: "Afirmativo con verbo principal → tag negativo con 'do'."
+                            },
+                            {
+                                id: "q32",
+                                type: "radio",
+                                question: "32. She hasn't arrived yet, ______?",
+                                options: ["has she", "hasn't she", "does she"],
+                                correct: "has she",
+                                explanation: "Negativo principal → tag afirmativo, mismo auxiliar."
+                            },
+                            {
+                                id: "q33",
+                                type: "radio",
+                                question: "33. They will come to the meeting, ______?",
+                                options: ["will they", "won't they", "don't they"],
+                                correct: "won't they",
+                                explanation: "Afirmativo con 'will' → tag negativo 'won't'."
+                            },
+                            {
+                                id: "q34",
+                                type: "radio",
+                                question: "34. You can speak French, ______?",
+                                options: ["can you", "can't you", "do you"],
+                                correct: "can't you",
+                                explanation: "Afirmativo con 'can' → tag negativo 'can't'."
+                            },
+                            {
+                                id: "q35",
+                                type: "radio",
+                                question: "35. What is the rule for question tags?",
+                                options: [
+                                    "Same auxiliary, opposite polarity",
+                                    "Different auxiliary, same polarity",
+                                    "Always use 'do'"
+                                ],
+                                correct: "Same auxiliary, opposite polarity",
+                                explanation: "La regla es: mismo auxiliar, polaridad opuesta (afirmativo → negativo, negativo → afirmativo)."
+                            }
+                        ]
+                    }
+                ]
+            },
+            // ============================================================
+            // SECCIÓN IV: VOCABULARIO
+            // ============================================================
+            {
+                sectionTitle: "Sección IV: Vocabulario",
+                subsections: [
+                    {
+                        subtitle: "G. Logros, Experiencias y Educación.",
+                        items: [
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. After 40 years of work, he's looking forward to his ______ next year.",
+                                options: ["graduation", "retirement", "lesson"],
+                                correct: "retirement",
+                                explanation: "'Retirement' es la jubilación después de una vida laboral."
+                            },
+                            {
+                                id: "q37",
+                                type: "radio",
+                                question: "37. Her ______ to the community project was recognized with an award.",
+                                options: ["effort", "knowledge", "contribution"],
+                                correct: "contribution",
+                                explanation: "'Contribution' significa contribución o aporte."
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. A ______ helps students pay for their studies based on merit.",
+                                options: ["certificate", "scholarship", "lecture"],
+                                correct: "scholarship",
+                                explanation: "Una 'scholarship' es una beca que ayuda a pagar estudios."
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. She has a master's ______ in business administration.",
+                                options: ["degree", "course", "lesson"],
+                                correct: "degree",
+                                explanation: "'Degree' se refiere a un título universitario (master's degree)."
+                            },
+                            {
+                                id: "q40",
+                                type: "radio",
+                                question: "40. Winning the competition was her greatest ______.",
+                                options: ["effort", "achievement", "knowledge"],
+                                correct: "achievement",
+                                explanation: "'Achievement' significa logro o hazaña."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "H. Personalidad y Relaciones Personales.",
+                        items: [
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: "41. Someone who always tells the truth is ______.",
+                                options: ["arrogant", "insecure", "sincere"],
+                                correct: "sincere",
+                                explanation: "'Sincere' significa sincero, que dice la verdad."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: "42. A person who thinks they are better than others is ______.",
+                                options: ["arrogant", "humble", "reliable"],
+                                correct: "arrogant",
+                                explanation: "'Arrogant' significa arrogante, que se cree mejor que los demás."
+                            },
+                            {
+                                id: "q43",
+                                type: "radio",
+                                question: "43. Which two words describe positive personality traits?",
+                                options: [
+                                    "arrogant and mean",
+                                    "friendly and reliable",
+                                    "selfish and insecure"
+                                ],
+                                correct: "friendly and reliable",
+                                explanation: "'Friendly and reliable' son cualidades positivas. 'Arrogant and mean' y 'selfish and insecure' son negativas."
+                            },
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: "44. Understanding how others feel is called ______.",
+                                options: ["argument", "empathy", "trust"],
+                                correct: "empathy",
+                                explanation: "'Empathy' es la capacidad de entender los sentimientos de otros."
+                            },
+                            {
+                                id: "q45",
+                                type: "radio",
+                                question: "45. A person you know but who is not a close friend is an ______.",
+                                options: ["acquaintance", "argument", "commitment"],
+                                correct: "acquaintance",
+                                explanation: "'Acquaintance' es un conocido, no un amigo cercano."
+                            },
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: "46. He's very ______; he always wants to learn new things.",
+                                options: ["curious", "selfish", "mean"],
+                                correct: "curious",
+                                explanation: "'Curious' significa curioso, con deseos de aprender."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "I. Leyes, Derechos y Sociedad.",
+                        items: [
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. Treating people unfairly because of their race or gender is ______.",
+                                options: ["evidence", "respect", "discrimination"],
+                                correct: "discrimination",
+                                explanation: "'Discrimination' es discriminación, trato injusto por raza o género."
+                            },
+                            {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. In court, lawyers present ______ to prove their case.",
+                                options: ["evidence", "discrimination", "commitment"],
+                                correct: "evidence",
+                                explanation: "'Evidence' es evidencia o pruebas en un caso legal."
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. A long-term promise or obligation is a ______.",
+                                options: ["trust", "commitment", "argument"],
+                                correct: "commitment",
+                                explanation: "'Commitment' es compromiso a largo plazo."
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: "50. A person who doesn't believe in their abilities is ______.",
+                                options: ["insecure", "confident", "arrogant"],
+                                correct: "insecure",
+                                explanation: "'Insecure' significa inseguro, que no confía en sus habilidades."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+</body>
+</html>

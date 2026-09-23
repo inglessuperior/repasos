@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Módulo 6</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS CENTRALIZADO -->
+    <link rel="stylesheet" href="../assets/css/style-repasos.css">
+</head>
+<body>
+
+    <header class="max-w-4xl mx-auto text-center mb-8">
+        <!-- Logo con ruta corregida -->
+        <img src="../assets/img/logo.png" class="imagen1" alt="Logo de Inglés Superior" style="display: block; margin: 1rem auto;">
+        
+        <!-- Recuadro MÓDULO con width 30% -->
+        <p class="formula mx-auto p-0 text-sm" style="width: 30%; color: #1f2937; border-color: #d1d5db;">MÓDULO: 6</p>
+        
+        <h1 class="titulo1 mt-2 mb-4">Repaso Módulo 6</h1>
+
+        <div id="printResultSummary" class="hidden text-center py-4"></div>
+
+        <div class="text-container">
+            <h2 class="titulo2 mb-4">Instrucciones:</h2>
+            <p class="text-lg text-slate-600">Lee cada pregunta con atención y selecciona o escribe la respuesta correcta.</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <form id="quizForm" onsubmit="return false;">
+            <div id="quizContainer"></div>
+
+            <!-- Botones y Resultados -->
+            <div class="text-container text-center">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow transition duration-200" id="checkButton">Verificar respuestas</button>
+                    <button type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-200 hidden" id="pdfButton">Generar PDF de resultados</button>
+                </div>
+                
+                <div id="finalScore" class="hidden mt-8 p-6 border-2 border-slate-300 bg-slate-50 rounded-lg flex flex-col justify-center items-center space-y-2"></div>
+            </div>
+        </form>
+    </main>
+
+    <!-- ============================================================
+         DATOS DE LAS PREGUNTAS (exactamente igual que antes)
+         ============================================================ -->
+    <script>
+        const sectionsData = [
+            {
+                sectionTitle: "Sección I: Tiempos verbales",
+                subsections: [
+                    {
+                        subtitle: "A. Presente simple vs. presente continuo.",
+                        items: [
+                            {
+                                id: "q1",
+                                type: "radio",
+                                question: "1. I usually ______ (work) from home on Fridays, but today I ______ (work) from the office today.",
+                                options: ["work / am working", "am working / work", "work / work"],
+                                correct: "work / am working",
+                                explanation: "Usamos presente simple ('work') para rutinas o hábitos y presente continuo ('am working') para acciones temporales o en proceso."
+                            },
+                            {
+                                id: "q2",
+                                type: "radio",
+                                question: "2. Shhh! Be quiet. The baby ______ (sleep).",
+                                options: ["sleep", "sleeps", "is sleeping"],
+                                correct: "is sleeping",
+                                explanation: "El contexto ('Shhh! Be quiet') nos indica que el bebé está durmiendo (acción en proceso), por lo que sería presente continuo."
+                            },
+                            {
+                                id: "q3",
+                                type: "radio",
+                                question: "3. Water ______ (boil) at 100 degrees Celsius.",
+                                options: ["is boiling", "boil", "boils"],
+                                correct: "boils",
+                                explanation: "Los hechos generales y verdades científicas se expresan con presente simple."
+                            },
+                            {
+                                id: "q4",
+                                type: "radio",
+                                question: "4. \"Where's John?\" \"He ______ (talk) on the phone in the other room.\"",
+                                options: ["talks", "is talking", "talk"],
+                                correct: "is talking",
+                                explanation: "La pregunta sobre su ubicación actual y el contexto indican que es una acción en progreso ('is talking')."
+                            },
+                            {
+                                id: "q5",
+                                type: "text",
+                                question: "5. She ______ (not / like) coffee. She always drinks tea.",
+                                correct: ["doesn't like"],
+                                explanation: "Para hábitos y gustos en tercera persona del singular ('she') en presente simple, usamos 'doesn't' + 'like'."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "B. Pasado continuo.",
+                        items: [
+                            {
+                                id: "q6",
+                                type: "radio",
+                                question: "6. Yesterday at 8 PM, I ______ (watch) a movie.",
+                                options: ["watched", "was watching", "am watching"],
+                                correct: "was watching",
+                                explanation: "Una acción en progreso en un momento específico del pasado requiere pasado continuo ('was/were + verbo-ing')."
+                            },
+                            {
+                                id: "q7",
+                                type: "radio",
+                                question: "7. What ______ (you / do) when the power went out?",
+                                options: ["were you doing", "did you do", "are you doing"],
+                                correct: "were you doing",
+                                explanation: "Se pregunta sobre una acción que estaba en desarrollo cuando otra la interrumpió, por lo que usamos pasado continuo."
+                            },
+                            {
+                                id: "q8",
+                                type: "text",
+                                question: "8. They ______ listening to the instructions because they were distracted.",
+                                correct: ["weren't"],
+                                explanation: "Para el pasado continuo con 'they' se usa 'were not' (o 'weren't')."
+                            },
+                            {
+                                id: "q9",
+                                type: "radio",
+                                question: "9. It ______ (rain) heavily when we left the house.",
+                                options: ["rained", "was raining", "is raining"],
+                                correct: "was raining",
+                                explanation: "Indica una acción pasada que estaba ocurriendo (pasado continuo) cuando otra acción ocurrió ('left')."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "C. Selecciona o escribe el adverbio correcto.",
+                        items: [
+                            {
+                                id: "q10",
+                                type: "radio",
+                                question: "10. She's always at the office. She works ______.",
+                                options: ["hard", "harder", "hardly"],
+                                correct: "hard",
+                                explanation: "'Hard' funciona como adjetivo y como adverbio sin cambiar su forma (se conocen como 'flat adverbs'). 'Hardly' significa 'apenas/casi no'."
+                            },
+                            {
+                                id: "q11",
+                                type: "radio",
+                                question: "11. You must handle these documents ______. They are confidential.",
+                                options: ["careful", "carefully", "carefulness"],
+                                correct: "carefully",
+                                explanation: "El adverbio 'carefully' significa 'cuidadosamente/con cuidado'."
+                            },
+                            {
+                                id: "q12",
+                                type: "radio",
+                                question: "12. He speaks very ______. I can never understand him.",
+                                options: ["complicated", "clearly", "fast"],
+                                correct: "fast",
+                                explanation: "'Fast' funciona como adjetivo y como adverbio sin cambiar su forma (se conocen como 'flat adverbs')."
+                            },
+                            {
+                                id: "q13",
+                                type: "radio",
+                                question: "13. Elige la oración que esté correcta.",
+                                options: [
+                                    "He explain the procedure patiently.",
+                                    "He explained the procedure patience.",
+                                    "He explained the procedure patiently."
+                                ],
+                                correct: "He explained the procedure patiently.",
+                                explanation: "'Patiently' es un adverbio de modo. Dos de las oraciones tienen errores gramaticales."
+                            },
+                            {
+                                id: "q14",
+                                type: "radio",
+                                question: "14. ¿Qué oración tiene un adverbio?",
+                                options: ["She is a good driver.", "She drives well.", "Her driving is good."],
+                                correct: "She drives well.",
+                                explanation: "'Well' es el adverbio irregular que modifica al verbo 'drives'. En las otras oraciones, 'good' es un adjetivo."
+                            },
+                            {
+                                id: "q15",
+                                type: "radio",
+                                question: "15. The team worked ______ (efficient) to meet the deadline.",
+                                options: ["efficient", "efficiently", "efficiency"],
+                                correct: "efficiently",
+                                explanation: "El adverbio 'efficiently' significa 'eficientemente'."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "Sección II: Hábitos y adaptación",
+                subsections: [
+                    {
+                        subtitle: "D. Elige la estructura correcta: used to, be used to, o get used to.",
+                        items: [
+                            {
+                                id: "q16",
+                                type: "radio",
+                                question: "16. When I was a kid, I ______ play tennis every weekend.",
+                                options: ["used to", "am getting used to", "use to"],
+                                correct: "used to",
+                                explanation: "Estructura para hábitos en el pasado: Sujeto + used to + verbo."
+                            },
+                            {
+                                id: "q17",
+                                type: "radio",
+                                question: "17. I ______ living in a big city now. I've been here for five years.",
+                                options: ["used to", "am used to", "get used to"],
+                                correct: "am used to",
+                                explanation: "Usamos 'am used to' para indicar que ya estamos acostumbrados a una situación actual."
+                            },
+                            {
+                                id: "q18",
+                                type: "radio",
+                                question: "18. It was difficult at first, but I finally ______ the new software.",
+                                options: ["used to", "am used to", "got used to"],
+                                correct: "got used to",
+                                explanation: "Expresa el proceso de adaptación que ocurrió en el pasado ('got used to')."
+                            },
+                            {
+                                id: "q19",
+                                type: "text",
+                                question: "19. She ______ drink coffee, but now she prefers tea.",
+                                correct: ["used to"],
+                                explanation: "Indica un hábito o estado pasado ('used to' + verbo)."
+                            },
+                            {
+                                id: "q20",
+                                type: "radio",
+                                question: "20. Are you ______ the cold weather here yet?",
+                                options: ["got used to", "getting used to", "use to"],
+                                correct: "getting used to",
+                                explanation: "El proceso de adaptación está en progreso, por lo que se usa 'getting used to'."
+                            },
+                            {
+                                id: "q21",
+                                type: "text",
+                                question: "21. We are ______ working long hours at this company. (acostumbrados)",
+                                correct: ["used to"],
+                                explanation: "'Used to' se usa para comunicar que estás acostumbrado a algo."
+                            },
+                            {
+                                id: "q22",
+                                type: "radio",
+                                question: "22. He ______ (not / eat) spicy food, but he loves it now.",
+                                options: ["doesn't get used to eating", "isn't used to eating", "didn't use to eat"],
+                                correct: "didn't use to eat",
+                                explanation: "Para la forma negativa de un hábito pasado ('used to') usamos 'didn't use to' + verbo."
+                            },
+                            {
+                                id: "q23",
+                                type: "radio",
+                                question: "23. What is the main difference between <b>used to</b> and <b>be used to</b>?",
+                                options: [
+                                    "Used to is for past habits, be used to is for current adaptation.",
+                                    "Used to is for current adaptation, be used to is for past habits.",
+                                    "They mean the same thing."
+                                ],
+                                correct: "Used to is for past habits, be used to is for current adaptation.",
+                                explanation: "'Used to' describe hábitos del pasado (soler); 'be used to' describe estar acostumbrado a algo en el presente."
+                            },
+                            {
+                                id: "q24",
+                                type: "radio",
+                                question: "24. I ______ waking up early for my new job. (está en proceso de adaptarse)",
+                                options: ["am getting used to", "got used to", "am used to"],
+                                correct: "am getting used to",
+                                explanation: "Cuando queremos decir que nos estamos adaptando/acostumbrando a algo, usamos 'getting used to'."
+                            },
+                            {
+                                id: "q25",
+                                type: "radio",
+                                question: "25. It will take some time to ______ the different time zone.",
+                                options: ["use to", "get used to", "got used to"],
+                                correct: "get used to",
+                                explanation: "Después de 'to', usamos 'get used to' para referirnos al proceso de adaptarse a un cambio."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "Sección III: Cantidad y grado",
+                subsections: [
+                    {
+                        subtitle: "E. Much, many, a lot of, a little, a few. Elige el correcto.",
+                        items: [
+                            {
+                                id: "q26",
+                                type: "radio",
+                                question: "26. We don't have ______ time before the meeting.",
+                                options: ["many", "much", "a few"],
+                                correct: "much",
+                                explanation: "Usamos 'much' con sustantivos incontables ('time') en oraciones negativas o interrogativas."
+                            },
+                            {
+                                id: "q27",
+                                type: "radio",
+                                question: "27. She has ______ friends from different countries.",
+                                options: ["much", "a little", "a lot of"],
+                                correct: "a lot of",
+                                explanation: "'A lot of' se puede usar con sustantivos contables en plural ('friends') en oraciones afirmativas."
+                            },
+                            {
+                                id: "q28",
+                                type: "radio",
+                                question: "28. Can I have ______ water, please? I'm thirsty.",
+                                options: ["a few", "a little", "many"],
+                                correct: "a little",
+                                explanation: "Usamos 'a little' para expresar una cantidad pequeña con sustantivos incontables ('water')."
+                            },
+                            {
+                                id: "q29",
+                                type: "radio",
+                                question: "29. There were only ______ people at the presentation.",
+                                options: ["a little", "a few", "much"],
+                                correct: "a few",
+                                explanation: "Usamos 'a few' con sustantivos contables en plural ('people') para indicar una cantidad pequeña pero suficiente."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "F. Very, too, enough. Elige el correcto.",
+                        items: [
+                            {
+                                id: "q30",
+                                type: "radio",
+                                question: "30. This coffee is ______ hot to drink right now.",
+                                options: ["very", "too", "enough"],
+                                correct: "too",
+                                explanation: "'Too' se usa antes de un adjetivo para indicar un exceso."
+                            },
+                            {
+                                id: "q31",
+                                type: "text",
+                                question: "31. He isn't old ______ to drive a car.",
+                                correct: ["enough"],
+                                explanation: "En oraciones negativas, 'enough' se coloca después del adjetivo ('old enough') para indicar suficiencia."
+                            },
+                            {
+                                id: "q32",
+                                type: "radio",
+                                question: "32. The movie was ______ interesting. I really enjoyed it.",
+                                options: ["too", "enough", "very"],
+                                correct: "very",
+                                explanation: "'Very' intensifica el adjetivo ('very interesting') de manera positiva."
+                            },
+                            {
+                                id: "q33",
+                                type: "text",
+                                question: "33. This box is ______ heavy to carry. You'll hurt your back if you try.",
+                                correct: ["too"],
+                                explanation: "'Too heavy' nos indica que es demasiado pesada. La segunda oración refuerza la idea."
+                            },
+                            {
+                                id: "q34",
+                                type: "radio",
+                                question: "34. We don't have ______ chairs for all the guests.",
+                                options: ["too", "enough", "very"],
+                                correct: "enough",
+                                explanation: "'Enough' se coloca antes de un sustantivo ('enough chairs') para indicar la cantidad necesaria."
+                            },
+                            {
+                                id: "q35",
+                                type: "radio",
+                                question: "35. This task is ______ complex for a beginner.",
+                                options: ["enough", "very", "too"],
+                                correct: "too",
+                                explanation: "Expresa un exceso negativo ('too complex')."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                sectionTitle: "Sección IV: Vocabulario y condicionales",
+                subsections: [
+                    {
+                        subtitle: "G. Vocabulario de salud, compras, emociones y gobierno.",
+                        items: [
+                            {
+                                id: "q36",
+                                type: "radio",
+                                question: "36. When you have a high temperature, you have a ______.",
+                                options: ["cough", "fever", "headache"],
+                                correct: "fever",
+                                explanation: "'Fever' (fiebre) es el término médico para referirse a una temperatura corporal alta."
+                            },
+                            {
+                                id: "q37",
+                                type: "radio",
+                                question: "37. You should ______ before buying an expensive product.",
+                                options: ["compare prices", "make a complaint", "get a prescription"],
+                                correct: "compare prices",
+                                explanation: "Comparar precios ('compare prices') es una buena práctica antes de una compra importante."
+                            },
+                            {
+                                id: "q38",
+                                type: "radio",
+                                question: "38. The opposite of nervous is ______.",
+                                options: ["anxious", "disappointed", "calm"],
+                                correct: "calm",
+                                explanation: "'Calm' (tranquilo) es el antónimo directo de 'nervous' (nervioso)."
+                            },
+                            {
+                                id: "q39",
+                                type: "radio",
+                                question: "39. The ______ is responsible for making laws in a country.",
+                                options: ["government", "economy", "society"],
+                                correct: "government",
+                                explanation: "El gobierno ('government') se encarga de legislar y administrar un país."
+                            },
+                            {
+                                id: "q40",
+                                type: "radio",
+                                question: "40. If a product is broken, you can return it and ask for a ______.",
+                                options: ["receipt", "refund", "warranty"],
+                                correct: "refund",
+                                explanation: "Si un producto está defectuoso, puedes solicitar un reembolso ('refund')."
+                            },
+                            {
+                                id: "q41",
+                                type: "radio",
+                                question: "41. I feel ______ about the exam. I didn't study enough.",
+                                options: ["confident", "anxious", "proud"],
+                                correct: "anxious",
+                                explanation: "No haber estudiado lo suficiente puede generar ansiedad."
+                            },
+                            {
+                                id: "q42",
+                                type: "radio",
+                                question: "42. To pay for public services like roads and schools, citizens pay ______.",
+                                options: ["taxes", "fines", "fees"],
+                                correct: "taxes",
+                                explanation: "Los ciudadanos pagan impuestos ('taxes') para financiar los servicios públicos."
+                            }
+                        ]
+                    },
+                    {
+                        subtitle: "H. Expresiones de Opinión y Primer Condicional.",
+                        items: [
+                            {
+                                id: "q43",
+                                type: "radio",
+                                question: "43. I ______ that is the best solution. (expresar desacuerdo)",
+                                options: ["not think", "am not think", "don't think"],
+                                correct: "don't think",
+                                explanation: "Estructura correcta para introducir una opinión en negativo: I don't think."
+                            },
+                            {
+                                id: "q44",
+                                type: "radio",
+                                question: "44. Which phrase is the most formal to express an opinion?",
+                                options: ["In my opinion,...", "I guess...", "I feel like..."],
+                                correct: "In my opinion,...",
+                                explanation: "'In my opinion,...' es una forma formal y estándar para expresar una opinión."
+                            },
+                            {
+                                id: "q45",
+                                type: "radio",
+                                question: "45. If it ______ (rain) tomorrow, we ______ (cancel) the picnic.",
+                                options: ["rains / will cancel", "will rain / cancel", "rains / will cancel"],
+                                correct: "rains / will cancel",
+                                explanation: "En el primer condicional, la cláusula 'if' va en presente simple ('rains') y la cláusula principal usa 'will' + verbo base ('will cancel')."
+                            },
+                            {
+                                id: "q46",
+                                type: "radio",
+                                question: "46. She will get the job if she ______ the interview.",
+                                options: ["pass", "passes", "will pass"],
+                                correct: "passes",
+                                explanation: "La estructura del primer condicional lleva la cláusula con 'if' en presente y el resultado con 'will'."
+                            },
+                            {
+                                id: "q47",
+                                type: "radio",
+                                question: "47. Which sentence is a <b>first conditional</b>?",
+                                options: [
+                                    "If I had time, I would help you.",
+                                    "If water freezes, it turns to ice.",
+                                    "If you study, you will pass the exam."
+                                ],
+                                correct: "If you study, you will pass the exam.",
+                                explanation: "Usa presente simple en la condición ('study') y futuro con 'will' en el resultado ('will pass')."
+                            },
+                            {
+                                id: "q48",
+                                type: "radio",
+                                question: "48. ______ we should invest more in renewable energy.",
+                                options: ["I believe", "I want", "I need"],
+                                correct: "I believe",
+                                explanation: "'I believe' es una forma común para expresar opiniones."
+                            },
+                            {
+                                id: "q49",
+                                type: "radio",
+                                question: "49. If you ______ (not / hurry), you ______ (miss) the bus.",
+                                options: ["don't hurry / will miss", "won't hurry / will miss", "didn't hurry / missed"],
+                                correct: "don't hurry / will miss",
+                                explanation: "La cláusula condicional (la parte con 'if') va en presente simple y la consecuencia va en futuro."
+                            },
+                            {
+                                id: "q50",
+                                type: "radio",
+                                question: "50. What is the structure of the <b>first conditional</b>?",
+                                options: [
+                                    "If + past simple, would + verb",
+                                    "If + present simple, will + verb",
+                                    "If + present perfect, will + verb"
+                                ],
+                                correct: "If + present simple, will + verb",
+                                explanation: "El primer condicional relaciona una condición real o probable en presente simple con un resultado probable en futuro."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+
+    <!-- ============================================================
+         JS CENTRALIZADO (TODA la lógica está aquí)
+         ============================================================ -->
+    <script src="../assets/js/repasos.js"></script>
+
+    <!-- ============================================================
+         INICIALIZACIÓN ESPECÍFICA DE ESTE REPASO
+         ============================================================ -->
+    <script>
+        window.onload = function() {
+            renderQuiz(sectionsData);
+
+            document.getElementById('checkButton')?.addEventListener('click', function() {
+                checkQuiz(sectionsData);
+            });
+
+            document.getElementById('pdfButton')?.addEventListener('click', generatePDF);
+        };
+    </script>
+
+</body>
+</html>
